@@ -59,6 +59,26 @@ main {
 main ul {
   list-style: none;
   padding: 0;
+  width: 100%;
+}
+
+main li {
+  user-select: none;
+
+  cursor: pointer;
+  width: 100%;
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  transition:
+    background-color 0.2s ease-out,
+    filter 0.2s ease-out;
+}
+main li:hover {
+  background-color: white;
+}
+main li:active {
+  filter: brightness(0.9);
 }
 footer button {
   width: 100%;
