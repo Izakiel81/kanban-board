@@ -5,8 +5,8 @@
     <header>
       <img src="../../assets/logo.png" alt="logo" />
       <h1>Kanban board</h1>
+      <hr />
     </header>
-    <hr />
     <main>
       <ul>
         <li>Workspace 1</li>
@@ -22,10 +22,12 @@
 
 <style scoped>
 .sidebar {
+  display: flex;
+  flex-direction: column;
+
   width: 250px;
   height: 100vh;
   background-color: #f4f4f4;
-  padding: 20px;
 
   font-family: "Poppins", sans-serif;
 }
@@ -35,6 +37,7 @@ header {
   align-items: center;
 
   gap: 10px;
+  padding: 20px 20px 0;
 }
 header img {
   width: 100px;
@@ -45,11 +48,18 @@ header h1 {
   color: #333;
   text-align: center;
 }
+header hr {
+  width: 100%;
+  margin-bottom: 15px;
+}
 main {
-  margin-top: 5px;
+  flex-grow: 1;
+  padding: 0 20px 20px;
 }
 main ul {
   list-style: none;
   padding: 0;
+}
+footer {
 }
 </style>
