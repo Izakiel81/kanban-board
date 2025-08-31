@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import SidebarComponent from "./components/sidebar/SidebarComponent.vue";
+</script>
 
-<template></template>
+<template>
+  <SidebarComponent />
+</template>
 
 <style scoped></style>
