@@ -68,5 +68,14 @@ footer button {
   color: white;
   font-size: 16px;
   cursor: pointer;
+
+  transition: filter 100ms ease-in-out;
+}
+footer button:hover {
+  filter: brightness(90%);
+}
+footer button:active {
+  filter: brightness(80%);
+  transition: filter 0ms;
 }
 </style>
