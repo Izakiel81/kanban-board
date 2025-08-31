@@ -7,6 +7,16 @@
       <h1>Kanban board</h1>
     </header>
     <hr />
+    <main>
+      <ul>
+        <li>Workspace 1</li>
+        <li>Workspace 2</li>
+        <li>Workspace 3</li>
+      </ul>
+    </main>
+    <footer>
+      <button>+ Add workspace</button>
+    </footer>
   </div>
 </template>
 
@@ -25,7 +35,6 @@ header {
   align-items: center;
 
   gap: 10px;
-  margin-bottom: 20px;
 }
 header img {
   width: 100px;
@@ -35,5 +44,12 @@ header h1 {
   font-size: 25px;
   color: #333;
   text-align: center;
+}
+main {
+  margin-top: 5px;
+}
+main ul {
+  list-style: none;
+  padding: 0;
 }
 </style>
