@@ -60,6 +60,13 @@ main ul {
   list-style: none;
   padding: 0;
 }
-footer {
+footer button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }
 </style>
