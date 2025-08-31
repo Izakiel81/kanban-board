@@ -72,7 +72,7 @@ main li {
 
   transition:
     background-color 0.2s ease-out,
-    filter 0.2s ease-out;
+    filter 0.1s ease-out;
 }
 main li:hover {
   background-color: white;
