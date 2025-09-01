@@ -1,7 +1,9 @@
 <script lang="ts" setup></script>
 <template>
   <div class="container">
-    <div class="board"></div>
+    <div class="board">
+      <button class="board-add">+ Add</button>
+    </div>
     <div class="add-board-container">
       <h1>+ Add board</h1>
     </div>
@@ -22,7 +24,24 @@
   min-width: 230px;
   min-height: 50px;
 
+  padding: 3px;
+
   border-radius: 8px;
+}
+.board-add {
+  cursor: pointer;
+
+  width: 100%;
+  height: 20px;
+
+  border: none;
+  border-radius: 5px;
+
+  color: #fff;
+  background-color: transparent;
+}
+.board-add:hover {
+  border: 1px solid #fff;
 }
 .add-board-container {
   display: flex;
@@ -50,8 +69,8 @@
 }
 .add-board-container h1 {
   color: #ccc;
-
-  font-family: "Poppins", sans-serif;
-  font-size: 20px;
+  font:
+    500 20px/24px "Poppins",
+    sans-serif;
 }
 </style>
