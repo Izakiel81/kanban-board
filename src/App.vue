@@ -12,6 +12,7 @@ import MainPageComponent from "./components/main/MainPageComponent.vue";
 
 <style scoped>
 #container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 250px 1fr;
 }
 </style>
