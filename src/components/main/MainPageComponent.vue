@@ -1,11 +1,11 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import TaskList from "./task-list/TaskList.vue";
+</script>
 <template>
   <div class="container">
-    <div class="board">
-      <button class="board-add">+ Add</button>
-    </div>
-    <div class="add-board-container">
-      <h1>+ Add board</h1>
+    <TaskList />
+    <div class="add-list-container">
+      <h1>+ Add list</h1>
     </div>
   </div>
 </template>
@@ -18,39 +18,15 @@
 
   gap: 10px;
 }
-.board {
-  background-color: #0000005f;
 
-  min-width: 230px;
-  min-height: 50px;
-
-  padding: 3px;
-
-  border-radius: 8px;
-}
-.board-add {
-  cursor: pointer;
-
-  width: 100%;
-  height: 20px;
-
-  border: none;
-  border-radius: 5px;
-
-  color: #fff;
-  background-color: transparent;
-}
-.board-add:hover {
-  border: 1px solid #fff;
-}
-.add-board-container {
+.add-list-container {
   display: flex;
 
   border: 2px dashed #ccc;
   border-radius: 8px;
 
-  min-width: 230px;
-  min-height: 50px;
+  min-width: 250px;
+  min-height: 70px;
 
   justify-content: center;
   align-items: center;
@@ -61,13 +37,13 @@
 
   cursor: pointer;
 }
-.add-board-container:hover {
+.add-list-container:hover {
   background-color: #cccccc69;
 }
-.add-board-container:active {
+.add-list-container:active {
   filter: brightness(90%);
 }
-.add-board-container h1 {
+.add-list-container h1 {
   color: #ccc;
   font:
     500 20px/24px "Poppins",
