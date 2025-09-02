@@ -1,8 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TaskListItem from "./TaskListItem.vue";
+</script>
 
 <template>
   <div class="list">
-    <button class="list-add">+ Add</button>
+    <TaskListItem />
+    <button class="list-add">+ Add Card</button>
   </div>
 </template>
 

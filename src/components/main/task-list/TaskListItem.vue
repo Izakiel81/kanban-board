@@ -6,7 +6,7 @@
         <span><button>Title</button></span>
       </h2>
     </div>
-    <button>Add card</button>
+    <p>Content</p>
   </div>
 </template>
 <style scoped></style>
