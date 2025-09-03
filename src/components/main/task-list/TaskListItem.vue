@@ -1,11 +1,6 @@
 <script setup lang="ts"></script>
 <template>
   <div class="container">
-    <div class="title-container">
-      <h2 class="title">
-        <button class="title-button">Title</button>
-      </h2>
-    </div>
     <p class="content">Content</p>
   </div>
 </template>
@@ -17,17 +12,11 @@
   flex-flow: wrap column;
 
   gap: 2px;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 4px 7px;
 }
-.title-container {
-  display: flex;
-}
-.title {
-  width: 100%;
-}
-.title-button {
-  width: 100%;
-  text-align: left;
-}
+
 .content {
   color: #fff;
 }
