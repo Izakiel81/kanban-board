@@ -38,20 +38,23 @@ const isEditingTitle = ref(true);
   text-align: left;
 
   background-color: transparent;
+  color: white;
+
   border: none;
   padding: 5px 2px;
   font-size: 18px;
 }
 .title-textarea {
   width: 100%;
-  height: 24px;
+  min-height: 24px;
 
-  resize: none;
+  field-sizing: content;
+  box-sizing: border-box;
 
   padding: 0 3px;
   font-size: 18px;
-  overflow-wrap: break-word;
   overflow: hidden;
+  overflow-wrap: break-word;
 }
 .list {
   background-color: #0000005f;
