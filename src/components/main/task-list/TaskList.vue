@@ -2,7 +2,7 @@
 import TaskListItem from "./TaskListItem.vue";
 import { ref } from "vue";
 
-const isEditingTitle = ref(true);
+const isEditingTitle = ref(false);
 </script>
 
 <template>
@@ -50,7 +50,7 @@ const isEditingTitle = ref(true);
 
   field-sizing: content;
   box-sizing: border-box;
-
+  resize: none;
   padding: 0 3px;
   font-size: 18px;
   overflow: hidden;

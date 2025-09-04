@@ -18,6 +18,8 @@
 }
 
 .content {
-  color: #fff;
+  font:
+    400 16px/20px "Poppins",
+    sans-serif;
 }
 </style>
