@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { TaskList, Workspace } from "../interfaces/Workspace";
+import { Workspace } from "../interfaces/Workspace";
 import { Ref, ref } from "vue";
 
 export const useWorkspacesStore = defineStore("workspaces", () => {
@@ -18,5 +18,18 @@ export const useWorkspacesStore = defineStore("workspaces", () => {
       (workspace) => workspace.id !== id,
     );
   }
-  return { workspaces, addWorkspace, editWorkspace, removeWorkspace };
+
+  function getWorkspaceIndexById(workspaceId: string) {
+    return workspaces.value.findIndex(
+      (workspace) => workspace.id === workspaceId,
+    );
+  }
+
+  return {
+    workspaces,
+    addWorkspace,
+    editWorkspace,
+    removeWorkspace,
+    getWorkspaceIndexById,
+  };
 });
