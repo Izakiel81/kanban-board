@@ -15,6 +15,9 @@ export const useCardsStore = defineStore("cards", () => {
   function deleteCard(cardId: string) {
     cards.value = cards.value.filter((card) => card.id !== cardId);
   }
+  function getCardsByTaskListId(taskListId: string) {
+    return cards.value.filter((card) => card.taskListId === taskListId);
+  }
   function cascadeDeleteCardsByTaskListId(taskListId: string) {
     cards.value = cards.value.filter((card) => card.taskListId !== taskListId);
   }
@@ -23,6 +26,7 @@ export const useCardsStore = defineStore("cards", () => {
     addCard,
     editCard,
     deleteCard,
+    getCardsByTaskListId,
     cascadeDeleteCardsByTaskListId,
   };
 });
