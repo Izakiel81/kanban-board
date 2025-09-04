@@ -13,13 +13,20 @@ export const useTaskListsStore = defineStore("tasklists", () => {
 
   function editTaskList(taskList: TaskList) {
     const index = taskLists.value.indexOf(taskList);
-
     taskLists.value[index] = taskList;
   }
 
   function removeTaskList(taskListId: string) {
     cardsStore.cascadeDeleteCardsByTaskListId(taskListId);
-    taskLists.value.filter((taskList) => taskList.id !== taskListId);
+    taskLists.value = taskLists.value.filter(
+      (taskList) => taskList.id !== taskListId,
+    );
+  }
+
+  function getTaskListsByWorkspaceId(workspaceId: string) {
+    return taskLists.value.filter(
+      (taskList) => taskList.workspaceId === workspaceId,
+    );
   }
 
   function cascadeDeleteTaskListsByWorkspaceId(workspaceId: string) {
@@ -33,6 +40,7 @@ export const useTaskListsStore = defineStore("tasklists", () => {
     addTaskList,
     editTaskList,
     removeTaskList,
+    getTaskListsByWorkspaceId,
     cascadeDeleteTaskListsByWorkspaceId,
   };
 });

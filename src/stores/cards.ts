@@ -13,10 +13,10 @@ export const useCardsStore = defineStore("cards", () => {
     cards.value[index] = card;
   }
   function deleteCard(cardId: string) {
-    cards.value.filter((card) => card.id !== cardId);
+    cards.value = cards.value.filter((card) => card.id !== cardId);
   }
   function cascadeDeleteCardsByTaskListId(taskListId: string) {
-    cards.value.filter((card) => card.taskListId !== taskListId);
+    cards.value = cards.value.filter((card) => card.taskListId !== taskListId);
   }
   return {
     cards,

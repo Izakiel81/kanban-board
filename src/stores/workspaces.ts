@@ -16,7 +16,7 @@ export const useWorkspacesStore = defineStore("workspaces", () => {
   }
   function removeWorkspace(id: string) {
     taskLists.cascadeDeleteTaskListsByWorkspaceId(id);
-    workspaces.value = workspaces.value.filter(
+    workspaces.value = workspaces.value = workspaces.value.filter(
       (workspace) => workspace.id !== id,
     );
   }
