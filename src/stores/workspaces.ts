@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { Workspace } from "../interfaces/Workspace";
-import { Ref, ref } from "vue";
+import { type Workspace } from "../interfaces/Workspace";
+import { type Ref, ref } from "vue";
 
 export const useWorkspacesStore = defineStore("workspaces", () => {
   const workspaces: Ref<Workspace[]> = ref([]);
@@ -11,17 +11,11 @@ export const useWorkspacesStore = defineStore("workspaces", () => {
 
   function editWorkspace(workspace: Workspace) {
     const index = workspaces.value.indexOf(workspace);
-    workspaces[index] = workspace;
+    workspaces.value[index] = workspace;
   }
   function removeWorkspace(id: string) {
     workspaces.value = workspaces.value.filter(
       (workspace) => workspace.id !== id,
-    );
-  }
-
-  function getWorkspaceIndexById(workspaceId: string) {
-    return workspaces.value.findIndex(
-      (workspace) => workspace.id === workspaceId,
     );
   }
 
@@ -30,6 +24,5 @@ export const useWorkspacesStore = defineStore("workspaces", () => {
     addWorkspace,
     editWorkspace,
     removeWorkspace,
-    getWorkspaceIndexById,
   };
 });
