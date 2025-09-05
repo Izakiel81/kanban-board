@@ -10,7 +10,7 @@ import MainPageComponent from "./components/main/MainPageComponent.vue";
   </div>
 </template>
 
-<style scoped>
+<style>
 #container {
   display: grid;
   grid-template-columns: 250px 1fr;
