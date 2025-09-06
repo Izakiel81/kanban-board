@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import TaskList from "./task-list/TaskList.vue";
+const props = defineProps<{ id: string }>();
 </script>
 <template>
   <div class="container">
