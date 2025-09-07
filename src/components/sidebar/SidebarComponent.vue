@@ -6,8 +6,10 @@ const workspacesStore = useWorkspacesStore();
 const props = defineProps<{ id: string }>();
 
 const isAddingWorkspace = ref(false);
-const inputRef = ref(null);
 const newWorkspaceTitle = ref("");
+
+const inputRef = ref(null);
+const buttonRef = ref(false);
 
 function startAdding() {
   isAddingWorkspace.value = true;
@@ -25,6 +27,10 @@ function finishAdding() {
 
   newWorkspaceTitle.value = "";
   isAddingWorkspace.value = false;
+  if (buttonRef.value) buttonRef.value.disabled = true;
+  setTimeout(() => {
+    if (buttonRef.value) buttonRef.value.disabled = false;
+  }, 200);
 }
 </script>
 
@@ -54,7 +60,7 @@ function finishAdding() {
       />
     </main>
     <footer>
-      <button @click="startAdding()">
+      <button ref="buttonRef" @click="startAdding()">
         {{ !isAddingWorkspace ? "+ Add workspace" : "Done" }}
       </button>
     </footer>
