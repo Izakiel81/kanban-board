@@ -1,11 +1,28 @@
 <script lang="ts" setup>
 import TaskList from "./task-list/TaskList.vue";
+import { useTaskListsStore } from "../../stores/tasklists";
+import { watch, ref } from "vue";
+import { useRoute } from "vue-router";
+
+const tasklistsStore = useTaskListsStore();
+const currentWorkspaceId = ref(null);
+const route = useRoute();
+
+watch(
+  () => route.params.id,
+  (newId, oldId) => {
+    currentWorkspaceId.value = newId;
+  },
+);
 const props = defineProps<{ id: string }>();
 </script>
 <template>
   <div class="container">
-    {{ props.id }}
-    <TaskList />
+    <TaskList
+      v-for="tasklist in tasklistsStore.getTaskListsByWorkspaceId(
+        currentWorkspaceId,
+      )"
+    />
     <div class="add-list-container">
       <h1>+ Add list</h1>
     </div>
