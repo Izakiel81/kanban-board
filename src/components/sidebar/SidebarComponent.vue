@@ -2,6 +2,10 @@
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
 import { watch, ref, nextTick } from "vue";
 import { v4 as uuid } from "uuid";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 const workspacesStore = useWorkspacesStore();
 const props = defineProps<{ id: string }>();
 
@@ -42,8 +46,13 @@ function finishAdding() {
       <hr />
     </header>
     <main>
-      <ul v-for="workspace in workspacesStore.workspaces">
-        <li>{{ workspace.title }}</li>
+      <ul>
+        <li
+          @click="router.push('/' + workspace.id)"
+          v-for="workspace in workspacesStore.workspaces"
+        >
+          {{ workspace.title }}
+        </li>
       </ul>
       <input
         class="add-workspace-title"
