@@ -36,5 +36,5 @@ export const useWorkspacesStore = defineStore(
       removeWorkspace,
     };
   },
-  { persist: false },
+  { persist: true },
 );
