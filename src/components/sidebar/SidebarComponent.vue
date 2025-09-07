@@ -1,8 +1,18 @@
 <script setup lang="ts">
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
-import { watch, ref } from "vue";
+import { watch, ref, nextTick } from "vue";
 const workspacesStore = useWorkspacesStore();
-console.log(workspacesStore.workspaces);
+
+const isAddingWorkspace = ref(false);
+const inputRef = ref(null);
+const newWorkspaceTitle = ref("");
+
+function startAdding() {
+  isAddingWorkspace.value = true;
+  nextTick(() => {
+    inputRef.value && inputRef.value.focus();
+  });
+}
 </script>
 
 <template>
@@ -16,9 +26,15 @@ console.log(workspacesStore.workspaces);
       <ul v-for="workspace in workspacesStore.workspaces">
         <li>{{ workspace.title }}</li>
       </ul>
+      <input
+        class="add-workspace-title"
+        ref="inputRef"
+        v-model="newWorkspaceTitle"
+        v-if="!isAddingWorkspace"
+      />
     </main>
     <footer>
-      <button @click="workspacesStore.addWorkspace()">+ Add workspace</button>
+      <button @click="startAdding()">+ Add workspace</button>
     </footer>
   </div>
 </template>
@@ -58,6 +74,7 @@ header hr {
 main {
   flex-grow: 1;
   padding: 0 20px 20px;
+  overflow: auto;
 }
 main ul {
   list-style: none;
@@ -76,12 +93,28 @@ main li {
   transition:
     background-color 0.2s ease-out,
     filter 0.1s ease-out;
+  overflow-wrap: break-word;
 }
 main li:hover {
   background-color: white;
 }
 main li:active {
   filter: brightness(0.9);
+}
+.add-workspace-title {
+  outline: none;
+
+  width: 100%;
+
+  padding: 5px 10px;
+
+  border-radius: 2px;
+  border: 1px solid #888;
+
+  transition: border-color 0.3s ease-out;
+}
+.add-workspace-title:focus {
+  border-color: #007bff;
 }
 footer button {
   width: 100%;
