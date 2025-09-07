@@ -4,6 +4,8 @@ import { useTaskListsStore } from "../../stores/tasklists";
 import { watch, ref } from "vue";
 import { useRoute } from "vue-router";
 
+const props = defineProps<{ id: string }>();
+
 const tasklistsStore = useTaskListsStore();
 const currentWorkspaceId = ref(null);
 const route = useRoute();
@@ -14,8 +16,10 @@ watch(
     currentWorkspaceId.value = newId;
   },
 );
-const props = defineProps<{ id: string }>();
+
+function startAdding() {}
 </script>
+
 <template>
   <div class="container">
     <TaskList
@@ -23,11 +27,12 @@ const props = defineProps<{ id: string }>();
         currentWorkspaceId,
       )"
     />
-    <div class="add-list-container">
+    <div class="add-list-container" @click="">
       <h1>+ Add list</h1>
     </div>
   </div>
 </template>
+
 <style scoped>
 .container {
   display: flex;
