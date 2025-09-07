@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
 import { watch, ref, nextTick } from "vue";
+import { v4 as uuid } from "uuid";
 const workspacesStore = useWorkspacesStore();
+const props = defineProps<{ id: string }>();
 
 const isAddingWorkspace = ref(false);
 const inputRef = ref(null);
@@ -12,6 +14,17 @@ function startAdding() {
   nextTick(() => {
     inputRef.value && inputRef.value.focus();
   });
+}
+function finishAdding() {
+  newWorkspaceTitle.value
+    ? workspacesStore.addWorkspace({
+        id: uuid(),
+        title: newWorkspaceTitle.value,
+      })
+    : workspacesStore.addWorkspace();
+
+  newWorkspaceTitle.value = "";
+  isAddingWorkspace.value = false;
 }
 </script>
 
@@ -29,12 +42,21 @@ function startAdding() {
       <input
         class="add-workspace-title"
         ref="inputRef"
+        placeholder="Workspace title"
         v-model="newWorkspaceTitle"
-        v-if="!isAddingWorkspace"
+        v-if="isAddingWorkspace"
+        @keyup.escape="
+          () => {
+            ((isAddingWorkspace = false), (newWorkspaceTitle = ''));
+          }
+        "
+        @blur="finishAdding()"
       />
     </main>
     <footer>
-      <button @click="startAdding()">+ Add workspace</button>
+      <button @click="startAdding()">
+        {{ !isAddingWorkspace ? "+ Add workspace" : "Done" }}
+      </button>
     </footer>
   </div>
 </template>
