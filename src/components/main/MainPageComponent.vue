@@ -4,6 +4,7 @@ const props = defineProps<{ id: string }>();
 </script>
 <template>
   <div class="container">
+    {{ props.id }}
     <TaskList />
     <div class="add-list-container">
       <h1>+ Add list</h1>

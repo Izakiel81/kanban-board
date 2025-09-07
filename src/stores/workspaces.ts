@@ -2,29 +2,39 @@ import { defineStore } from "pinia";
 import { type Workspace } from "../interfaces/Workspace";
 import { type Ref, ref } from "vue";
 import { useTaskListsStore } from "./tasklists";
+import { v4 as uuid } from "uuid";
 
-export const useWorkspacesStore = defineStore("workspaces", () => {
-  const workspaces: Ref<Workspace[]> = ref([]);
-  const taskLists = useTaskListsStore();
-  function addWorkspace(workspace: Workspace) {
-    workspaces.value.push(workspace);
-  }
+export const useWorkspacesStore = defineStore(
+  "workspaces",
+  () => {
+    const workspaces: Ref<Workspace[]> = ref([]);
+    const taskLists = useTaskListsStore();
+    function addWorkspace(workspace?: Workspace) {
+      workspaces.value.push(
+        workspace ?? {
+          id: uuid(),
+          title: "Workspace " + (workspaces.value.length + 1),
+        },
+      );
+    }
 
-  function editWorkspace(workspace: Workspace) {
-    const index = workspaces.value.indexOf(workspace);
-    workspaces.value[index] = workspace;
-  }
-  function removeWorkspace(id: string) {
-    taskLists.cascadeDeleteTaskListsByWorkspaceId(id);
-    workspaces.value = workspaces.value = workspaces.value.filter(
-      (workspace) => workspace.id !== id,
-    );
-  }
+    function editWorkspace(workspace: Workspace) {
+      const index = workspaces.value.indexOf(workspace);
+      workspaces.value[index] = workspace;
+    }
+    function removeWorkspace(id: string) {
+      taskLists.cascadeDeleteTaskListsByWorkspaceId(id);
+      workspaces.value = workspaces.value = workspaces.value.filter(
+        (workspace) => workspace.id !== id,
+      );
+    }
 
-  return {
-    workspaces,
-    addWorkspace,
-    editWorkspace,
-    removeWorkspace,
-  };
-});
+    return {
+      workspaces,
+      addWorkspace,
+      editWorkspace,
+      removeWorkspace,
+    };
+  },
+  { persist: true },
+);

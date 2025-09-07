@@ -1,4 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useWorkspacesStore } from "../../stores/workspaces.ts";
+import { watch, ref } from "vue";
+const workspacesStore = useWorkspacesStore();
+console.log(workspacesStore.workspaces);
+</script>
 
 <template>
   <div class="sidebar">
@@ -8,14 +13,12 @@
       <hr />
     </header>
     <main>
-      <ul>
-        <li>Workspace 1</li>
-        <li>Workspace 2</li>
-        <li>Workspace 3</li>
+      <ul v-for="workspace in workspacesStore.workspaces">
+        <li>{{ workspace.title }}</li>
       </ul>
     </main>
     <footer>
-      <button>+ Add workspace</button>
+      <button @click="workspacesStore.addWorkspace()">+ Add workspace</button>
     </footer>
   </div>
 </template>

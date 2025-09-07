@@ -17,9 +17,8 @@ watch(
 
 <template>
   <div id="container">
-    <SidebarComponent />
-    <h1>{{ currentWorkspaceId }}</h1>
-    <MainPageComponent />
+    <SidebarComponent :id="currentWorkspaceId" />
+    <MainPageComponent :id="currentWorkspaceId" />
   </div>
 </template>
 
