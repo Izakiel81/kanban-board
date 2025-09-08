@@ -86,24 +86,44 @@ function startAdding() {}
   gap: 5px;
 }
 .new-list-container-buttons button {
+  cursor: pointer;
+
   padding: 6px 40px;
 
   color: #fff;
   background-color: #007bff;
   border: none;
   border-radius: 5px;
-}
 
+  transition: filter 0.1s ease-in-out;
+}
+.new-list-container-buttons button:hover {
+  filter: brightness(90%);
+}
+.new-list-container-buttons button:active {
+  filter: brightness(80%);
+}
 #close {
+  cursor: pointer;
+
   position: relative;
   user-select: none;
 
-  height: 30px;
-  width: 30px;
+  height: 28px;
+  width: 28px;
   padding: 6px 10px;
+
   border-radius: 5px;
 
   background-color: #555;
+
+  transition: filter 0.1s ease-in-out;
+}
+#close:hover {
+  filter: brightness(120%);
+}
+#close:active {
+  filter: brightness(110%);
 }
 #close::before,
 #close::after {
@@ -111,7 +131,7 @@ function startAdding() {}
   position: absolute;
   width: 56%;
   top: 46%;
-  left: 21%;
+  left: 20%;
   border: 1px solid #aaa;
   border-radius: 5px;
 }
