@@ -14,7 +14,9 @@ export const useTaskListsStore = defineStore(
     }
 
     function editTaskList(taskList: TaskList) {
-      const index = taskLists.value.indexOf(taskList);
+      const index = taskLists.value.findIndex(
+        (item) => item.id === taskList.id,
+      );
       taskLists.value[index] = taskList;
     }
 

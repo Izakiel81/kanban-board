@@ -10,7 +10,17 @@ const isEditingTitle = ref(false);
 const newTaskListTitle = ref("");
 
 const taskListsStore = useTaskListsStore();
-function editTitle() {}
+function editTitle() {
+  if (!newTaskListTitle) return;
+  taskListsStore.editTaskList({
+    id: props.taskList.id,
+    title: newTaskListTitle.value,
+    workspaceId: props.taskList.workspaceId,
+  } as TaskList);
+
+  newTaskListTitle.value = "";
+  isEditingTitle.value = false;
+}
 </script>
 
 <template>
@@ -26,7 +36,7 @@ function editTitle() {}
         class="title-textarea"
         v-model="newTaskListTitle"
         v-else
-        @blur="isEditingTitle = false"
+        @blur="editTitle()"
       ></textarea>
     </div>
     <TaskListItem />
