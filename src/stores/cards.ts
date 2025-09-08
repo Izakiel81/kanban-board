@@ -9,7 +9,7 @@ export const useCardsStore = defineStore("cards", () => {
     cards.value.push(card);
   }
   function editCard(card: Card) {
-    const index = cards.value.indexOf(card);
+    const index = cards.value.findIndex((item) => item.id === card.id);
     cards.value[index] = card;
   }
   function deleteCard(cardId: string) {

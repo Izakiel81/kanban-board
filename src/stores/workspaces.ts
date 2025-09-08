@@ -19,7 +19,9 @@ export const useWorkspacesStore = defineStore(
     }
 
     function editWorkspace(workspace: Workspace) {
-      const index = workspaces.value.indexOf(workspace);
+      const index = workspaces.value.findIndex(
+        (item) => item.id === workspace.id,
+      );
       workspaces.value[index] = workspace;
     }
     function removeWorkspace(id: string) {
