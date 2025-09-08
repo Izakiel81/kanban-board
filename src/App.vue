@@ -2,22 +2,16 @@
 import SidebarComponent from "./components/sidebar/SidebarComponent.vue";
 import MainPageComponent from "./components/main/MainPageComponent.vue";
 import { useRoute } from "vue-router";
-import { ref, watch } from "vue";
+import { computed, watch } from "vue";
 
 const route = useRoute();
-const currentWorkspaceId = ref(route.params.id);
-watch(
-  () => route.params.id,
-  (newId) => {
-    currentWorkspaceId.value = newId;
-  },
-);
+const currentWorkspaceId = computed(() => route.params.id);
 </script>
 
 <template>
   <div id="container">
     <SidebarComponent :id="currentWorkspaceId" />
-    <MainPageComponent :id="currentWorkspaceId" />
+    <MainPageComponent v-if="currentWorkspaceId" :id="currentWorkspaceId" />
   </div>
 </template>
 

@@ -7,20 +7,15 @@ import { v4 as uuid } from "uuid";
 const props = defineProps<{ id?: string }>();
 const tasklistsStore = useTaskListsStore();
 
-const currentWorkspaceId = ref(props.id);
+const currentWorkspaceId = computed(() => props.id);
 const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
-watch(
-  () => props.id,
-  (newId) => {
-    currentWorkspaceId.value = newId;
-    console.log(currentWorkspaceId.value);
-  },
-);
 const currentTaskLists = computed(() =>
   tasklistsStore.getTaskListsByWorkspaceId(currentWorkspaceId.value),
 );
+
+console.log(currentTaskLists.value);
 
 function addTaskList() {
   if (!newTaskListTitle) return;
@@ -37,7 +32,7 @@ function addTaskList() {
 <template>
   <div class="container">
     <TaskList
-      v-if="currentTaskLists.value"
+      v-if="currentTaskLists"
       v-for="taskList in currentTaskLists"
       :key="taskList.id"
       :taskList="{

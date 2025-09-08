@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
 import { type TaskList } from "@/interfaces/workspaces.ts";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 const props = defineProps<{ taskList: TaskList }>();
-const currentTaskList = ref(props.taskList);
+const currentTaskList = computed(() => props.taskList);
+console.log(currentTaskList.value);
 const isEditingTitle = ref(false);
 </script>
 

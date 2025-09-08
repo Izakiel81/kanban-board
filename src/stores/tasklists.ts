@@ -26,7 +26,7 @@ export const useTaskListsStore = defineStore(
     }
 
     function getTaskListsByWorkspaceId(workspaceId: string) {
-      return taskLists.value.find(
+      return taskLists.value.filter(
         (taskList) => taskList.workspaceId === workspaceId,
       );
     }
