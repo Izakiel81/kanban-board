@@ -13,7 +13,7 @@ export const useWorkspacesStore = defineStore(
       workspaces.value.push(
         workspace ?? {
           id: uuid(),
-          title: "Workspace " + (workspaces.value.length + 1),
+          title: "Board " + (workspaces.value.length + 1),
         },
       );
     }

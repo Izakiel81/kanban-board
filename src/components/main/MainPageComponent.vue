@@ -30,14 +30,21 @@ function startAdding() {}
         currentWorkspaceId,
       )"
     />
-    <div class="new-list-container">
-      <input />
+    <div class="new-list-container" v-if="isAdding">
+      <input v-model="newTaskListTitle" />
       <span class="new-list-container-buttons">
         <button>Add</button>
-        <span id="close" />
+        <span
+          id="close"
+          @click="
+            () => {
+              ((isAdding = false), (newTaskListTitle = ''));
+            }
+          "
+        />
       </span>
     </div>
-    <div class="add-list-container" @click="">
+    <div class="add-list-container" @click="isAdding = true" v-else>
       <h1>+ Add list</h1>
     </div>
   </div>

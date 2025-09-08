@@ -18,7 +18,7 @@ watch(
 <template>
   <div id="container">
     <SidebarComponent :id="currentWorkspaceId" />
-    <MainPageComponent :id="currentWorkspaceId" />
+    <MainPageComponent v-if="currentWorkspaceId" :id="currentWorkspaceId" />
   </div>
 </template>
 
