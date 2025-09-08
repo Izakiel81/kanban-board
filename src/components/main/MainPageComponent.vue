@@ -1,39 +1,55 @@
 <script lang="ts" setup>
 import TaskList from "./task-list/TaskList.vue";
 import { useTaskListsStore } from "../../stores/tasklists";
-import { watch, ref } from "vue";
-import { useRoute } from "vue-router";
+import { watch, ref, computed } from "vue";
+import { v4 as uuid } from "uuid";
 
-const props = defineProps<{ id: string }>();
-
+const props = defineProps<{ id?: string }>();
 const tasklistsStore = useTaskListsStore();
-const currentWorkspaceId = ref(null);
-const route = useRoute();
 
+const currentWorkspaceId = ref(props.id);
 const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
 watch(
-  () => route.params.id,
-  (newId, oldId) => {
+  () => props.id,
+  (newId) => {
     currentWorkspaceId.value = newId;
+    console.log(currentWorkspaceId.value);
   },
 );
+const currentTaskLists = computed(() =>
+  tasklistsStore.getTaskListsByWorkspaceId(currentWorkspaceId.value),
+);
 
-function startAdding() {}
+function addTaskList() {
+  if (!newTaskListTitle) return;
+  tasklistsStore.addTaskList({
+    id: uuid(),
+    workspaceId: currentWorkspaceId.value,
+    title: newTaskListTitle.value,
+  });
+  isAdding.value = false;
+  newTaskListTitle.value = "";
+}
 </script>
 
 <template>
   <div class="container">
     <TaskList
-      v-for="tasklist in tasklistsStore.getTaskListsByWorkspaceId(
-        currentWorkspaceId,
-      )"
+      v-if="currentTaskLists.value"
+      v-for="taskList in currentTaskLists"
+      :key="taskList.id"
+      :taskList="{
+        id: taskList.id,
+        title: taskList.title,
+        workspaceId: taskList.workspaceId,
+      }"
     />
     <div class="new-list-container" v-if="isAdding">
       <input v-model="newTaskListTitle" />
       <span class="new-list-container-buttons">
-        <button>Add</button>
+        <button @click="addTaskList()">Add</button>
         <span
           id="close"
           @click="

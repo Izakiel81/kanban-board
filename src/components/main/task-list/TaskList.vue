@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
+import { type TaskList } from "@/interfaces/workspaces.ts";
 import { ref } from "vue";
-
+const props = defineProps<{ taskList: TaskList }>();
+const currentTaskList = ref(props.taskList);
 const isEditingTitle = ref(false);
 </script>
 
@@ -10,7 +12,7 @@ const isEditingTitle = ref(false);
     <div class="title-container">
       <h2 class="title" v-if="!isEditingTitle">
         <button class="title-button" @click="isEditingTitle = true">
-          Title
+          {{ currentTaskList.title }}
         </button>
       </h2>
       <textarea

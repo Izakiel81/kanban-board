@@ -7,7 +7,6 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const workspacesStore = useWorkspacesStore();
-const props = defineProps<{ id: string }>();
 
 const isAddingWorkspace = ref(false);
 const newWorkspaceTitle = ref("");
