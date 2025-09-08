@@ -10,6 +10,9 @@ const tasklistsStore = useTaskListsStore();
 const currentWorkspaceId = ref(null);
 const route = useRoute();
 
+const isAdding = ref(false);
+const newTaskListTitle = ref("");
+
 watch(
   () => route.params.id,
   (newId, oldId) => {
@@ -27,6 +30,13 @@ function startAdding() {}
         currentWorkspaceId,
       )"
     />
+    <div class="new-list-container">
+      <input />
+      <span class="new-list-container-buttons">
+        <button>Add</button>
+        <span id="close" />
+      </span>
+    </div>
     <div class="add-list-container" @click="">
       <h1>+ Add list</h1>
     </div>
@@ -42,6 +52,76 @@ function startAdding() {}
 
   gap: 10px;
 }
+.new-list-container {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 5px;
+
+  min-width: 250px;
+
+  background-color: #0000005f;
+
+  border-radius: 8px;
+}
+.new-list-container input {
+  outline: none;
+
+  border: 2px solid #999;
+  border-radius: 3px;
+
+  padding: 2px 5px;
+
+  transition: border-color 0.3s ease-out;
+}
+
+.new-list-container input:focus {
+  border-color: #007bff;
+}
+.new-list-container-buttons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.new-list-container-buttons button {
+  padding: 6px 40px;
+
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+}
+
+#close {
+  position: relative;
+  user-select: none;
+
+  height: 30px;
+  width: 30px;
+  padding: 6px 10px;
+  border-radius: 5px;
+
+  background-color: #555;
+}
+#close::before,
+#close::after {
+  content: "";
+  position: absolute;
+  width: 56%;
+  top: 46%;
+  left: 21%;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+}
+
+#close::before {
+  transform: rotate(45deg);
+}
+#close::after {
+  transform: rotate(-45deg);
+}
 
 .add-list-container {
   display: flex;
@@ -54,7 +134,6 @@ function startAdding() {}
 
   justify-content: center;
   align-items: center;
-
   text-align: center;
 
   user-select: none;
