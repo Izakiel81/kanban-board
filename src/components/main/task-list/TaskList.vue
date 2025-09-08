@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
-import { type TaskList } from "@/interfaces/workspaces.ts";
+import { type TaskList } from "@/interfaces/workspaces";
+import { useTaskListsStore } from "../../../stores/tasklists";
 import { computed, ref } from "vue";
+
 const props = defineProps<{ taskList: TaskList }>();
 const currentTaskList = computed(() => props.taskList);
 const isEditingTitle = ref(false);
+const newTaskListTitle = ref("");
+
+const taskListsStore = useTaskListsStore();
+function editTitle() {}
 </script>
 
 <template>
@@ -18,6 +24,7 @@ const isEditingTitle = ref(false);
       <textarea
         aria-multiline="true"
         class="title-textarea"
+        v-model="newTaskListTitle"
         v-else
         @blur="isEditingTitle = false"
       ></textarea>
