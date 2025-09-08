@@ -15,8 +15,6 @@ const currentTaskLists = computed(() =>
   tasklistsStore.getTaskListsByWorkspaceId(currentWorkspaceId.value),
 );
 
-console.log(currentTaskLists.value);
-
 function addTaskList() {
   if (!newTaskListTitle) return;
   tasklistsStore.addTaskList({
