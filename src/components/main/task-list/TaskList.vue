@@ -4,7 +4,6 @@ import { type TaskList } from "@/interfaces/workspaces.ts";
 import { computed, ref } from "vue";
 const props = defineProps<{ taskList: TaskList }>();
 const currentTaskList = computed(() => props.taskList);
-console.log(currentTaskList.value);
 const isEditingTitle = ref(false);
 </script>
 
