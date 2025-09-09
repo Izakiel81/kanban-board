@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
-import { type TaskList } from "@/interfaces/workspaces";
+import { type TaskList } from "../../../interfaces/Workspace";
 import { useTaskListsStore } from "../../../stores/tasklists";
 import { useCardsStore } from "../../../stores/cards";
 import { computed, ref } from "vue";
@@ -64,7 +64,7 @@ function editTitle() {
         @blur="editTitle()"
       ></textarea>
     </div>
-    <TaskListItem v-for="card in currentCards" />
+    <TaskListItem v-for="card in currentCards" :key="card.id" :card="card" />
     <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">
       + Add Card
     </button>

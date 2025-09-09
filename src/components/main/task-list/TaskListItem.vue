@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { useCardsStore } from "../../../stores/cards";
+import { type Card } from "../../../interfaces/Workspace";
+import { ref } from "vue";
+const props = defineProps<{ card: Card }>();
+
+const currentCard = ref(props.card);
 </script>
 
 <template>
   <div class="container">
-    <p class="content">Content</p>
+    <p class="content">{{ currentCard.title }}</p>
   </div>
 </template>
 <style scoped>
