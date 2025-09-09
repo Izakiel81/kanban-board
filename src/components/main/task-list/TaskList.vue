@@ -145,6 +145,12 @@ function editTitle() {
 
   transition: filter 0.1s ease-in-out;
 }
+.new-card-container-buttons button:hover {
+  filter: brightness(90%);
+}
+.new-card-container-buttons button:active {
+  filter: brightness(80%);
+}
 #close {
   cursor: pointer;
 
@@ -162,10 +168,10 @@ function editTitle() {
   transition: filter 0.1s ease-in-out;
 }
 #close:hover {
-  filter: brightness(120%);
+  filter: brightness(80%);
 }
 #close:active {
-  filter: brightness(110%);
+  filter: brightness(90%);
 }
 #close::before,
 #close::after {
