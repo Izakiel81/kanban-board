@@ -89,7 +89,7 @@ function editTitle() {
   cursor: pointer;
 
   width: 100%;
-  height: 50px;
+  height: 25px;
 
   border: 1px solid #ffffff7f;
   border-radius: 5px;

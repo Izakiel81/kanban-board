@@ -165,8 +165,8 @@ function addTaskList() {
   border: 2px dashed #ccc;
   border-radius: 8px;
 
-  min-width: 250px;
-  min-height: 70px;
+  min-width: 230px;
+  min-height: 50px;
 
   justify-content: center;
   align-items: center;
@@ -185,7 +185,7 @@ function addTaskList() {
 .add-list-container h1 {
   color: #ccc;
   font:
-    500 20px/24px "Poppins",
+    500 16px/20px "Poppins",
     sans-serif;
 }
 </style>
