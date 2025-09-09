@@ -65,14 +65,23 @@ function editTitle() {
       ></textarea>
     </div>
     <TaskListItem v-for="card in currentCards" />
-    <div class="new-card-container">
+    <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">
+      + Add Card
+    </button>
+    <div class="new-card-container" v-else>
       <textarea name="" id="" v-model="newCardTitle"></textarea>
       <span class="new-card-container-buttons">
-        <button>Add card</button>
-        <span id="close"></span>
+        <button @click="addCard()">Add card</button>
+        <span
+          id="close"
+          @click="
+            () => {
+              ((isAddingCard = false), (newCardTitle = ''));
+            }
+          "
+        />
       </span>
     </div>
-    <button class="list-add" v-if="!isAddingCard">+ Add Card</button>
   </div>
 </template>
 
@@ -127,6 +136,21 @@ function editTitle() {
   background-color: #fff;
   border-radius: 6px;
   padding: 4px 7px;
+}
+.new-card-container textarea {
+  resize: none;
+
+  outline: none;
+
+  border: 2px solid #ccc;
+  border-radius: 3px;
+
+  padding: 2px 5px;
+
+  transition: border-color 0.3s ease-out;
+}
+.new-card-container textarea:focus {
+  border-color: #007bff;
 }
 .new-card-container-buttons {
   display: flex;
