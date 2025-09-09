@@ -2,6 +2,7 @@
 import TaskListItem from "./TaskListItem.vue";
 import { type TaskList } from "@/interfaces/workspaces";
 import { useTaskListsStore } from "../../../stores/tasklists";
+import { useCardsStore } from "../../../stores/cards";
 import { computed, ref } from "vue";
 
 const props = defineProps<{ taskList: TaskList }>();
@@ -10,6 +11,12 @@ const isEditingTitle = ref(false);
 const newTaskListTitle = ref("");
 
 const taskListsStore = useTaskListsStore();
+const cardsStore = useCardsStore();
+
+const currentCards = computed(() =>
+  cardsStore.getCardsByTaskListId(currentTaskList.value.id),
+);
+
 function editTitle() {
   if (!newTaskListTitle) return;
   taskListsStore.editTaskList({
