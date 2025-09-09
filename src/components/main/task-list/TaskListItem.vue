@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCardsStore } from "../../../stores/cards";
 </script>
+
 <template>
   <div class="container">
     <p class="content">Content</p>

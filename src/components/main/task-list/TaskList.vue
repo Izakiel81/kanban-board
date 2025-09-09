@@ -46,7 +46,7 @@ function editTitle() {
         @blur="editTitle()"
       ></textarea>
     </div>
-    <TaskListItem />
+    <TaskListItem v-for="card in currentCards" />
     <button class="list-add">+ Add Card</button>
   </div>
 </template>
