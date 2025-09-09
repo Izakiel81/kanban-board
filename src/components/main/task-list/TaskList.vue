@@ -10,7 +10,7 @@ const props = defineProps<{ taskList: TaskList }>();
 const currentTaskList = computed(() => props.taskList);
 
 const isEditingTitle = ref(false);
-const newTaskListTitle = ref("");
+const newTaskListTitle = ref(props.taskList.title || "");
 
 const taskListsStore = useTaskListsStore();
 const cardsStore = useCardsStore();
@@ -64,7 +64,12 @@ function editTitle() {
         @blur="editTitle()"
       ></textarea>
     </div>
-    <TaskListItem v-for="card in currentCards" :key="card.id" :card="card" />
+    <TaskListItem
+      v-for="card in currentCards"
+      :key="card.id"
+      :card="card"
+      draggable="true"
+    />
     <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">
       + Add Card
     </button>
@@ -119,7 +124,7 @@ function editTitle() {
 .list {
   background-color: #0000005f;
 
-  min-width: 230px;
+  width: 230px;
   min-height: 50px;
 
   padding: 10px;

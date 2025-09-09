@@ -69,7 +69,7 @@ function finishAdding() {
     </main>
     <footer>
       <button ref="buttonRef" @click="startAdding()">
-        {{ !isAddingWorkspace ? "+ Add workspace" : "Done" }}
+        {{ !isAddingWorkspace ? "+ Add board" : "Done" }}
       </button>
     </footer>
   </div>
