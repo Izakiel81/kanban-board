@@ -46,10 +46,28 @@ function editTitle() {
   newTaskListTitle.value = "";
   isEditingTitle.value = false;
 }
+
+function startDrag(evt, item) {
+  evt.dataTransfer.dropEffect = "move";
+  evt.dataTransfer.effectAllowed = "move";
+  evt.dataTransfer.setData("itemId", item.id);
+}
+function onDrop(evt, taskListId) {
+  const itemId = evt.dataTransfer.getData("itemId");
+  const item = cardsStore.cards.find((item) => item.id === itemId);
+  console.log(currentCards.value);
+  console.log(itemId);
+  item.taskListId = taskListId;
+}
 </script>
 
 <template>
-  <div class="list">
+  <div
+    class="list"
+    @drop="onDrop($event, currentTaskList.id)"
+    @dragover.prevent
+    @dragenter.prevent
+  >
     <div class="title-container">
       <h2 class="title" v-if="!isEditingTitle">
         <button class="title-button" @click="isEditingTitle = true">
@@ -69,6 +87,7 @@ function editTitle() {
       :key="card.id"
       :card="card"
       draggable="true"
+      @dragstart="startDrag($event, card)"
     />
     <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">
       + Add Card

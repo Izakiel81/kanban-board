@@ -26,8 +26,10 @@ const currentCard = ref(props.card);
 }
 
 .content {
+  user-select: none;
   font:
     400 16px/20px "Poppins",
     sans-serif;
+  overflow-wrap: anywhere;
 }
 </style>
