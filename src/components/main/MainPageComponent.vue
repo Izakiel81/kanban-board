@@ -33,11 +33,7 @@ function addTaskList() {
       v-if="currentTaskLists"
       v-for="taskList in currentTaskLists"
       :key="taskList.id"
-      :taskList="{
-        id: taskList.id,
-        title: taskList.title,
-        workspaceId: taskList.workspaceId,
-      }"
+      :taskList="taskList"
     />
     <div class="new-list-container" v-if="isAdding">
       <input v-model="newTaskListTitle" />

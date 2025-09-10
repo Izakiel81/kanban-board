@@ -55,8 +55,6 @@ function startDrag(evt, item) {
 function onDrop(evt, taskListId) {
   const itemId = evt.dataTransfer.getData("itemId");
   const item = cardsStore.cards.find((item) => item.id === itemId);
-  console.log(currentCards.value);
-  console.log(itemId);
   item.taskListId = taskListId;
 }
 </script>
