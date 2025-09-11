@@ -53,6 +53,8 @@ function startDrag(evt, item) {
   evt.dataTransfer.dropEffect = "move";
   evt.dataTransfer.effectAllowed = "move";
   evt.dataTransfer.setData("itemId", item.id);
+  evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
+  evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
 }
 function onDrop(evt, taskListId) {
   const itemId = evt.dataTransfer.getData("itemId");
@@ -99,16 +101,15 @@ function onCardDrop(evt, id) {
         @blur="editTitle()"
       ></textarea>
     </div>
-    <TaskListItem
-      v-for="card in currentCards"
-      :key="card.id"
-      :card="card"
-      draggable="true"
-      @dragstart="startDrag($event, card)"
-      @drop="onCardDrop($event, card.id)"
-      @dragover.prevent
-      @dragenter.prevent
-    />
+    <div class="task-list-wrapper">
+      <TaskListItem
+        v-for="card in currentCards"
+        :key="card.id"
+        :card="card"
+        @dragStart="(event, card) => startDrag(event, card)"
+        @emitDrop="(event, id) => onCardDrop(event, id)"
+      />
+    </div>
     <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">
       + Add Card
     </button>
@@ -169,6 +170,9 @@ function onCardDrop(evt, id) {
   padding: 10px;
 
   border-radius: 8px;
+}
+.task-list-wrapper {
+  margin-bottom: 5px;
 }
 .new-card-container {
   margin-bottom: 5px;
