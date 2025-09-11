@@ -57,6 +57,15 @@ function onDrop(evt, taskListId) {
   const item = cardsStore.cards.find((item) => item.id === itemId);
   item.taskListId = taskListId;
 }
+function onCardDrop(evt, id) {
+  const itemId = evt.dataTransfer.getData("itemId");
+  const draggedItemIndex = cardsStore.cards.findIndex(
+    (item) => item.id === itemId,
+  );
+  const cardIndex = cardsStore.cards.findIndex((item) => item.id === id);
+  console.log("dragged item index: ", draggedItemIndex);
+  console.log("card index: ", cardIndex);
+}
 </script>
 
 <template>
@@ -86,6 +95,9 @@ function onDrop(evt, taskListId) {
       :card="card"
       draggable="true"
       @dragstart="startDrag($event, card)"
+      @drop="onCardDrop($event, card.id)"
+      @dragover.prevent
+      @dragenter.prevent
     />
     <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">
       + Add Card
