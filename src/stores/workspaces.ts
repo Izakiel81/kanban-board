@@ -10,12 +10,13 @@ export const useWorkspacesStore = defineStore(
     const workspaces: Ref<Workspace[]> = ref([]);
     const taskLists = useTaskListsStore();
     function addWorkspace(workspace?: Workspace) {
-      workspaces.value.push(
-        workspace ?? {
+      workspaces.value.push({
+        ...(workspace ?? {
           id: uuid(),
           title: "Board " + (workspaces.value.length + 1),
-        },
-      );
+        }),
+        order: workspaces.value.length,
+      });
     }
 
     function editWorkspace(workspace: Workspace) {
