@@ -16,7 +16,9 @@ const taskListsStore = useTaskListsStore();
 const cardsStore = useCardsStore();
 
 const currentCards = computed(() =>
-  cardsStore.getCardsByTaskListId(currentTaskList.value.id),
+  cardsStore
+    .getCardsByTaskListId(currentTaskList.value.id)
+    .sort((a, b) => a.order - b.order),
 );
 
 const isAddingCard = ref(false);
@@ -63,8 +65,16 @@ function onCardDrop(evt, id) {
     (item) => item.id === itemId,
   );
   const cardIndex = cardsStore.cards.findIndex((item) => item.id === id);
-  console.log("dragged item index: ", draggedItemIndex);
-  console.log("card index: ", cardIndex);
+
+  cardsStore.cards[draggedItemIndex].order =
+    cardsStore.cards[draggedItemIndex].order +
+    cardsStore.cards[cardIndex].order;
+  cardsStore.cards[cardIndex].order =
+    cardsStore.cards[draggedItemIndex].order -
+    cardsStore.cards[cardIndex].order;
+  cardsStore.cards[draggedItemIndex].order =
+    cardsStore.cards[draggedItemIndex].order -
+    cardsStore.cards[cardIndex].order;
 }
 </script>
 
