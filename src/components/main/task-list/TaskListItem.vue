@@ -7,6 +7,8 @@ const props = defineProps<{ card: Card }>();
 const currentCard = ref(props.card);
 
 function onDragEnter(evt) {
+  console.log(evt.dataTransfer.getData("itemId") === currentCard.value.id);
+  if (evt.dataTransfer.getData("itemId") === currentCard.value.id) return;
   evt.target.style.width = evt.dataTransfer.getData("width") + "px";
   evt.target.style.height = evt.dataTransfer.getData("height") + "px";
   evt.target.className = "add-button dragged-on";
@@ -28,6 +30,7 @@ function onDragLeave(evt) {
       @dragover.prevent
       @drop="
         (event) => {
+          if (event.dataTransfer.getData('itemId') === currentCard.id) return;
           onDragLeave(event);
           $emit('emitDrop', event, currentCard.id);
         }
