@@ -90,7 +90,7 @@ function onCardDrop(evt, id) {
     @dragenter.prevent
   >
     <div class="title-container">
-      <h2 class="title" v-if="isEditingTitle">
+      <h2 class="title" v-if="!isEditingTitle">
         <button class="title-button" @click="isEditingTitle = true">
           {{ currentTaskList.title }}
         </button>
@@ -100,6 +100,7 @@ function onCardDrop(evt, id) {
         class="title-textarea"
         v-model="newTaskListTitle"
         v-else
+        @blur="editTitle()"
       ></textarea>
     </div>
     <div class="task-list-wrapper">
@@ -151,9 +152,8 @@ function onCardDrop(evt, id) {
   font-size: 18px;
 }
 .title-textarea {
-  position: relative;
-  display: block;
   width: 100%;
+  min-height: 24px;
 
   field-sizing: content;
   box-sizing: border-box;
@@ -162,15 +162,6 @@ function onCardDrop(evt, id) {
   font-size: 18px;
   overflow: hidden;
   overflow-wrap: break-word;
-  z-index: 1;
-}
-.title-textarea::before {
-  content: "";
-  display: block;
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
 }
 .list {
   background-color: #0000005f;
