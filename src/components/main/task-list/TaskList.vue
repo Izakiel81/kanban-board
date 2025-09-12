@@ -99,8 +99,14 @@ function onCardDrop(evt, id) {
         aria-multiline="true"
         class="title-textarea"
         v-model="newTaskListTitle"
+        rows="1"
         v-else
         @blur="editTitle()"
+        @keyup.enter="editTitle()"
+        @keyup.escape="
+          newTaskListTitle = '';
+          isEditingTitle = false;
+        "
       ></textarea>
     </div>
     <div class="task-list-wrapper">
@@ -116,7 +122,7 @@ function onCardDrop(evt, id) {
       + Add Card
     </button>
     <div class="new-card-container" v-else>
-      <textarea name="" id="" v-model="newCardTitle"></textarea>
+      <textarea name="" id="" v-model="newCardTitle" rows="1"></textarea>
       <span class="new-card-container-buttons">
         <button @click="addCard()">Add card</button>
         <span
