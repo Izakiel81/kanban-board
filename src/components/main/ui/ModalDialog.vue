@@ -1,12 +1,16 @@
-<script setup>
-import { useRefs } from 'vue';
-const props = defineProps<{show: boolean}>();
-const { show } = useRefs(props);
+<script setup lang="ts">
+import { toRefs } from "vue";
+const props = defineProps<{ show: boolean; onCancel: () => void }>();
+const { show, onCancel } = toRefs(props);
 </script>
 <template>
   <div class="overlay" v-if="show">
     <div class="wrapper">
-      <slot></slot>
+      <header>
+        <slot name="header"></slot>
+        <span class="cancel" @click="onCancel" />
+      </header>
+      <slot name="default"></slot>
     </div>
   </div>
 </template>
@@ -16,7 +20,19 @@ const { show } = useRefs(props);
   inset: 0;
   width: 100%;
   height: 100vh;
-  opacity: 0.5;
-  background-color: #000;
+  background-color: #00000045;
+}
+.wrapper {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 500px;
+  min-height: 200px;
+
+  background-color: #fff;
+
+  border-radius: 8px;
 }
 </style>

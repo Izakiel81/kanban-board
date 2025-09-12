@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCardsStore } from "../../../stores/cards";
+import ModalDialog from "../ui/ModalDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
 import { ref, useTemplateRef } from "vue";
 const props = defineProps<{ card: Card }>();
@@ -56,6 +57,7 @@ function onDragLeave(evt) {
       <p class="content">{{ currentCard.title }}</p>
     </div>
     <span class="drag-indicator-down" ref="dragIndicatorDown" />
+    <ModalDialog :show="true" />
   </div>
 </template>
 <style scoped>
