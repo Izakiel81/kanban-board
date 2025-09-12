@@ -53,6 +53,7 @@ function startDrag(evt, item) {
   evt.dataTransfer.dropEffect = "move";
   evt.dataTransfer.effectAllowed = "move";
   evt.dataTransfer.setData("itemId", item.id);
+  evt.dataTransfer.setData("itemOrder", item.order);
   evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
   evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
 }

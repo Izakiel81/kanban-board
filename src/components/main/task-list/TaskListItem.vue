@@ -1,30 +1,41 @@
 <script setup lang="ts">
 import { useCardsStore } from "../../../stores/cards";
 import { type Card } from "../../../interfaces/Workspace";
-import { ref } from "vue";
+import { ref, useTemplateRef } from "vue";
 const props = defineProps<{ card: Card }>();
 
 const currentCard = ref(props.card);
+const dragIndicatorDown = useTemplateRef("dragIndicatorDown");
 
 function onDragEnter(evt) {
-  console.log(evt.dataTransfer.getData("itemId") === currentCard.value.id);
   if (evt.dataTransfer.getData("itemId") === currentCard.value.id) return;
-  evt.target.style.width = evt.dataTransfer.getData("width") + "px";
-  evt.target.style.height = evt.dataTransfer.getData("height") + "px";
-  evt.target.className = "add-button dragged-on";
+  const currComponent =
+    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order
+      ? evt.target
+      : dragIndicatorDown.value;
+
+  currComponent.style.width = evt.dataTransfer.getData("width") + "px";
+  currComponent.style.height = evt.dataTransfer.getData("height") + "px";
+  currComponent.className = currComponent.className + " dragged-on";
 }
 
 function onDragLeave(evt) {
-  evt.target.style.width = 100 + "%";
-  evt.target.style.height = 2 + "px";
-  evt.target.className = "add-button";
+  const currComponent =
+    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order
+      ? evt.target
+      : dragIndicatorDown.value;
+  currComponent.style.width = 100 + "%";
+  currComponent.style.height = 2 + "px";
+  currComponent.className = "";
+  evt.target.className = "drag-target";
+  dragIndicatorDown.value.className = "drag-indicator-down";
 }
 </script>
 
 <template>
   <div class="wrapper">
     <span
-      class="add-button"
+      class="drag-target"
       @dragenter="onDragEnter($event)"
       @dragleave="onDragLeave($event)"
       @dragover.prevent
@@ -35,7 +46,7 @@ function onDragLeave(evt) {
           $emit('emitDrop', event, currentCard.id);
         }
       "
-    ></span>
+    />
     <div
       class="container"
       draggable="true"
@@ -43,6 +54,7 @@ function onDragLeave(evt) {
     >
       <p class="content">{{ currentCard.title }}</p>
     </div>
+    <span class="drag-indicator-down" ref="dragIndicatorDown" />
   </div>
 </template>
 <style scoped>
@@ -60,7 +72,7 @@ function onDragLeave(evt) {
   padding: 4px 7px;
 }
 
-.add-button {
+.drag-target {
   cursor: pointer;
   position: relative;
 
@@ -71,25 +83,30 @@ function onDragLeave(evt) {
 
   background-color: transparent;
 }
-.add-button::before,
-.add-button::after {
+.drag-target::before,
+.drag-target::after {
+  display: block;
   content: "";
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 13px;
   background-color: transparent;
 }
 
-.add-button::before {
-  top: -8px;
+.drag-target::before {
+  top: -9px;
 }
-.add-button::after {
-  top: 8px;
+.drag-target::after {
+  top: 2px;
 }
 .dragged-on {
   background-color: #555;
   border-radius: 6px;
   margin: 3px 0;
+}
+.drag-indicator-down {
+  position: relative;
+  top: 3px;
 }
 .content {
   user-select: none;
