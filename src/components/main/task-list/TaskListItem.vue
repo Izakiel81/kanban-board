@@ -10,7 +10,8 @@ const dragIndicatorDown = useTemplateRef("dragIndicatorDown");
 function onDragEnter(evt) {
   if (evt.dataTransfer.getData("itemId") === currentCard.value.id) return;
   const currComponent =
-    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order
+    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order ||
+    evt.dataTransfer.getData("itemTaskListId") !== currentCard.value.taskListId
       ? evt.target
       : dragIndicatorDown.value;
 
@@ -106,6 +107,10 @@ function onDragLeave(evt) {
 }
 .drag-indicator-down {
   position: relative;
+
+  height: 2px;
+  width: 100%;
+
   top: 3px;
 }
 .content {
