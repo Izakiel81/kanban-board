@@ -10,7 +10,12 @@ const { show, onCancel } = toRefs(props);
         <slot name="header"></slot>
         <span class="cancel" @click="onCancel" />
       </header>
-      <slot name="default"></slot>
+      <main>
+        <slot name="default"></slot>
+      </main>
+      <footer>
+        <slot name="footer"></slot>
+      </footer>
     </div>
   </div>
 </template>
@@ -47,13 +52,20 @@ header {
 
   border-bottom: 1px solid #ccc;
 }
+main {
+  padding: 0 15px;
+}
+footer {
+  padding: 5px 15px;
+  border-top: 1px solid #ccc;
+}
 .cancel {
   cursor: pointer;
   position: relative;
   margin-right: 5px;
   border-radius: 100%;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   transition:
     background-color 0.1s ease,
     filter 0.1s ease-out;

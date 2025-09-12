@@ -3,6 +3,8 @@ import { useCardsStore } from "../../../stores/cards";
 import ModalDialog from "../ui/ModalDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
 import { ref, useTemplateRef } from "vue";
+import ModalDialogButton from "../ui/ModalDialogButton.vue";
+
 const props = defineProps<{ card: Card }>();
 
 const currentCard = ref(props.card);
@@ -59,7 +61,10 @@ function onDragLeave(evt) {
     <span class="drag-indicator-down" ref="dragIndicatorDown" />
     <ModalDialog :show="true">
       <template #header>
-        <h1>Title</h1>
+        <h2>Title</h2>
+      </template>
+      <template #footer>
+        <ModalDialogButton :color="'#000'">Button</ModalDialogButton>
       </template>
     </ModalDialog>
   </div>
