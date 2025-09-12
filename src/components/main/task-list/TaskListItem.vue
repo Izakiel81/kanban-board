@@ -67,7 +67,7 @@ function onDragLeave(evt) {
   height: 2px;
   width: 100%;
 
-  padding: 4px 0;
+  margin: 3px 0;
 
   background-color: transparent;
 }
@@ -89,7 +89,7 @@ function onDragLeave(evt) {
 .dragged-on {
   background-color: #555;
   border-radius: 6px;
-  margin: 5px 0;
+  margin: 3px 0;
 }
 .content {
   user-select: none;
