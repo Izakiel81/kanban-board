@@ -34,5 +34,53 @@ const { show, onCancel } = toRefs(props);
   background-color: #fff;
 
   border-radius: 8px;
+
+  font-family: "Poppins", sans-serif;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 15px;
+
+  width: 100%;
+
+  border-bottom: 1px solid #ccc;
+}
+.cancel {
+  cursor: pointer;
+  position: relative;
+  margin-right: 5px;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  transition:
+    background-color 0.1s ease,
+    filter 0.1s ease-out;
+}
+
+.cancel:hover {
+  background-color: #eee;
+}
+
+.cancel:active {
+  filter: brightness(90%);
+}
+
+.cancel::before,
+.cancel::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 2px solid #aaa;
+  border-radius: 2px;
+  width: 17px;
+}
+.cancel::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.cancel::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 </style>
