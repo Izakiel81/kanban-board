@@ -59,12 +59,9 @@ function onDragLeave(evt) {
       <p class="content">{{ currentCard.title }}</p>
     </div>
     <span class="drag-indicator-down" ref="dragIndicatorDown" />
-    <ModalDialog :show="true">
+    <ModalDialog :show="false">
       <template #header>
         <h2>Title</h2>
-      </template>
-      <template #footer>
-        <ModalDialogButton :color="'#000'">Button</ModalDialogButton>
       </template>
     </ModalDialog>
   </div>

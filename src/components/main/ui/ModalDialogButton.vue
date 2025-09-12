@@ -19,7 +19,7 @@ button {
   padding: 5px 10px;
 
   color: white;
-  background-color: #2fc5f7;
+  background-color: #21a5f5;
 
   transition: filter 0.1s ease-out;
 }
