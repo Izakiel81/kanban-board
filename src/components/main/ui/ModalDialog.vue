@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { toRefs } from "vue";
-const props = defineProps<{ show: boolean; onCancel: () => void }>();
+const props = defineProps<{
+  show: boolean;
+  onCancel: () => void;
+  width?: number;
+  height?: number;
+}>();
 const { show, onCancel } = toRefs(props);
 </script>
 <template>
   <div class="overlay" v-if="show">
-    <div class="wrapper">
+    <div class="wrapper" :width="width + 'px'" :height="height + 'px'">
       <header>
         <slot name="header"></slot>
         <span class="cancel" @click="onCancel" />
@@ -29,9 +34,9 @@ const { show, onCancel } = toRefs(props);
 }
 .wrapper {
   position: absolute;
-  top: 20%;
+  top: 15%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0);
 
   width: 500px;
   min-height: 200px;
@@ -53,7 +58,9 @@ header {
   border-bottom: 1px solid #ccc;
 }
 main {
-  padding: 0 15px;
+  overflow: auto;
+  padding: 10px;
+  min-height: 250px;
 }
 footer {
   padding: 5px 15px;

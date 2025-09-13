@@ -64,7 +64,7 @@ function onDragLeave(evt) {
         <h2>Title</h2>
       </template>
       <template #default>
-        <textarea name="" id=""></textarea>
+        <textarea name="" id="" class="description-textarea"></textarea>
       </template>
     </ModalDialog>
   </div>
@@ -130,5 +130,13 @@ function onDragLeave(evt) {
     400 16px/20px "Poppins",
     sans-serif;
   overflow-wrap: anywhere;
+}
+
+.description-textarea {
+  resize: none;
+  font-size: 16px;
+  width: 100%;
+  padding: 8px;
+  min-height: 250px;
 }
 </style>
