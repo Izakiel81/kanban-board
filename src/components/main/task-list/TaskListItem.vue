@@ -2,18 +2,27 @@
 import { useCardsStore } from "../../../stores/cards";
 import ModalDialog from "../ui/ModalDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
-import { ref, useTemplateRef } from "vue";
+import { ref, computed, useTemplateRef } from "vue";
 import ModalDialogButton from "../ui/ModalDialogButton.vue";
 
 const props = defineProps<{ card: Card }>();
+const emit = defineEmits(["editCard", "dragStart", "emitDrop"]);
 
-const currentCard = ref(props.card);
+const currentCard = computed(() => props.card);
 const dragIndicatorDown = useTemplateRef("dragIndicatorDown");
 
 const showModalDialog = ref(false);
 const modalDialogTitleEdit = ref(false);
 const newCardTitle = ref(currentCard.value.title || "");
 const newCardDescription = ref(currentCard.value.description || "");
+
+function closeDialog(newCard: Card) {
+  emit("editCard", newCard);
+
+  showModalDialog.value = false;
+}
+
+function editTitle() {}
 
 function onDragEnter(evt) {
   if (evt.dataTransfer.getData("itemId") === currentCard.value.id) return;
@@ -42,7 +51,7 @@ function onDragLeave(evt) {
 </script>
 
 <template>
-  <div class="wrapper">
+  <div class="wrapper" @click="showModalDialog = true">
     <span
       class="drag-target"
       @dragenter="onDragEnter($event)"
@@ -52,30 +61,39 @@ function onDragLeave(evt) {
         (event) => {
           if (event.dataTransfer.getData('itemId') === currentCard.id) return;
           onDragLeave(event);
-          $emit('emitDrop', event, currentCard.id);
+          emit('emitDrop', event, currentCard.id);
         }
       "
     />
     <div
       class="container"
       draggable="true"
-      @dragstart="$emit('dragStart', $event, currentCard)"
-      @click="showModalDialog = true"
+      @dragstart="emit('dragStart', $event, currentCard)"
     >
       <p class="content">{{ currentCard.title }}</p>
     </div>
     <span class="drag-indicator-down" ref="dragIndicatorDown" />
     <ModalDialog
       :show="showModalDialog"
-      :onCancel="() => (showModalDialog = false)"
+      :onCancel="
+        () =>
+          closeDialog({
+            ...currentCard,
+            title: newCardTitle,
+            description: newCardDescription,
+          })
+      "
     >
       <template #header>
-        <h2>{{ newCardTitle }}</h2>
+        <span>
+          <h2 @click="modalDialogTitleEdit = true" v-if="!modalDialogTitleEdit">
+            {{ newCardTitle }}
+          </h2>
+          <textarea v-model="newCardTitle" v-else />
+        </span>
       </template>
       <template #default>
         <textarea
-          name=""
-          id=""
           class="description-textarea"
           v-model="newCardDescription"
         ></textarea>

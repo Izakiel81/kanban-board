@@ -116,6 +116,12 @@ function onCardDrop(evt, id) {
         :card="card"
         @dragStart="(event, card) => startDrag(event, card)"
         @emitDrop="(event, id) => onCardDrop(event, id)"
+        @editCard="
+          (card) => {
+            cardsStore.editCard(card);
+            console.log(card);
+          }
+        "
       />
     </div>
     <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">

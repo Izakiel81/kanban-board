@@ -13,7 +13,7 @@ const { show, onCancel } = toRefs(props);
     <div class="wrapper" :width="width + 'px'" :height="height + 'px'">
       <header>
         <slot name="header"></slot>
-        <span class="cancel" @click="onCancel" />
+        <span class="cancel" @click.stop="onCancel" />
       </header>
       <main>
         <slot name="default"></slot>
