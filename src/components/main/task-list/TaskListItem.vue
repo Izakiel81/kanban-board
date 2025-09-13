@@ -10,6 +10,11 @@ const props = defineProps<{ card: Card }>();
 const currentCard = ref(props.card);
 const dragIndicatorDown = useTemplateRef("dragIndicatorDown");
 
+const showModalDialog = ref(false);
+const modalDialogTitleEdit = ref(false);
+const newCardTitle = ref(currentCard.value.title || "");
+const newCardDescription = ref(currentCard.value.description || "");
+
 function onDragEnter(evt) {
   if (evt.dataTransfer.getData("itemId") === currentCard.value.id) return;
   const currComponent =
@@ -55,16 +60,25 @@ function onDragLeave(evt) {
       class="container"
       draggable="true"
       @dragstart="$emit('dragStart', $event, currentCard)"
+      @click="showModalDialog = true"
     >
       <p class="content">{{ currentCard.title }}</p>
     </div>
     <span class="drag-indicator-down" ref="dragIndicatorDown" />
-    <ModalDialog :show="true">
+    <ModalDialog
+      :show="showModalDialog"
+      :onCancel="() => (showModalDialog = false)"
+    >
       <template #header>
-        <h2>Title</h2>
+        <h2>{{ newCardTitle }}</h2>
       </template>
       <template #default>
-        <textarea name="" id="" class="description-textarea"></textarea>
+        <textarea
+          name=""
+          id=""
+          class="description-textarea"
+          v-model="newCardDescription"
+        ></textarea>
       </template>
     </ModalDialog>
   </div>
@@ -82,6 +96,8 @@ function onDragLeave(evt) {
   background-color: #fff;
   border-radius: 6px;
   padding: 4px 7px;
+
+  cursor: pointer;
 }
 
 .drag-target {
