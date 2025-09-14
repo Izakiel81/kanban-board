@@ -65,6 +65,11 @@ main {
 footer {
   padding: 5px 15px;
   border-top: 1px solid #ccc;
+
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
 }
 .cancel {
   cursor: pointer;

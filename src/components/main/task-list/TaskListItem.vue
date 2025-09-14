@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useCardsStore } from "../../../stores/cards";
+import DeleteButton from "../ui/DeleteButton.vue";
 import ModalDialog from "../ui/ModalDialog.vue";
+import ModalDialogButton from "../ui/ModalDialogButton.vue";
 import { type Card } from "../../../interfaces/Workspace";
 import { ref, computed, useTemplateRef } from "vue";
-import ModalDialogButton from "../ui/ModalDialogButton.vue";
 
 const props = defineProps<{ card: Card }>();
 const emit = defineEmits(["editCard", "dragStart", "emitDrop"]);
@@ -12,6 +13,7 @@ const currentCard = computed(() => props.card);
 const dragIndicatorDown = useTemplateRef("dragIndicatorDown");
 
 const showModalDialog = ref(false);
+const showDeleteDialog = ref(true);
 const modalDialogTitleEdit = ref(false);
 const newCardTitle = ref(currentCard.value.title || "");
 const newCardDescription = ref(currentCard.value.description || "");
@@ -22,7 +24,11 @@ function closeDialog(newCard: Card) {
   showModalDialog.value = false;
 }
 
-function editTitle() {}
+function deleteCard() {
+  emit("deleteCard", currentCard.id);
+
+  showDeleteDialog.value = false;
+}
 
 function onDragEnter(evt) {
   if (evt.dataTransfer.getData("itemId") === currentCard.value.id) return;
@@ -71,6 +77,7 @@ function onDragLeave(evt) {
       @dragstart="emit('dragStart', $event, currentCard)"
     >
       <p class="content">{{ currentCard.title }}</p>
+      <span><DeleteButton :width="20" :height="20" /></span>
     </div>
     <span class="drag-indicator-down" ref="dragIndicatorDown" />
     <ModalDialog
@@ -93,10 +100,20 @@ function onDragLeave(evt) {
         </span>
       </template>
       <template #default>
-        <textarea
-          class="description-textarea"
-          v-model="newCardDescription"
-        ></textarea>
+        <textarea class="description-textarea" v-model="newCardDescription" />
+      </template>
+    </ModalDialog>
+    <ModalDialog :show="true" :onCancel="showDeleteDialog = false">
+      <template #header>
+        <h3>Are you sure you want to delete this card?</h3>
+      </template>
+      <template #default>
+        <h2>{{ currentCard.title }}</h2>
+        <p>{{ currentCard.description }}</p>
+      </template>
+      <template #footer>
+        <ModalDialogButton :width="60" :height="20">Yes</ModalDialogButton>
+        <ModalDialogButton>Cancel</ModalDialogButton>
       </template>
     </ModalDialog>
   </div>
@@ -108,7 +125,7 @@ function onDragLeave(evt) {
 }
 .container {
   display: flex;
-  flex-flow: wrap column;
+  justify-content: space-between;
 
   gap: 2px;
   background-color: #fff;
