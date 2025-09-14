@@ -13,7 +13,7 @@ const currentCard = computed(() => props.card);
 const dragIndicatorDown = useTemplateRef("dragIndicatorDown");
 
 const showModalDialog = ref(false);
-const showDeleteDialog = ref(true);
+const showDeleteDialog = ref(false);
 const modalDialogTitleEdit = ref(false);
 const newCardTitle = ref(currentCard.value.title || "");
 const newCardDescription = ref(currentCard.value.description || "");
@@ -77,7 +77,11 @@ function onDragLeave(evt) {
       @dragstart="emit('dragStart', $event, currentCard)"
     >
       <p class="content">{{ currentCard.title }}</p>
-      <span><DeleteButton :width="20" :height="20" /></span>
+      <DeleteButton
+        :width="20"
+        :height="20"
+        :onClick="() => (showDeleteDialog = true)"
+      />
     </div>
     <span class="drag-indicator-down" ref="dragIndicatorDown" />
     <ModalDialog
@@ -93,7 +97,11 @@ function onDragLeave(evt) {
     >
       <template #header>
         <span>
-          <h2 @click="modalDialogTitleEdit = true" v-if="!modalDialogTitleEdit">
+          <h2
+            @click="modalDialogTitleEdit = true"
+            v-if="!modalDialogTitleEdit"
+            class="modal-dialog-title"
+          >
             {{ newCardTitle }}
           </h2>
           <textarea v-model="newCardTitle" v-else />
@@ -103,7 +111,10 @@ function onDragLeave(evt) {
         <textarea class="description-textarea" v-model="newCardDescription" />
       </template>
     </ModalDialog>
-    <ModalDialog :show="true" :onCancel="showDeleteDialog = false">
+    <ModalDialog
+      :show="showDeleteDialog"
+      :onCancel="() => (showDeleteDialog = false)"
+    >
       <template #header>
         <h3>Are you sure you want to delete this card?</h3>
       </template>
@@ -112,8 +123,14 @@ function onDragLeave(evt) {
         <p>{{ currentCard.description }}</p>
       </template>
       <template #footer>
-        <ModalDialogButton :width="60" :height="20">Yes</ModalDialogButton>
-        <ModalDialogButton>Cancel</ModalDialogButton>
+        <ModalDialogButton :width="70" :height="30">Yes</ModalDialogButton>
+        <ModalDialogButton
+          :width="70"
+          :bgcolor="'#ff0000'"
+          :onClick="() => (showDeleteDialog = false)"
+        >
+          Cancel
+        </ModalDialogButton>
       </template>
     </ModalDialog>
   </div>
@@ -182,7 +199,9 @@ function onDragLeave(evt) {
     sans-serif;
   overflow-wrap: anywhere;
 }
-
+.modal-dialog-title {
+  word-break: break-word;
+}
 .description-textarea {
   resize: none;
   font-size: 16px;

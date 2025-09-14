@@ -51,6 +51,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   padding: 10px 10px 10px 15px;
 
   width: 100%;
@@ -76,8 +77,7 @@ footer {
   position: relative;
   margin-right: 5px;
   border-radius: 100%;
-  width: 35px;
-  height: 35px;
+  padding: 17px;
   transition:
     background-color 0.1s ease,
     filter 0.1s ease-out;

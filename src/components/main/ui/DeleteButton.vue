@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const { color, width, height, onClick } = defineProps<{
-  color: string;
+  color?: string;
   width?: number;
   height?: number;
   onClick: () => void;
 }>();
 </script>
 <template>
-  <span @click="onClick">
+  <span @click.stop="onClick">
     <svg
       :width="width || 20"
       :height="height || 20"
