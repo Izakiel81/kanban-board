@@ -123,7 +123,9 @@ function onDragLeave(evt) {
         <p>{{ currentCard.description }}</p>
       </template>
       <template #footer>
-        <ModalDialogButton :width="70" :height="30">Yes</ModalDialogButton>
+        <ModalDialogButton :width="70" :height="30" :onClick="deleteCard">
+          Yes
+        </ModalDialogButton>
         <ModalDialogButton
           :width="70"
           :bgcolor="'#ff0000'"

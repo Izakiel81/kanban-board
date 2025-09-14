@@ -9,7 +9,7 @@ const { onClick, bgcolor, tcolor } = defineProps<{
 </script>
 <template>
   <button
-    @click.stop="() => onClick"
+    @click.stop="onClick"
     :style="{
       color: tcolor,
       backgroundColor: bgcolor,
