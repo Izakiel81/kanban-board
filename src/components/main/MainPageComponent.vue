@@ -25,6 +25,18 @@ function addTaskList() {
   isAdding.value = false;
   newTaskListTitle.value = "";
 }
+function startDrag(evt, list) {
+  evt.dataTransfer.dropEffect = "move";
+  evt.dataTransfer.effectAllowed = "move";
+  evt.dataTransfer.setData("listId", list.id);
+  evt.dataTransfer.setData("listOrder", list.order);
+  evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
+  evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
+}
+function onListDrop(evt, list) {
+  const listId = evt.dataTransfer.getData("listId");
+  if (!listId) return;
+}
 </script>
 
 <template>
@@ -34,7 +46,8 @@ function addTaskList() {
       v-for="taskList in currentTaskLists"
       :key="taskList.id"
       :taskList="taskList"
-      draggable="true"
+      @listDragStart="(event, list) => startDrag(event, list)"
+      @onListDrop="(event, list) => onListDrop(event, list)"
     />
     <div class="new-list-container" v-if="isAdding">
       <input v-model="newTaskListTitle" />
@@ -62,8 +75,7 @@ function addTaskList() {
   align-items: flex-start;
 
   padding: 10px;
-
-  gap: 10px;
+  gap: 2px;
 }
 .new-list-container {
   display: flex;

@@ -7,7 +7,8 @@ import { computed, ref, useTemplateRef } from "vue";
 import { v4 as uuid } from "uuid";
 
 const props = defineProps<{ taskList: TaskList }>();
-const emit = defineEmits(["dragStart", "dragEnter", "dragLeave"]);
+const emit = defineEmits(["listDragStart", "onListDrop"]);
+
 const currentTaskList = computed(() => props.taskList);
 
 const isEditingTitle = ref(false);
@@ -64,6 +65,7 @@ function startDrag(evt, item) {
 }
 function onDrop(evt, taskListId) {
   const itemId = evt.dataTransfer.getData("itemId");
+  if (!itemId) return;
   const item = cardsStore.cards.find((item) => item.id === itemId);
   item.taskListId = taskListId;
 }
@@ -73,6 +75,7 @@ function onDragLeave(evt) {}
 
 function onCardDrop(evt, id) {
   const itemId = evt.dataTransfer.getData("itemId");
+  if (!itemId) return;
   const draggedItemIndex = cardsStore.cards.findIndex(
     (item) => item.id === itemId,
   );
@@ -92,12 +95,19 @@ function onCardDrop(evt, id) {
 
 <template>
   <div class="list-container">
-    <span ref="dragLeft" class="dragArea"></span>
+    <span
+      ref="dragLeft"
+      class="drag-area"
+      @dragenter.preent
+      @drop.stop="emit('onListDrop', $event)"
+    ></span>
     <div
       class="list"
       @drop="onDrop($event, currentTaskList.id)"
+      draggable="true"
       @dragover.prevent
       @dragenter.prevent
+      @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
     >
       <div class="title-container">
         <h2 class="title" v-if="!isEditingTitle">
@@ -156,11 +166,26 @@ function onCardDrop(evt, id) {
         </span>
       </div>
     </div>
-    <span ref="dragRight" class="dragArea"></span>
+    <span ref="dragRight" class="drag-area" @drop.stop="emit('onDrop', $event)">
+    </span>
   </div>
 </template>
 
 <style scoped>
+.list-container {
+  display: flex;
+}
+.drag-area {
+  position: relative;
+  width: 2px;
+}
+.drag-area::before,
+.drag-area::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 15px;
+}
 .title-container {
   display: flex;
   margin-bottom: 5px;
@@ -202,7 +227,12 @@ function onCardDrop(evt, id) {
   border-radius: 8px;
 }
 .task-list-wrapper {
+  display: flex;
+  flex-direction: column;
+
   margin-bottom: 5px;
+
+  gap: 5px;
 }
 .new-card-container {
   margin-bottom: 5px;

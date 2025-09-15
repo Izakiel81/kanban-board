@@ -10,13 +10,18 @@ const props = defineProps<{ card: Card }>();
 const emit = defineEmits(["editCard", "dragStart", "emitDrop"]);
 
 const currentCard = computed(() => props.card);
-const dragIndicatorDown = useTemplateRef("dragIndicatorDown");
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
 const modalDialogTitleEdit = ref(false);
+const elementHeight = ref(2);
 const newCardTitle = ref(currentCard.value.title || "");
 const newCardDescription = ref(currentCard.value.description || "");
+
+const draggedOver = ref(false);
+const isAbove = ref(false);
+
+let counter = 0;
 
 function closeDialog(newCard: Card) {
   emit("editCard", newCard);
@@ -36,50 +41,50 @@ function onDragEnter(evt) {
     evt.dataTransfer.getData("itemId") === currentCard.value.id
   )
     return;
-  const currComponent =
-    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order ||
-    evt.dataTransfer.getData("itemTaskListId") !== currentCard.value.taskListId
-      ? evt.target
-      : dragIndicatorDown.value;
 
-  currComponent.style.width = evt.dataTransfer.getData("width") + "px";
-  currComponent.style.height = evt.dataTransfer.getData("height") + "px";
-  currComponent.className = currComponent.className + " dragged-on";
+  counter++;
+
+  draggedOver.value = true;
+  isAbove.value =
+    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order ||
+    evt.dataTransfer.getData("itemTaskListId") !== currentCard.value.taskListId;
+  elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
 }
 
 function onDragLeave(evt) {
-  const currComponent =
-    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order
-      ? evt.target
-      : dragIndicatorDown.value;
-  currComponent.style.width = 100 + "%";
-  currComponent.style.height = 2 + "px";
-  currComponent.className = "";
-  evt.target.className = "drag-target";
-  dragIndicatorDown.value.className = "drag-indicator-down";
+  counter--;
+  if (counter > 0) return;
+
+  draggedOver.value = false;
+  elementHeight.value = 2;
+  counter = 0;
 }
 </script>
 
 <template>
-  <div class="wrapper" @click="showModalDialog = true">
+  <div
+    class="wrapper"
+    draggable="true"
+    @dragstart.stop="emit('dragStart', $event, currentCard)"
+    @click="showModalDialog = true"
+    @dragover.prevent
+    @dragenter.prevent.stop="onDragEnter($event)"
+    @dragleave.prevent.stop="onDragLeave($event)"
+    @drop.stop="
+      (event) => {
+        if (event.dataTransfer.getData('itemId') === currentCard.id) return;
+        onDragLeave(event);
+        emit('emitDrop', event, currentCard.id);
+      }
+    "
+  >
     <span
       class="drag-target"
-      @dragenter.stop="onDragEnter($event)"
-      @dragleave.stop="onDragLeave($event)"
-      @dragover.prevent
-      @drop.stop="
-        (event) => {
-          if (event.dataTransfer.getData('itemId') === currentCard.id) return;
-          onDragLeave(event);
-          emit('emitDrop', event, currentCard.id);
-        }
-      "
+      :class="{ 'dragged-on': draggedOver & isAbove }"
+      :style="{ height: draggedOver & isAbove ? elementHeight + 'px' : '2px' }"
+      id="up"
     />
-    <div
-      class="container"
-      draggable="true"
-      @dragstart="emit('dragStart', $event, currentCard)"
-    >
+    <div class="container">
       <p class="content">{{ currentCard.title }}</p>
       <DeleteButton
         :width="20"
@@ -87,7 +92,12 @@ function onDragLeave(evt) {
         :onClick="() => (showDeleteDialog = true)"
       />
     </div>
-    <span class="drag-indicator-down" ref="dragIndicatorDown" />
+    <span
+      class="drag-target"
+      :class="{ 'dragged-on': draggedOver & !isAbove }"
+      :style="{ height: draggedOver & !isAbove ? elementHeight + 'px' : '2px' }"
+      id="down"
+    />
     <ModalDialog
       :show="showModalDialog"
       :onCancel="
@@ -165,38 +175,18 @@ function onDragLeave(evt) {
   height: 2px;
   width: 100%;
 
-  margin: 3px 0;
-
   background-color: transparent;
 }
-.drag-target::before,
-.drag-target::after {
-  display: block;
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 13px;
-  background-color: transparent;
+#up {
+  top: -2px;
 }
-
-.drag-target::before {
-  top: -9px;
-}
-.drag-target::after {
+#down {
   top: 2px;
 }
 .dragged-on {
   background-color: #555;
   border-radius: 6px;
   margin: 3px 0;
-}
-.drag-indicator-down {
-  position: relative;
-
-  height: 2px;
-  width: 100%;
-
-  top: 3px;
 }
 .content {
   user-select: none;
