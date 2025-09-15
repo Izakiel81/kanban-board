@@ -3,14 +3,18 @@ import TaskListItem from "./TaskListItem.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
 import { useTaskListsStore } from "../../../stores/tasklists";
 import { useCardsStore } from "../../../stores/cards";
-import { computed, ref } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import { v4 as uuid } from "uuid";
 
 const props = defineProps<{ taskList: TaskList }>();
+const emit = defineEmits(["dragStart", "dragEnter", "dragLeave"]);
 const currentTaskList = computed(() => props.taskList);
 
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
+
+const dragLeft = useTemplateRef("dragLeft");
+const dragRight = useTemplateRef("dragRight");
 
 const taskListsStore = useTaskListsStore();
 const cardsStore = useCardsStore();
@@ -63,6 +67,10 @@ function onDrop(evt, taskListId) {
   const item = cardsStore.cards.find((item) => item.id === itemId);
   item.taskListId = taskListId;
 }
+
+function onDragEnter(evt) {}
+function onDragLeave(evt) {}
+
 function onCardDrop(evt, id) {
   const itemId = evt.dataTransfer.getData("itemId");
   const draggedItemIndex = cardsStore.cards.findIndex(
@@ -83,64 +91,72 @@ function onCardDrop(evt, id) {
 </script>
 
 <template>
-  <div
-    class="list"
-    @drop="onDrop($event, currentTaskList.id)"
-    @dragover.prevent
-    @dragenter.prevent
-  >
-    <div class="title-container">
-      <h2 class="title" v-if="!isEditingTitle">
-        <button class="title-button" @click="isEditingTitle = true">
-          {{ currentTaskList.title }}
-        </button>
-      </h2>
-      <textarea
-        aria-multiline="true"
-        class="title-textarea"
-        v-model="newTaskListTitle"
-        rows="1"
-        v-else
-        @blur="editTitle()"
-        @keyup.enter="editTitle()"
-        @keyup.escape="
-          newTaskListTitle = '';
-          isEditingTitle = false;
-        "
-      ></textarea>
-    </div>
-    <div class="task-list-wrapper">
-      <TaskListItem
-        v-for="card in currentCards"
-        :key="card.id"
-        :card="card"
-        @dragStart="(event, card) => startDrag(event, card)"
-        @emitDrop="(event, id) => onCardDrop(event, id)"
-        @editCard="
-          (card) => {
-            cardsStore.editCard(card);
-            console.log(card);
-          }
-        "
-      />
-    </div>
-    <button class="list-add" v-if="!isAddingCard" @click="isAddingCard = true">
-      + Add Card
-    </button>
-    <div class="new-card-container" v-else>
-      <textarea name="" id="" v-model="newCardTitle" rows="1"></textarea>
-      <span class="new-card-container-buttons">
-        <button @click="addCard()">Add card</button>
-        <span
-          id="close"
-          @click="
-            () => {
-              ((isAddingCard = false), (newCardTitle = ''));
+  <div class="list-container">
+    <span ref="dragLeft" class="dragArea"></span>
+    <div
+      class="list"
+      @drop="onDrop($event, currentTaskList.id)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <div class="title-container">
+        <h2 class="title" v-if="!isEditingTitle">
+          <button class="title-button" @click="isEditingTitle = true">
+            {{ currentTaskList.title }}
+          </button>
+        </h2>
+        <textarea
+          aria-multiline="true"
+          class="title-textarea"
+          v-model="newTaskListTitle"
+          rows="1"
+          v-else
+          @blur="editTitle()"
+          @keyup.enter="editTitle()"
+          @keyup.escape="
+            newTaskListTitle = '';
+            isEditingTitle = false;
+          "
+        ></textarea>
+      </div>
+      <div class="task-list-wrapper">
+        <TaskListItem
+          v-for="card in currentCards"
+          :key="card.id"
+          :card="card"
+          @dragStart="(event, card) => startDrag(event, card)"
+          @emitDrop="(event, id) => onCardDrop(event, id)"
+          @editCard="
+            (card) => {
+              cardsStore.editCard(card);
+              console.log(card);
             }
           "
         />
-      </span>
+      </div>
+      <button
+        class="list-add"
+        v-if="!isAddingCard"
+        @click="isAddingCard = true"
+      >
+        + Add Card
+      </button>
+      <div class="new-card-container" v-else>
+        <textarea name="" id="" v-model="newCardTitle" rows="1"></textarea>
+        <span class="new-card-container-buttons">
+          <button @click="addCard()">Add card</button>
+          <span
+            id="close"
+            @click="
+              () => {
+                ((isAddingCard = false), (newCardTitle = ''));
+              }
+            "
+          />
+        </span>
+      </div>
     </div>
+    <span ref="dragRight" class="dragArea"></span>
   </div>
 </template>
 

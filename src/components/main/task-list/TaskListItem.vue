@@ -31,7 +31,11 @@ function deleteCard() {
 }
 
 function onDragEnter(evt) {
-  if (evt.dataTransfer.getData("itemId") === currentCard.value.id) return;
+  if (
+    !evt.dataTransfer.getData("itemId") ||
+    evt.dataTransfer.getData("itemId") === currentCard.value.id
+  )
+    return;
   const currComponent =
     parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order ||
     evt.dataTransfer.getData("itemTaskListId") !== currentCard.value.taskListId
@@ -60,10 +64,10 @@ function onDragLeave(evt) {
   <div class="wrapper" @click="showModalDialog = true">
     <span
       class="drag-target"
-      @dragenter="onDragEnter($event)"
-      @dragleave="onDragLeave($event)"
+      @dragenter.stop="onDragEnter($event)"
+      @dragleave.stop="onDragLeave($event)"
       @dragover.prevent
-      @drop="
+      @drop.stop="
         (event) => {
           if (event.dataTransfer.getData('itemId') === currentCard.id) return;
           onDragLeave(event);

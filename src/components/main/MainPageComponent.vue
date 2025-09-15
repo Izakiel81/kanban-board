@@ -34,6 +34,7 @@ function addTaskList() {
       v-for="taskList in currentTaskLists"
       :key="taskList.id"
       :taskList="taskList"
+      draggable="true"
     />
     <div class="new-list-container" v-if="isAdding">
       <input v-model="newTaskListTitle" />
