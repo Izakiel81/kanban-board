@@ -63,11 +63,16 @@ function startDrag(evt, item) {
   evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
   evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
 }
-function onDrop(evt, taskListId) {
+function onDrop(evt) {
   const itemId = evt.dataTransfer.getData("itemId");
-  if (!itemId) return;
+  const listId = evt.dataTransfer.getData("listId");
+  if (!itemId && !listId) return;
+  else if (listId) {
+    emit("onListDrop", evt, currentTaskList.value);
+    return;
+  }
   const item = cardsStore.cards.find((item) => item.id === itemId);
-  item.taskListId = taskListId;
+  item.taskListId = currentTaskList.value.id;
 }
 
 function onDragEnter(evt) {}
@@ -94,21 +99,16 @@ function onCardDrop(evt, id) {
 </script>
 
 <template>
-  <div class="list-container">
-    <span
-      ref="dragLeft"
-      class="drag-area"
-      @dragenter.preent
-      @drop.stop="emit('onListDrop', $event)"
-    ></span>
-    <div
-      class="list"
-      @drop="onDrop($event, currentTaskList.id)"
-      draggable="true"
-      @dragover.prevent
-      @dragenter.prevent
-      @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
-    >
+  <div
+    class="list-container"
+    @drop="onDrop($event)"
+    draggable="true"
+    @dragover.prevent
+    @dragenter.prevent
+    @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
+  >
+    <span ref="dragLeft" class="drag-area"></span>
+    <div class="list">
       <div class="title-container">
         <h2 class="title" v-if="!isEditingTitle">
           <button class="title-button" @click="isEditingTitle = true">

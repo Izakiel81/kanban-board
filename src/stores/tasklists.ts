@@ -10,7 +10,12 @@ export const useTaskListsStore = defineStore(
     const cardsStore = useCardsStore();
 
     function addTaskList(taskList: TaskList) {
-      taskLists.value.push({ ...taskList, order: taskLists.value.length });
+      taskLists.value.push({
+        ...taskList,
+        order: taskLists.value.length
+          ? taskLists.value[taskLists.value.length - 1].order + 1
+          : 0,
+      });
     }
 
     function editTaskList(taskList: TaskList) {

@@ -12,7 +12,9 @@ const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
 const currentTaskLists = computed(() =>
-  tasklistsStore.getTaskListsByWorkspaceId(currentWorkspaceId.value),
+  tasklistsStore
+    .getTaskListsByWorkspaceId(currentWorkspaceId.value)
+    .sort((a, b) => a.order - b.order),
 );
 
 function addTaskList() {
@@ -35,7 +37,22 @@ function startDrag(evt, list) {
 }
 function onListDrop(evt, list) {
   const listId = evt.dataTransfer.getData("listId");
-  if (!listId) return;
+  const draggedItemIndex = tasklistsStore.taskLists.findIndex(
+    (item) => item.id === listId,
+  );
+  const droppedItemIndex = tasklistsStore.taskLists.findIndex(
+    (item) => item.id === list.id,
+  );
+
+  tasklistsStore.taskLists[draggedItemIndex].order =
+    tasklistsStore.taskLists[draggedItemIndex].order +
+    tasklistsStore.taskLists[droppedItemIndex].order;
+  tasklistsStore.taskLists[droppedItemIndex].order =
+    tasklistsStore.taskLists[draggedItemIndex].order -
+    tasklistsStore.taskLists[droppedItemIndex].order;
+  tasklistsStore.taskLists[draggedItemIndex].order =
+    tasklistsStore.taskLists[draggedItemIndex].order -
+    tasklistsStore.taskLists[droppedItemIndex].order;
 }
 </script>
 

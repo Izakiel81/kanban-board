@@ -8,7 +8,12 @@ export const useCardsStore = defineStore(
     const cards: Ref<Card[]> = ref([]);
 
     function addCard(card: Card) {
-      cards.value.push({ ...card, order: cards.value.length });
+      cards.value.push({
+        ...card,
+        order: cards.value.length
+          ? cards.value[cards.value.length - 1].order + 1
+          : 0,
+      });
     }
     function editCard(card: Card) {
       const index = cards.value.findIndex((item) => item.id === card.id);
