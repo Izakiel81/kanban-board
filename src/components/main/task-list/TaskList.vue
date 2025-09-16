@@ -87,7 +87,7 @@ function onDragEnter(evt) {
   if ((!itemId && !listId) || listId === currentTaskList.value.id) return;
   counter++;
   draggedOver.value = true;
-  isOnRight.value = parseInt(listOrder) > currentTaskList.order;
+  isOnRight.value = parseInt(listOrder) < currentTaskList.value.order;
   elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
 }
 function onDragLeave(evt) {
@@ -198,7 +198,11 @@ function onCardDrop(evt, id) {
     <span
       class="drag-area"
       id="left"
-      :class="{ 'dragged-on': draggedOver && isOnRight }"
+      :class="{ 'dragged-on': draggedOver & isOnRight }"
+      :style="{
+        width: draggedOver & isOnRight ? 230 + 'px' : 5 + 'px',
+        height: draggedOver & isOnRight ? elementHeight + 'px' : 0,
+      }"
     >
     </span>
   </div>
