@@ -37,6 +37,7 @@ function startDrag(evt, list) {
 }
 function onListDrop(evt, list) {
   const listId = evt.dataTransfer.getData("listId");
+  if (listId === list.id) return;
   const draggedItemIndex = tasklistsStore.taskLists.findIndex(
     (item) => item.id === listId,
   );

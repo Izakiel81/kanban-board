@@ -121,9 +121,9 @@ function onCardDrop(evt, id) {
 <template>
   <div
     class="list-container"
-    @drop.stop="onDrop($event)"
     draggable="true"
     @dragover.prevent
+    @drop.stop="onDrop($event)"
     @dragenter.stop="onDragEnter($event)"
     @dragleave.stop="onDragLeave($event)"
     @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
@@ -215,6 +215,10 @@ function onCardDrop(evt, id) {
 .drag-area {
   position: relative;
   height: 100%;
+
+  transition:
+    width 0.1s ease-out,
+    height 0.1s ease-out;
 }
 .dragged-on {
   background-color: #555;
@@ -255,6 +259,7 @@ function onCardDrop(evt, id) {
   background-color: #0000005f;
 
   width: 230px;
+  height: fit-content;
   min-height: 50px;
 
   padding: 10px;
