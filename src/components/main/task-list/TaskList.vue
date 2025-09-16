@@ -14,11 +14,12 @@ const currentTaskList = computed(() => props.taskList);
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
 
-const dragLeft = useTemplateRef("dragLeft");
-const dragRight = useTemplateRef("dragRight");
-
 const taskListsStore = useTaskListsStore();
 const cardsStore = useCardsStore();
+
+const elementHeight = ref(0);
+const isOnRight = ref(false);
+const draggedOver = ref(false);
 
 const currentCards = computed(() =>
   cardsStore
@@ -28,6 +29,8 @@ const currentCards = computed(() =>
 
 const isAddingCard = ref(false);
 const newCardTitle = ref("");
+
+let counter = 0;
 
 function addCard() {
   if (!newCardTitle) return;
@@ -68,6 +71,7 @@ function onDrop(evt) {
   const listId = evt.dataTransfer.getData("listId");
   if (!itemId && !listId) return;
   else if (listId) {
+    onDragLeave(evt);
     emit("onListDrop", evt, currentTaskList.value);
     return;
   }
@@ -75,8 +79,24 @@ function onDrop(evt) {
   item.taskListId = currentTaskList.value.id;
 }
 
-function onDragEnter(evt) {}
-function onDragLeave(evt) {}
+function onDragEnter(evt) {
+  const itemId = evt.dataTransfer.getData("itemId");
+  const listId = evt.dataTransfer.getData("listId");
+
+  const listOrder = evt.dataTransfer.getData("listOrder");
+  if ((!itemId && !listId) || listId === currentTaskList.value.id) return;
+  counter++;
+  draggedOver.value = true;
+  isOnRight.value = parseInt(listOrder) > currentTaskList.order;
+  elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
+}
+function onDragLeave(evt) {
+  counter--;
+  if (counter > 0) return;
+  draggedOver.value = false;
+  elementHeight.value = 0;
+  counter = 0;
+}
 
 function onCardDrop(evt, id) {
   const itemId = evt.dataTransfer.getData("itemId");
@@ -84,30 +104,39 @@ function onCardDrop(evt, id) {
   const draggedItemIndex = cardsStore.cards.findIndex(
     (item) => item.id === itemId,
   );
-  const cardIndex = cardsStore.cards.findIndex((item) => item.id === id);
+  const droppedItemIndex = cardsStore.cards.findIndex((item) => item.id === id);
 
   cardsStore.cards[draggedItemIndex].order =
     cardsStore.cards[draggedItemIndex].order +
-    cardsStore.cards[cardIndex].order;
-  cardsStore.cards[cardIndex].order =
+    cardsStore.cards[droppedItemIndex].order;
+  cardsStore.cards[droppedItemIndex].order =
     cardsStore.cards[draggedItemIndex].order -
-    cardsStore.cards[cardIndex].order;
+    cardsStore.cards[droppedItemIndex].order;
   cardsStore.cards[draggedItemIndex].order =
     cardsStore.cards[draggedItemIndex].order -
-    cardsStore.cards[cardIndex].order;
+    cardsStore.cards[droppedItemIndex].order;
 }
 </script>
 
 <template>
   <div
     class="list-container"
-    @drop="onDrop($event)"
+    @drop.stop="onDrop($event)"
     draggable="true"
     @dragover.prevent
-    @dragenter.prevent
+    @dragenter.stop="onDragEnter($event)"
+    @dragleave.stop="onDragLeave($event)"
     @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
   >
-    <span ref="dragLeft" class="drag-area"></span>
+    <span
+      class="drag-area"
+      id="left"
+      :style="{
+        width: draggedOver & !isOnRight ? 230 + 'px' : 5 + 'px',
+        height: draggedOver & !isOnRight ? elementHeight + 'px' : 0,
+      }"
+      :class="{ 'dragged-on': draggedOver & !isOnRight }"
+    ></span>
     <div class="list">
       <div class="title-container">
         <h2 class="title" v-if="!isEditingTitle">
@@ -166,7 +195,11 @@ function onCardDrop(evt, id) {
         </span>
       </div>
     </div>
-    <span ref="dragRight" class="drag-area" @drop.stop="emit('onDrop', $event)">
+    <span
+      class="drag-area"
+      id="left"
+      :class="{ 'dragged-on': draggedOver && isOnRight }"
+    >
     </span>
   </div>
 </template>
@@ -177,14 +210,12 @@ function onCardDrop(evt, id) {
 }
 .drag-area {
   position: relative;
-  width: 2px;
-}
-.drag-area::before,
-.drag-area::after {
-  content: "";
-  position: absolute;
   height: 100%;
-  width: 15px;
+}
+.dragged-on {
+  background-color: #555;
+  border-radius: 6px;
+  margin: 0 5px;
 }
 .title-container {
   display: flex;

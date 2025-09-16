@@ -201,6 +201,8 @@ function onListDrop(evt, list) {
   user-select: none;
 
   cursor: pointer;
+
+  margin-left: 5px;
 }
 .add-list-container:hover {
   background-color: #cccccc69;
