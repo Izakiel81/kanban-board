@@ -16,6 +16,8 @@ const buttonRef = ref(false);
 const draggedOver = ref(false);
 const isAbove = ref(false);
 
+let counter = 0;
+
 function startAdding() {
   isAddingWorkspace.value = true;
   nextTick(() => {
@@ -38,10 +40,19 @@ function finishAdding() {
   }, 200);
 }
 
-function dragStart() {}
-function dragEnter() {}
-function dragLeave() {}
-function drop() {}
+function startDrag(evt, item) {
+  console.log("startDrag");
+  evt.dataTransfer.dropEffect = "move";
+  evt.dataTransfer.effectAllowed = "move";
+  evt.dataTransfer.setData("boardId", item.id);
+  evt.dataTransfer.setData("boardOrder", item.order);
+  evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
+  evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
+}
+
+function dragEnter(evt) {}
+function dragLeave(evt) {}
+function drop(evt) {}
 </script>
 
 <template>
@@ -55,6 +66,7 @@ function drop() {}
       <ul>
         <li
           draggable="true"
+          @dragstart="startDrag($event, workspace)"
           @click="router.push('/' + workspace.id)"
           v-for="workspace in workspacesStore.workspaces"
         >
