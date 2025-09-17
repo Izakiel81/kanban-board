@@ -13,6 +13,8 @@ const newWorkspaceTitle = ref("");
 
 const inputRef = ref(null);
 const buttonRef = ref(false);
+const draggedOver = ref(false);
+const isAbove = ref(false);
 
 function startAdding() {
   isAddingWorkspace.value = true;
@@ -35,6 +37,11 @@ function finishAdding() {
     if (buttonRef.value) buttonRef.value.disabled = false;
   }, 200);
 }
+
+function dragStart() {}
+function dragEnter() {}
+function dragLeave() {}
+function drop() {}
 </script>
 
 <template>
@@ -47,6 +54,7 @@ function finishAdding() {
     <main>
       <ul>
         <li
+          draggable="true"
           @click="router.push('/' + workspace.id)"
           v-for="workspace in workspacesStore.workspaces"
         >
