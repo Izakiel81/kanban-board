@@ -15,7 +15,9 @@ export const useWorkspacesStore = defineStore(
           id: uuid(),
           title: "Board " + (workspaces.value.length + 1),
         }),
-        order: workspaces.value.length,
+        order: workspaces.value.length
+          ? workspaces.value[workspaces.value.length - 1].order + 1
+          : 0,
       });
     }
 
