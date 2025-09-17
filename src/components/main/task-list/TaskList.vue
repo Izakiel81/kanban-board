@@ -19,6 +19,7 @@ const cardsStore = useCardsStore();
 
 const elementHeight = ref(0);
 const isOnRight = ref(false);
+const cardIsDragged = ref(false);
 const draggedOver = ref(false);
 
 const currentCards = computed(() =>
@@ -77,6 +78,7 @@ function onDrop(evt) {
   }
   const item = cardsStore.cards.find((item) => item.id === itemId);
   item.taskListId = currentTaskList.value.id;
+  onDragLeave(evt);
 }
 
 function onDragEnter(evt) {
@@ -86,7 +88,8 @@ function onDragEnter(evt) {
   const listOrder = evt.dataTransfer.getData("listOrder");
   if ((!itemId && !listId) || listId === currentTaskList.value.id) return;
   counter++;
-  draggedOver.value = true;
+  if (itemId) cardIsDragged.value = true;
+  else draggedOver.value = true;
   isOnRight.value = parseInt(listOrder) < currentTaskList.value.order;
   elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
 }
@@ -94,6 +97,7 @@ function onDragLeave(evt) {
   counter--;
   if (counter > 0) return;
   draggedOver.value = false;
+  cardIsDragged.value = false;
   elementHeight.value = 0;
   counter = 0;
 }
@@ -173,6 +177,14 @@ function onCardDrop(evt, id) {
           "
         />
       </div>
+      <div
+        id="card"
+        :class="{ 'dragged-on': cardIsDragged }"
+        :style="{
+          width: cardIsDragged ? '100%' : 0,
+          height: cardIsDragged ? elementHeight + 'px' : 0,
+        }"
+      ></div>
       <button
         class="list-add"
         v-if="!isAddingCard"
@@ -224,6 +236,10 @@ function onCardDrop(evt, id) {
   background-color: #555;
   border-radius: 6px;
   margin: 0 5px;
+}
+#card {
+  margin: 0;
+  margin-bottom: 5px;
 }
 .title-container {
   display: flex;
