@@ -13,6 +13,7 @@ const newWorkspaceTitle = ref("");
 
 const inputRef = ref(null);
 const buttonRef = ref(false);
+const elementHeight = ref(0);
 const draggedOver = ref(false);
 const isAbove = ref(false);
 
@@ -41,17 +42,30 @@ function finishAdding() {
 }
 
 function startDrag(evt, item) {
-  console.log("startDrag");
   evt.dataTransfer.dropEffect = "move";
   evt.dataTransfer.effectAllowed = "move";
   evt.dataTransfer.setData("boardId", item.id);
   evt.dataTransfer.setData("boardOrder", item.order);
-  evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
   evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
 }
 
-function dragEnter(evt) {}
-function dragLeave(evt) {}
+function dragEnter(evt, board) {
+  counter++;
+  const boardId = evt.dataTransfer.getData("boardId");
+  const boardOrder = evt.dataTransfer.getData("boardOrder");
+  if (!boardId || boardId === board.id) return;
+  draggedOver.value = true;
+  isAbove.value = parseInt(boardOrder) > board.order;
+  elementHeight.value = evt.dataTransfer.getData("height");
+}
+function dragLeave(evt) {
+  counter--;
+  if (counter > 0) return;
+  counter = 0;
+  draggedOver.value = false;
+  isAbove.value = false;
+  elementHeight.value = 0;
+}
 function drop(evt) {}
 </script>
 
@@ -66,11 +80,29 @@ function drop(evt) {}
       <ul>
         <li
           draggable="true"
-          @dragstart="startDrag($event, workspace)"
+          @dragover.prevent
+          @dragstart.stop="startDrag($event, workspace)"
+          @dragenter.stop="dragEnter($event, workspace)"
+          @dragleave.stop="dragLeave($event)"
           @click="router.push('/' + workspace.id)"
           v-for="workspace in workspacesStore.workspaces"
+          class="board"
         >
+          <span
+            :class="{ 'dragged-on': draggedOver & isAbove }"
+            :style="{
+              width: draggedOver & isAbove ? '100%' : 0,
+              height: draggedOver & isAbove ? elementHeight + 'px' : 0,
+            }"
+          ></span>
           {{ workspace.title }}
+          <span
+            :class="{ 'dragged-on': draggedOver & !isAbove }"
+            :style="{
+              width: draggedOver & !isAbove ? '100%' : 0,
+              height: draggedOver & !isAbove ? elementHeight + 'px' : 0,
+            }"
+          ></span>
         </li>
       </ul>
       <input
@@ -141,6 +173,8 @@ main ul {
 main li {
   user-select: none;
 
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
   width: 100%;
   padding: 5px 10px;
@@ -156,6 +190,11 @@ main li:hover {
 }
 main li:active {
   filter: brightness(0.9);
+}
+.dragged-on {
+  background-color: #555;
+  border-radius: 6px;
+  margin: 3px 0;
 }
 .add-workspace-title {
   outline: none;
