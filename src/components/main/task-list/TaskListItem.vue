@@ -176,6 +176,10 @@ function onDragLeave(evt) {
   width: 100%;
 
   background-color: transparent;
+
+  transition:
+    width 0.1s ease-out,
+    height 0.1s ease-out;
 }
 #up {
   top: -2px;

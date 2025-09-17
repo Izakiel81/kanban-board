@@ -179,6 +179,7 @@ function onCardDrop(evt, id) {
       </div>
       <div
         id="card"
+        class="drag-area"
         :class="{ 'dragged-on': cardIsDragged }"
         :style="{
           width: cardIsDragged ? '100%' : 0,
