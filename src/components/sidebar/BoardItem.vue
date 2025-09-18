@@ -9,6 +9,8 @@ const elementHeight = ref(0);
 const draggedOver = ref(false);
 const isAbove = ref(false);
 
+const emit = defineEmits(["onDrop"]);
+
 let counter = 0;
 
 function startDrag(evt, item) {
@@ -37,6 +39,11 @@ function dragLeave(evt) {
   isAbove.value = false;
   elementHeight.value = 0;
 }
+function onDrop(evt) {
+  if (evt.dataTransfer.getData("boardId") === currentBoard.value.id) return;
+  emit("onDrop", evt, currentBoard.value.id);
+  dragLeave(evt);
+}
 </script>
 <template>
   <li
@@ -45,7 +52,8 @@ function dragLeave(evt) {
     @dragstart.stop="startDrag($event, currentBoard)"
     @dragenter.stop="dragEnter($event)"
     @dragleave.stop="dragLeave($event)"
-    @click="router.push('/' + workspace.id)"
+    @drop="onDrop($event)"
+    @click="router.push('/' + currentBoard.id)"
     class="board"
   >
     <span
@@ -79,8 +87,7 @@ function dragLeave(evt) {
   border-radius: 5px;
 
   transition:
-    height 1s ease-out,
-    background-color 0.2s ease-out,
+    backgrouncolor 0.2s ease-out,
     filter 0.1s ease-out;
   overflow-wrap: break-word;
 }

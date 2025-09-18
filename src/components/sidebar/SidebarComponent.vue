@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import BoardItem from "./BoardItem.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
-import { watch, ref, nextTick } from "vue";
+import { watch, ref, computed, nextTick } from "vue";
 import { v4 as uuid } from "uuid";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const workspacesStore = useWorkspacesStore();
+
+const currentWorkspaces = computed(() =>
+  workspacesStore.workspaces.sort((a, b) => a.order - b.order),
+);
 
 const isAddingWorkspace = ref(false);
 const newWorkspaceTitle = ref("");
@@ -37,7 +41,26 @@ function finishAdding() {
   }, 200);
 }
 
-function drop(evt) {}
+function drop(evt, id) {
+  const boardId = evt.dataTransfer.getData("boardId");
+  if (!boardId) return;
+  const draggedItemIndex = workspacesStore.workspaces.findIndex(
+    (item) => item.id === boardId,
+  );
+  const droppedItemIndex = workspacesStore.workspaces.findIndex(
+    (item) => item.id === id,
+  );
+
+  workspacesStore.workspaces[draggedItemIndex].order =
+    workspacesStore.workspaces[draggedItemIndex].order +
+    workspacesStore.workspaces[droppedItemIndex].order;
+  workspacesStore.workspaces[droppedItemIndex].order =
+    workspacesStore.workspaces[draggedItemIndex].order -
+    workspacesStore.workspaces[droppedItemIndex].order;
+  workspacesStore.workspaces[draggedItemIndex].order =
+    workspacesStore.workspaces[draggedItemIndex].order -
+    workspacesStore.workspaces[droppedItemIndex].order;
+}
 </script>
 
 <template>
@@ -50,8 +73,9 @@ function drop(evt) {}
     <main>
       <ul>
         <BoardItem
-          v-for="workspace in workspacesStore.workspaces"
+          v-for="workspace in currentWorkspaces"
           :workspace="workspace"
+          @onDrop="(event, id) => drop(event, id)"
         />
       </ul>
       <input
