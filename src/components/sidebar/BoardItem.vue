@@ -54,13 +54,15 @@ function onDrop(evt) {
 <template>
   <li
     draggable="true"
+    class="board"
     @dragover.prevent
     @dragstart.stop="startDrag($event, currentBoard)"
     @dragenter.stop="dragEnter($event)"
     @dragleave.stop="dragLeave($event)"
     @drop="onDrop($event)"
     @click="router.push('/' + currentBoard.id)"
-    class="board"
+    @mouseover="showButtons = true"
+    @mouseleave="showButtons = false"
   >
     <span
       class="drag-area"
@@ -72,13 +74,12 @@ function onDrop(evt) {
     ></span>
     <span class="board-title">
       {{ currentBoard.title }}
-      <span class="buttons">
+      <span class="buttons" :style="{ opacity: showButtons ? 1 : 0 }">
         <EditButton :width="16" :height="16" />
         <DeleteButton
           :width="16"
           :height="16"
           :fill="'#000'"
-          :style="{ position: 'relative', top: '3px' }"
           @click.stop="showDeleteDialog = true"
         />
       </span>
@@ -100,7 +101,16 @@ function onDrop(evt) {
     <template #header>Are you sure you want to delete this board?</template>
     <template #default>{{ currentBoard.title }}</template>
     <template #footer>
-      <ModalDialogButton :width="70" :height="30" :onClick="deleteBoard">
+      <ModalDialogButton
+        :width="70"
+        :height="30"
+        :onClick="
+          () => {
+            emit('deleteBoard', currentBoard.id);
+            showDeleteDialog = false;
+          }
+        "
+      >
         Yes
       </ModalDialogButton>
       <ModalDialogButton
@@ -145,6 +155,22 @@ function onDrop(evt) {
   display: flex;
   align-items: center;
   gap: 5px;
+
+  transition: opacity 0.2s ease-out;
+}
+.buttons span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  transition: background-color 0.2s ease-out;
+}
+.buttons span:hover {
+  background-color: #ddd;
 }
 .drag-area {
   height: 0;

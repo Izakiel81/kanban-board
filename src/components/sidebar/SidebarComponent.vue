@@ -41,6 +41,13 @@ function finishAdding() {
   }, 200);
 }
 
+function deleteWorkspace(id: string) {
+  workspacesStore.deleteWorkspace(id);
+  if (workspacesStore.workspaces.length === 0) {
+    router.push("/");
+  }
+}
+
 function drop(evt, id) {
   const boardId = evt.dataTransfer.getData("boardId");
   if (!boardId) return;
@@ -76,6 +83,7 @@ function drop(evt, id) {
           v-for="workspace in currentWorkspaces"
           :workspace="workspace"
           @onDrop="(event, id) => drop(event, id)"
+          @deleteBoard="(id) => deleteWorkspace(id)"
         />
       </ul>
       <div>

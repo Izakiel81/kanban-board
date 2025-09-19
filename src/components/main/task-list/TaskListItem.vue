@@ -13,6 +13,7 @@ const currentCard = computed(() => props.card);
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
+const showButtons = ref(false);
 const modalDialogTitleEdit = ref(false);
 const elementHeight = ref(2);
 const newCardTitle = ref(currentCard.value.title || "");
