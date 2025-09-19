@@ -78,25 +78,41 @@ function drop(evt, id) {
           @onDrop="(event, id) => drop(event, id)"
         />
       </ul>
-      <input
-        class="add-workspace-title"
-        ref="inputRef"
-        placeholder="Workspace title"
-        v-model="newWorkspaceTitle"
-        v-if="isAddingWorkspace"
-        @keyup.escape="
-          () => {
-            ((isAddingWorkspace = false), (newWorkspaceTitle = ''));
-          }
-        "
-        @blur="finishAdding()"
-      />
+      <div>
+        <input
+          class="add-workspace-title"
+          ref="inputRef"
+          placeholder="Workspace title"
+          v-model="newWorkspaceTitle"
+          v-if="isAddingWorkspace"
+          @keyup.escape="
+            () => {
+              ((isAddingWorkspace = false), (newWorkspaceTitle = ''));
+            }
+          "
+        />
+      </div>
+
+      <div class="buttons">
+        <button
+          class="add-button"
+          ref="buttonRef"
+          @click="isAddingWorkspace ? finishAdding() : startAdding()"
+          :id="isAddingWorkspace ? 'done' : null"
+        >
+          {{ !isAddingWorkspace ? "+ Add board" : "Done" }}
+        </button>
+        <span
+          v-if="isAddingWorkspace"
+          id="close"
+          @click="
+            () => {
+              ((isAddingWorkspace = false), (newWorkspaceTitle = ''));
+            }
+          "
+        />
+      </div>
     </main>
-    <footer>
-      <button ref="buttonRef" @click="startAdding()">
-        {{ !isAddingWorkspace ? "+ Add board" : "Done" }}
-      </button>
-    </footer>
   </div>
 </template>
 
@@ -142,7 +158,53 @@ main ul {
   padding: 0;
   width: 100%;
 }
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
+  margin: 3px 0;
+}
+#close {
+  display: flex;
+  cursor: pointer;
+
+  position: relative;
+  user-select: none;
+
+  height: 28px;
+  width: 28px;
+  padding: 6px 10px;
+
+  border-radius: 5px;
+
+  background-color: #ccc;
+
+  transition: filter 0.1s ease-in-out;
+}
+#close:hover {
+  filter: brightness(80%);
+}
+#close:active {
+  filter: brightness(90%);
+}
+#close::before,
+#close::after {
+  content: "";
+  position: absolute;
+  width: 56%;
+  top: 48%;
+  left: 18%;
+  border: 1px solid #fff;
+  border-radius: 5px;
+}
+
+#close::before {
+  transform: rotate(45deg);
+}
+#close::after {
+  transform: rotate(-45deg);
+}
 .add-workspace-title {
   outline: none;
 
@@ -158,22 +220,34 @@ main ul {
 .add-workspace-title:focus {
   border-color: #007bff;
 }
-footer button {
-  width: 100%;
+.add-button {
   padding: 10px;
   border: none;
-  background-color: #007bff;
-  color: white;
+  border-radius: 3px;
+  background-color: transparent;
+  color: #666;
   font-size: 16px;
   cursor: pointer;
 
-  transition: filter 100ms ease-in-out;
+  transition:
+    filter 100ms ease-in-out,
+    background-color 100ms ease-in-out;
 }
-footer button:hover {
-  filter: brightness(90%);
+.add-button:hover {
+  background-color: white;
 }
-footer button:active {
+.add-button:active {
   filter: brightness(80%);
-  transition: filter 0ms;
+}
+#done {
+  background-color: #007bff;
+  color: white;
+
+  height: 28px;
+  padding: 6px;
+  font-size: 14px;
+}
+#done:hover {
+  filter: brightness(90%);
 }
 </style>
