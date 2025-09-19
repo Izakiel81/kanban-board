@@ -10,7 +10,10 @@ const { show, onCancel } = toRefs(props);
 </script>
 <template>
   <div class="overlay" v-if="show">
-    <div class="wrapper" :width="width + 'px'" :height="height + 'px'">
+    <div
+      class="wrapper"
+      :style="{ width: width + 'px', height: height + 'px' }"
+    >
       <header>
         <slot name="header"></slot>
         <span class="cancel" @click.stop="onCancel" />
@@ -31,6 +34,7 @@ const { show, onCancel } = toRefs(props);
   width: 100%;
   height: 100vh;
   background-color: #00000045;
+  z-index: 1000;
 }
 .wrapper {
   position: absolute;
@@ -38,6 +42,8 @@ const { show, onCancel } = toRefs(props);
   left: 50%;
   transform: translate(-50%, 0);
 
+  display: flex;
+  flex-direction: column;
   width: 500px;
   min-height: 200px;
 
@@ -60,8 +66,8 @@ header {
 }
 main {
   overflow: auto;
+  flex: 1;
   padding: 10px;
-  min-height: 250px;
 }
 footer {
   padding: 5px 15px;

@@ -89,7 +89,7 @@ function onDragLeave(evt) {
       <DeleteButton
         :width="20"
         :height="20"
-        :onClick="() => (showDeleteDialog = true)"
+        @click.stop="() => (showDeleteDialog = true)"
       />
     </div>
     <span
@@ -137,13 +137,13 @@ function onDragLeave(evt) {
         <p>{{ currentCard.description }}</p>
       </template>
       <template #footer>
-        <ModalDialogButton :width="70" :height="30" :onClick="deleteCard">
+        <ModalDialogButton :width="70" :height="30" @click.stop="deleteCard">
           Yes
         </ModalDialogButton>
         <ModalDialogButton
           :width="70"
           :bgcolor="'#ff0000'"
-          :onClick="() => (showDeleteDialog = false)"
+          @click.stop="() => (showDeleteDialog = false)"
         >
           Cancel
         </ModalDialogButton>

@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { type Workspace } from "../../interfaces/Workspace";
+import ModalDialog from "../main/ui/ModalDialog.vue";
+import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
+import DeleteButton from "../main/ui/DeleteButton.vue";
+import EditButton from "../main/ui/EditButton.vue";
 import { ref, computed } from "vue";
 
 const { workspace } = defineProps<{ workspace: Workspace }>();
@@ -8,8 +12,10 @@ const currentBoard = computed(() => workspace);
 const elementHeight = ref(0);
 const draggedOver = ref(false);
 const isAbove = ref(false);
+const showDeleteDialog = ref(false);
+const showButtons = ref(false);
 
-const emit = defineEmits(["onDrop"]);
+const emit = defineEmits(["onDrop", "deleteBoard"]);
 
 let counter = 0;
 
@@ -64,7 +70,19 @@ function onDrop(evt) {
         height: draggedOver & isAbove ? elementHeight + 'px' : 0,
       }"
     ></span>
-    {{ currentBoard.title }}
+    <span class="board-title">
+      {{ currentBoard.title }}
+      <span class="buttons">
+        <EditButton :width="16" :height="16" />
+        <DeleteButton
+          :width="16"
+          :height="16"
+          :fill="'#000'"
+          :style="{ position: 'relative', top: '3px' }"
+          @click.stop="showDeleteDialog = true"
+        />
+      </span>
+    </span>
     <span
       class="drag-area"
       :class="{ 'dragged-on': draggedOver & !isAbove }"
@@ -74,6 +92,26 @@ function onDrop(evt) {
       }"
     ></span>
   </li>
+  <ModalDialog
+    :show="showDeleteDialog"
+    :width="350"
+    :onClose="() => (showDeleteDialog = false)"
+  >
+    <template #header>Are you sure you want to delete this board?</template>
+    <template #default>{{ currentBoard.title }}</template>
+    <template #footer>
+      <ModalDialogButton :width="70" :height="30" :onClick="deleteBoard">
+        Yes
+      </ModalDialogButton>
+      <ModalDialogButton
+        :width="70"
+        :bgcolor="'#ff0000'"
+        :onClick="() => (showDeleteDialog = false)"
+      >
+        Cancel
+      </ModalDialogButton>
+    </template>
+  </ModalDialog>
 </template>
 <style scoped>
 .board {
@@ -96,6 +134,17 @@ function onDrop(evt) {
 }
 .board:active {
   filter: brightness(0.9);
+}
+.board-title {
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 .drag-area {
   height: 0;

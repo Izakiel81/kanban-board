@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const { onClick, bgcolor, tcolor } = defineProps<{
-  onClick?: () => void;
   bgcolor?: string;
   tcolor?: string;
   width?: number;
@@ -9,7 +8,6 @@ const { onClick, bgcolor, tcolor } = defineProps<{
 </script>
 <template>
   <button
-    @click.stop="onClick"
     :style="{
       color: tcolor,
       backgroundColor: bgcolor,
