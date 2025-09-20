@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
+import DeleteButton from "../../main/ui/DeleteButton.vue";
+import ModalDialog from "../../main/ui/ModalDialog.vue";
+import ModalDialogButton from "../../main/ui/ModalDialogButton.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
 import { useTaskListsStore } from "../../../stores/tasklists";
 import { useCardsStore } from "../../../stores/cards";
@@ -21,6 +24,8 @@ const elementHeight = ref(0);
 const isOnRight = ref(false);
 const cardIsDragged = ref(false);
 const draggedOver = ref(false);
+const showDeleteButton = ref(false);
+const isDeleting = ref(false);
 
 const currentCards = computed(() =>
   cardsStore
@@ -131,6 +136,8 @@ function onCardDrop(evt, id) {
     @dragenter.stop="onDragEnter($event)"
     @dragleave.stop="onDragLeave($event)"
     @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
+    @mouseenter="showDeleteButton = true"
+    @mouseleave="showDeleteButton = false"
   >
     <span
       class="drag-area"
@@ -161,6 +168,17 @@ function onCardDrop(evt, id) {
             isEditingTitle = false;
           "
         ></textarea>
+        <span
+          class="delete-button"
+          :style="{ opacity: showDeleteButton ? 1 : 0 }"
+        >
+          <DeleteButton
+            :width="20"
+            :height="20"
+            :color="'#d4d4d4'"
+            @click.stop="isDeleting = true"
+          />
+        </span>
       </div>
       <div class="task-list-wrapper">
         <TaskListItem
@@ -219,6 +237,22 @@ function onCardDrop(evt, id) {
     >
     </span>
   </div>
+  <ModalDialog :show="isDeleting" :onCancel="() => (isDeleting = false)">
+    <template #header>Are you sure you want to delete this list?</template>
+    <template #default>{{ currentTaskList.title }}</template>
+    <template #footer>
+      <ModalDialogButton
+        @click.stop="
+          taskListsStore.removeTaskList(currentTaskList.id);
+          isDeleting = false;
+        "
+        >Yes</ModalDialogButton
+      >
+      <ModalDialogButton :bgcolor="'#ff0000'" @click.stop="isDeleting = false"
+        >Cancel</ModalDialogButton
+      >
+    </template>
+  </ModalDialog>
 </template>
 
 <style scoped>
@@ -393,5 +427,30 @@ function onCardDrop(evt, id) {
 }
 .list-add:hover {
   filter: brightness(80%);
+}
+.delete-button {
+  cursor: pointer;
+
+  position: relative;
+  top: 6px;
+
+  display: flex;
+  justify-content: center;
+
+  width: 22px;
+  height: 21px;
+  padding: 1px 3px 22px 3px;
+  border-radius: 3px;
+
+  transition:
+    opacity 0.2s ease-out,
+    filter 0.1s ease-out,
+    background-color 0.2s ease-out;
+}
+.delete-button:hover {
+  background-color: #888;
+}
+.delete-button:active {
+  filter: brightness(90%);
 }
 </style>

@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { toRefs } from "vue";
-const props = defineProps<{
+const { show, onCancel, width, height } = defineProps<{
   show: boolean;
   onCancel: () => void;
   width?: number;
   height?: number;
 }>();
-const { show, onCancel } = toRefs(props);
 </script>
 <template>
   <div class="overlay" v-if="show">

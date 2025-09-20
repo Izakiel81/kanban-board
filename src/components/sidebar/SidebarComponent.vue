@@ -42,7 +42,7 @@ function finishAdding() {
 }
 
 function deleteWorkspace(id: string) {
-  workspacesStore.deleteWorkspace(id);
+  workspacesStore.removeWorkspace(id);
   if (workspacesStore.workspaces.length === 0) {
     router.push("/");
   }

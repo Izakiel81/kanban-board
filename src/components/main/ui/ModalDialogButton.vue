@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { onClick, bgcolor, tcolor } = defineProps<{
+const { width, height, bgcolor, tcolor } = defineProps<{
   bgcolor?: string;
   tcolor?: string;
   width?: number;

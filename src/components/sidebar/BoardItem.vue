@@ -4,14 +4,19 @@ import ModalDialog from "../main/ui/ModalDialog.vue";
 import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
 import DeleteButton from "../main/ui/DeleteButton.vue";
 import EditButton from "../main/ui/EditButton.vue";
+import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
 
 const { workspace } = defineProps<{ workspace: Workspace }>();
 
+const router = useRouter();
+
 const currentBoard = computed(() => workspace);
+
 const elementHeight = ref(0);
 const draggedOver = ref(false);
 const isAbove = ref(false);
+
 const showDeleteDialog = ref(false);
 const showButtons = ref(false);
 
@@ -75,7 +80,7 @@ function onDrop(evt) {
     <span class="board-title">
       {{ currentBoard.title }}
       <span class="buttons" :style="{ opacity: showButtons ? 1 : 0 }">
-        <EditButton :width="16" :height="16" />
+        <EditButton :width="16" :height="16" @click.stop="() => {}" />
         <DeleteButton
           :width="16"
           :height="16"
@@ -96,7 +101,7 @@ function onDrop(evt) {
   <ModalDialog
     :show="showDeleteDialog"
     :width="350"
-    :onClose="() => (showDeleteDialog = false)"
+    :onCancel="() => (showDeleteDialog = false)"
   >
     <template #header>Are you sure you want to delete this board?</template>
     <template #default>{{ currentBoard.title }}</template>
@@ -104,7 +109,7 @@ function onDrop(evt) {
       <ModalDialogButton
         :width="70"
         :height="30"
-        :onClick="
+        @click.stop="
           () => {
             emit('deleteBoard', currentBoard.id);
             showDeleteDialog = false;
@@ -116,7 +121,7 @@ function onDrop(evt) {
       <ModalDialogButton
         :width="70"
         :bgcolor="'#ff0000'"
-        :onClick="() => (showDeleteDialog = false)"
+        @click.stop="() => (showDeleteDialog = false)"
       >
         Cancel
       </ModalDialogButton>
