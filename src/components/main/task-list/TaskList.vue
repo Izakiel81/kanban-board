@@ -190,7 +190,6 @@ function onCardDrop(evt, id) {
           @editCard="
             (card) => {
               cardsStore.editCard(card);
-              console.log(card);
             }
           "
         />

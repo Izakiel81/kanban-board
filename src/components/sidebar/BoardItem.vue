@@ -19,6 +19,9 @@ const isAbove = ref(false);
 
 const showDeleteDialog = ref(false);
 const showButtons = ref(false);
+const isEditing = ref(false);
+
+const newBoardTitle = ref(currentBoard.value.title);
 
 const emit = defineEmits(["onDrop", "deleteBoard"]);
 
@@ -98,6 +101,13 @@ function onDrop(evt) {
       }"
     ></span>
   </li>
+  <div class="edit-board">
+    <textarea :v-model="newBoardTitle" />
+    <div class="buttons">
+      <button>Done</button>
+      <span id="close" />
+    </div>
+  </div>
   <ModalDialog
     :show="showDeleteDialog"
     :width="350"
@@ -155,6 +165,70 @@ function onDrop(evt) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.edit-board button {
+  cursor: pointer;
+
+  padding: 6px 40px;
+
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+
+  transition: filter 0.1s ease-in-out;
+}
+.edit-board button:hover {
+  filter: brightness(80%);
+}
+.edit-board button:active {
+  filter: brightness(90%);
+}
+#close {
+  cursor: pointer;
+
+  position: relative;
+  user-select: none;
+
+  display: inline-block;
+
+  height: 28px;
+  width: 28px;
+  padding: 6px 10px;
+
+  border-radius: 5px;
+
+  background-color: #ccc;
+
+  transition: filter 0.1s ease-in-out;
+}
+#close:hover {
+  filter: brightness(80%);
+}
+#close:active {
+  filter: brightness(90%);
+}
+#close::before,
+#close::after {
+  content: "";
+  position: absolute;
+  width: 56%;
+  top: 46%;
+  left: 19%;
+  border: 1px solid #fff;
+  border-radius: 5px;
+}
+
+#close::before {
+  transform: rotate(45deg);
+}
+#close::after {
+  transform: rotate(-45deg);
+}
+.edit-board {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 .buttons {
   display: flex;
