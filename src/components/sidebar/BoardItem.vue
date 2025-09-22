@@ -22,6 +22,7 @@ const showButtons = ref(false);
 const isEditing = ref(false);
 
 const newBoardTitle = ref(currentBoard.value.title);
+const newBoardTitleRef = ref(null);
 
 const emit = defineEmits(["onDrop", "deleteBoard"]);
 
@@ -58,11 +59,25 @@ function onDrop(evt) {
   emit("onDrop", evt, currentBoard.value.id);
   dragLeave(evt);
 }
+function startEditing() {
+  isEditing.value = true;
+  nextTick(() => {
+    newBoardTitleRef.value && newBoardTitleRef.value.focus();
+  });
+}
+function finishEditing() {
+  if (newBoardTitle.value) {
+    currentBoard.value.title = newBoardTitle.value;
+  }
+  newBoardTitle.value = currentBoard.value.title;
+  isEditing.value = false;
+}
 </script>
 <template>
   <li
     draggable="true"
     class="board"
+    v-if="!isEditing"
     @dragover.prevent
     @dragstart.stop="startDrag($event, currentBoard)"
     @dragenter.stop="dragEnter($event)"
@@ -83,7 +98,7 @@ function onDrop(evt) {
     <span class="board-title">
       {{ currentBoard.title }}
       <span class="buttons" :style="{ opacity: showButtons ? 1 : 0 }">
-        <EditButton :width="16" :height="16" @click.stop="() => {}" />
+        <EditButton :width="16" :height="16" @click.stop="isEditing = true" />
         <DeleteButton
           :width="16"
           :height="16"
@@ -101,8 +116,13 @@ function onDrop(evt) {
       }"
     ></span>
   </li>
-  <div class="edit-board">
-    <textarea :v-model="newBoardTitle" />
+  <div class="edit-board" v-else>
+    <textarea
+      v-model="newBoardTitle"
+      ref="newBoardTitleRef"
+      rows="1"
+      @blur="finishEditing()"
+    />
     <div class="buttons">
       <button>Done</button>
       <span id="close" />
@@ -183,6 +203,22 @@ function onDrop(evt) {
 }
 .edit-board button:active {
   filter: brightness(90%);
+}
+.edit-board textarea {
+  outline: none;
+  resize: none;
+
+  width: 100%;
+
+  padding: 5px 10px;
+
+  border-radius: 2px;
+  border: 1px solid #888;
+
+  transition: border-color 0.3s ease-out;
+}
+.edit-board textarea:focus {
+  border-color: #007bff;
 }
 #close {
   cursor: pointer;
