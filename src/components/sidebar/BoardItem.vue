@@ -94,7 +94,7 @@ function finishEditing() {
         width: draggedOver & isAbove ? '100%' : 0,
         height: draggedOver & isAbove ? elementHeight + 'px' : 0,
       }"
-    ></span>
+    />
     <span class="board-title">
       {{ currentBoard.title }}
       <span class="buttons" :style="{ opacity: showButtons ? 1 : 0 }">
@@ -114,7 +114,7 @@ function finishEditing() {
         width: draggedOver & !isAbove ? '100%' : 0,
         height: draggedOver & !isAbove ? elementHeight + 'px' : 0,
       }"
-    ></span>
+    />
   </li>
   <div class="edit-board" v-else>
     <textarea
