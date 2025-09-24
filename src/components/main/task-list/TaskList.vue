@@ -48,8 +48,6 @@ const { startDrag, onDragLeave, onDragEnter, onDrop } = useTaskListDragAndDrop(
   cardIsDragged,
 );
 
-let counter = 0;
-
 function addCard() {
   if (!newCardTitle) return;
 
