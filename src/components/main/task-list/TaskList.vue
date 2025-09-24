@@ -9,6 +9,7 @@ import { useCardsStore } from "../../../stores/cards";
 import { computed, ref, useTemplateRef } from "vue";
 import { v4 as uuid } from "uuid";
 import { useDragAndDrop } from "../../../composables/useDragAndDrop";
+import { useTaskListDragAndDrop } from "../../../composables/useTaskListDragAndDrop";
 
 const props = defineProps<{ taskList: TaskList }>();
 const emit = defineEmits(["listDragStart", "onListDrop"]);
@@ -38,6 +39,14 @@ const currentCards = computed(() =>
 
 const isAddingCard = ref(false);
 const newCardTitle = ref("");
+
+const { onDragLeave, onDragEnter } = useTaskListDragAndDrop(
+  currentTaskList,
+  draggedOver,
+  isOnRight,
+  elementHeight,
+  cardIsDragged,
+);
 
 let counter = 0;
 
@@ -77,34 +86,13 @@ function onDrop(evt) {
   const listId = evt.dataTransfer.getData("listId");
   if (!itemId && !listId) return;
   else if (listId) {
-    onDragLeave(evt);
+    onDragLeave();
     emit("onListDrop", evt, currentTaskList.value);
     return;
   }
   const item = cardsStore.cards.find((item) => item.id === itemId);
   item.taskListId = currentTaskList.value.id;
-  onDragLeave(evt);
-}
-
-function onDragEnter(evt) {
-  const itemId = evt.dataTransfer.getData("itemId");
-  const listId = evt.dataTransfer.getData("listId");
-
-  const listOrder = evt.dataTransfer.getData("listOrder");
-  if ((!itemId && !listId) || listId === currentTaskList.value.id) return;
-  counter++;
-  if (itemId) cardIsDragged.value = true;
-  else draggedOver.value = true;
-  isOnRight.value = parseInt(listOrder) < currentTaskList.value.order;
-  elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
-}
-function onDragLeave(evt) {
-  counter--;
-  if (counter > 0) return;
-  draggedOver.value = false;
-  cardIsDragged.value = false;
-  elementHeight.value = 0;
-  counter = 0;
+  onDragLeave();
 }
 
 function onCardDrop(evt, id) {
@@ -123,7 +111,7 @@ function onCardDrop(evt, id) {
     @dragover.prevent
     @drop.stop="onDrop($event)"
     @dragenter.stop="onDragEnter($event)"
-    @dragleave.stop="onDragLeave($event)"
+    @dragleave.stop="onDragLeave()"
     @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
     @mouseenter="showDeleteButton = true"
     @mouseleave="showDeleteButton = false"
