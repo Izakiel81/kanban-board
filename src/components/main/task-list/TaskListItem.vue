@@ -10,22 +10,25 @@ import { ref, computed, useTemplateRef } from "vue";
 const props = defineProps<{ card: Card }>();
 
 const cardsStore = useCardsStore();
+
 const currentCard = computed(() => props.card);
+const draggedOver = ref(false);
+const isAbove = ref(false);
+const elementHeight = ref(2);
+
+const { startDrag, onDrop, onDragEnter, onDragLeave } = useCardDragAndDrop(
+  currentCard,
+  draggedOver,
+  isAbove,
+  elementHeight,
+);
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
 const showButtons = ref(false);
 const modalDialogTitleEdit = ref(false);
-const elementHeight = ref(2);
 const newCardTitle = ref(currentCard.value.title || "");
 const newCardDescription = ref(currentCard.value.description || "");
-
-const draggedOver = ref(false);
-const isAbove = ref(false);
-
-const { startDrag, onDrop } = useCardDragAndDrop(currentCard);
-
-let counter = 0;
 
 function closeDialog(newCard: Card) {
   cardsStore.editCard(newCard);
@@ -37,31 +40,6 @@ function deleteCard() {
   cardsStore.deleteCard(currentCard.value.id);
   showDeleteDialog.value = false;
 }
-
-function onDragEnter(evt) {
-  if (
-    !evt.dataTransfer.getData("itemId") ||
-    evt.dataTransfer.getData("itemId") === currentCard.value.id
-  )
-    return;
-
-  counter++;
-
-  draggedOver.value = true;
-  isAbove.value =
-    parseInt(evt.dataTransfer.getData("itemOrder")) > currentCard.value.order ||
-    evt.dataTransfer.getData("itemTaskListId") !== currentCard.value.taskListId;
-  elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
-}
-
-function onDragLeave(evt) {
-  counter--;
-  if (counter > 0) return;
-
-  draggedOver.value = false;
-  elementHeight.value = 2;
-  counter = 0;
-}
 </script>
 
 <template>
@@ -72,7 +50,7 @@ function onDragLeave(evt) {
     @click="showModalDialog = true"
     @dragover.prevent
     @dragenter.prevent.stop="onDragEnter($event)"
-    @dragleave.prevent.stop="onDragLeave($event)"
+    @dragleave.prevent.stop="onDragLeave()"
     @drop.stop="onDrop($event)"
   >
     <span
