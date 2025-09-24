@@ -8,7 +8,7 @@ import { useTaskListsStore } from "../../../stores/tasklists";
 import { useCardsStore } from "../../../stores/cards";
 import { computed, ref, useTemplateRef } from "vue";
 import { v4 as uuid } from "uuid";
-import { useDragAndDrop } from "@/composables/useDragAndDrop.vue";
+import { useDragAndDrop } from "../../../composables/useDragAndDrop";
 
 const props = defineProps<{ taskList: TaskList }>();
 const emit = defineEmits(["listDragStart", "onListDrop"]);
