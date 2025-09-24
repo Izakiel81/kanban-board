@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type Workspace } from "../../interfaces/Workspace";
+import { useWorkspacesStore } from "../../stores/workspaces";
 import ModalDialog from "../main/ui/ModalDialog.vue";
 import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
 import DeleteButton from "../main/ui/DeleteButton.vue";
@@ -10,6 +11,8 @@ import { ref, computed } from "vue";
 const { workspace } = defineProps<{ workspace: Workspace }>();
 
 const router = useRouter();
+
+const boardsStore = useWorkspacesStore();
 
 const currentBoard = computed(() => workspace);
 
@@ -27,6 +30,13 @@ const newBoardTitleRef = ref(null);
 const emit = defineEmits(["onDrop", "deleteBoard"]);
 
 let counter = 0;
+
+function deleteBoard(id: string) {
+  boardsStore.removeWorkspace(id);
+  if (boardsStore.workspaces.length === 0) {
+    router.push("/");
+  }
+}
 
 function startDrag(evt, item) {
   evt.dataTransfer.dropEffect = "move";
@@ -139,12 +149,7 @@ function finishEditing() {
       <ModalDialogButton
         :width="70"
         :height="30"
-        @click.stop="
-          () => {
-            emit('deleteBoard', currentBoard.id);
-            showDeleteDialog = false;
-          }
-        "
+        @click.stop="deleteBoard(currentBoard.id)"
       >
         Yes
       </ModalDialogButton>
