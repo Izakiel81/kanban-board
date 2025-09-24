@@ -27,14 +27,6 @@ function addTaskList() {
   isAdding.value = false;
   newTaskListTitle.value = "";
 }
-function startDrag(evt, list) {
-  evt.dataTransfer.dropEffect = "move";
-  evt.dataTransfer.effectAllowed = "move";
-  evt.dataTransfer.setData("listId", list.id);
-  evt.dataTransfer.setData("listOrder", list.order);
-  evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
-  evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
-}
 </script>
 
 <template>
