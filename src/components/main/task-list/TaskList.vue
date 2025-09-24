@@ -8,11 +8,14 @@ import { useTaskListsStore } from "../../../stores/tasklists";
 import { useCardsStore } from "../../../stores/cards";
 import { computed, ref, useTemplateRef } from "vue";
 import { v4 as uuid } from "uuid";
+import { useDragAndDrop } from "@/composables/useDragAndDrop.vue";
 
 const props = defineProps<{ taskList: TaskList }>();
 const emit = defineEmits(["listDragStart", "onListDrop"]);
 
 const currentTaskList = computed(() => props.taskList);
+
+const { startDrag, swapItems } = useDragAndDrop();
 
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
@@ -63,14 +66,11 @@ function editTitle() {
   isEditingTitle.value = false;
 }
 
-function startDrag(evt, item) {
-  evt.dataTransfer.dropEffect = "move";
-  evt.dataTransfer.effectAllowed = "move";
+function startDragging(evt, item) {
+  startDrag();
   evt.dataTransfer.setData("itemId", item.id);
   evt.dataTransfer.setData("itemOrder", item.order);
   evt.dataTransfer.setData("itemTaskListId", item.taskListId);
-  evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
-  evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
 }
 function onDrop(evt) {
   const itemId = evt.dataTransfer.getData("itemId");
@@ -185,7 +185,7 @@ function onCardDrop(evt, id) {
           v-for="card in currentCards"
           :key="card.id"
           :card="card"
-          @dragStart="(event, card) => startDrag(event, card)"
+          @dragStart="(event, card) => startDragging(event, card)"
           @emitDrop="(event, id) => onCardDrop(event, id)"
           @editCard="
             (card) => {
