@@ -38,14 +38,6 @@ function deleteBoard(id: string) {
   }
 }
 
-function startDrag(evt, item) {
-  evt.dataTransfer.dropEffect = "move";
-  evt.dataTransfer.effectAllowed = "move";
-  evt.dataTransfer.setData("boardId", item.id);
-  evt.dataTransfer.setData("boardOrder", item.order);
-  evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
-}
-
 function dragEnter(evt) {
   counter++;
   const boardId = evt.dataTransfer.getData("boardId");
