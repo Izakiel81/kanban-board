@@ -15,8 +15,8 @@ export function useDragAndDrop() {
   }
   function swapItems(
     list: any[],
-    draggedItemId: number,
-    droppedItemId: number,
+    draggedItemId: string,
+    droppedItemId: string,
   ) {
     const draggedItemIndex = list.findIndex(
       (item) => item.id === draggedItemId,
