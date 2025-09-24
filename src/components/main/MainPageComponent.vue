@@ -35,26 +35,6 @@ function startDrag(evt, list) {
   evt.dataTransfer.setData("width", evt.target.getBoundingClientRect().width);
   evt.dataTransfer.setData("height", evt.target.getBoundingClientRect().height);
 }
-function onListDrop(evt, list) {
-  const listId = evt.dataTransfer.getData("listId");
-  if (listId === list.id) return;
-  const draggedItemIndex = tasklistsStore.taskLists.findIndex(
-    (item) => item.id === listId,
-  );
-  const droppedItemIndex = tasklistsStore.taskLists.findIndex(
-    (item) => item.id === list.id,
-  );
-
-  tasklistsStore.taskLists[draggedItemIndex].order =
-    tasklistsStore.taskLists[draggedItemIndex].order +
-    tasklistsStore.taskLists[droppedItemIndex].order;
-  tasklistsStore.taskLists[droppedItemIndex].order =
-    tasklistsStore.taskLists[draggedItemIndex].order -
-    tasklistsStore.taskLists[droppedItemIndex].order;
-  tasklistsStore.taskLists[draggedItemIndex].order =
-    tasklistsStore.taskLists[draggedItemIndex].order -
-    tasklistsStore.taskLists[droppedItemIndex].order;
-}
 </script>
 
 <template>
