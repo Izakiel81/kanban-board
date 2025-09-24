@@ -11,7 +11,7 @@ export function useTaskListDragAndDrop(
 ) {
   const counter = ref(0);
 
-  function onDragLeave(event: DragEvent) {
+  function onDragEnter(event: DragEvent) {
     const itemId = event.dataTransfer!.getData("itemId");
     const listId = event.dataTransfer!.getData("listId");
 
@@ -23,8 +23,17 @@ export function useTaskListDragAndDrop(
     isOnRight.value = parseInt(listOrder) < currentTaskList.value.order;
     elementHeight.value = parseInt(event.dataTransfer!.getData("height"));
   }
+  function onDragLeave() {
+    counter.value--;
+    if (counter.value > 0) return;
+    draggedOver.value = false;
+    cardIsDragged.value = false;
+    elementHeight.value = 0;
+    counter.value = 0;
+  }
 
   return {
+    onDragEnter,
     onDragLeave,
   };
 }
