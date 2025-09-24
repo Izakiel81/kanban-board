@@ -19,6 +19,7 @@ export function useCardDragAndDrop(
     event.dataTransfer.setData("itemOrder", currentCard.value.order.toString());
     event.dataTransfer.setData("itemTaskListId", currentCard.value.taskListId);
   }
+
   function onDrop(event: DragEvent) {
     if (!event.dataTransfer) return;
     const itemId = event.dataTransfer.getData("itemId");
@@ -29,10 +30,11 @@ export function useCardDragAndDrop(
     onDragLeave();
   }
 
-  function onDragEnter(evt) {
+  function onDragEnter(event: DragEvent) {
     if (
-      !evt.dataTransfer.getData("itemId") ||
-      evt.dataTransfer.getData("itemId") === currentCard.value.id
+      !event.dataTransfer ||
+      !event.dataTransfer.getData("itemId") ||
+      event.dataTransfer.getData("itemId") === currentCard.value.id
     )
       return;
 
@@ -40,12 +42,13 @@ export function useCardDragAndDrop(
 
     draggedOver.value = true;
     isAbove.value =
-      parseInt(evt.dataTransfer.getData("itemOrder")) >
+      parseInt(event.dataTransfer.getData("itemOrder")) >
         currentCard.value.order ||
-      evt.dataTransfer.getData("itemTaskListId") !==
+      event.dataTransfer.getData("itemTaskListId") !==
         currentCard.value.taskListId;
-    elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
+    elementHeight.value = parseInt(event.dataTransfer.getData("height"));
   }
+
   function onDragLeave() {
     counter.value--;
     if (counter.value > 0) return;
@@ -57,6 +60,7 @@ export function useCardDragAndDrop(
   return {
     startDrag,
     onDrop,
+    onDragEnter,
     onDragLeave,
   };
 }
