@@ -40,7 +40,7 @@ const currentCards = computed(() =>
 const isAddingCard = ref(false);
 const newCardTitle = ref("");
 
-const { onDragLeave, onDragEnter } = useTaskListDragAndDrop(
+const { onDragLeave, onDragEnter, onDrop } = useTaskListDragAndDrop(
   currentTaskList,
   draggedOver,
   isOnRight,
@@ -81,19 +81,6 @@ function startDrag(evt, item) {
   evt.dataTransfer.setData("itemOrder", item.order);
   evt.dataTransfer.setData("itemTaskListId", item.taskListId);
 }
-function onDrop(evt) {
-  const itemId = evt.dataTransfer.getData("itemId");
-  const listId = evt.dataTransfer.getData("listId");
-  if (!itemId && !listId) return;
-  else if (listId) {
-    onDragLeave();
-    emit("onListDrop", evt, currentTaskList.value);
-    return;
-  }
-  const item = cardsStore.cards.find((item) => item.id === itemId);
-  item.taskListId = currentTaskList.value.id;
-  onDragLeave();
-}
 
 function onCardDrop(evt, id) {
   const itemId = evt.dataTransfer.getData("itemId");
@@ -109,7 +96,7 @@ function onCardDrop(evt, id) {
     class="list-container"
     draggable="true"
     @dragover.prevent
-    @drop.stop="onDrop($event)"
+    @drop.stop="onDrop($event, currentTaskList.id)"
     @dragenter.stop="onDragEnter($event)"
     @dragleave.stop="onDragLeave()"
     @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
