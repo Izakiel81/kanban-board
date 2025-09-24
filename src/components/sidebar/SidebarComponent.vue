@@ -41,13 +41,6 @@ function finishAdding() {
   }, 200);
 }
 
-function deleteWorkspace(id: string) {
-  workspacesStore.removeWorkspace(id);
-  if (workspacesStore.workspaces.length === 0) {
-    router.push("/");
-  }
-}
-
 function drop(evt, id) {
   const boardId = evt.dataTransfer.getData("boardId");
   if (!boardId) return;
