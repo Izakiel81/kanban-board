@@ -15,8 +15,17 @@ export function useTaskListDragAndDrop(
   const counter = ref(0);
   const taskListsStore = useTaskListsStore();
   const cardsStore = useCardsStore();
-  const { swapItems } = useDragAndDrop();
+  const { swapItems, dragStart } = useDragAndDrop();
 
+  function startDrag(event: DragEvent) {
+    if (!event.dataTransfer) return;
+    dragStart(event);
+    event.dataTransfer.setData("listId", currentTaskList.value.id);
+    event.dataTransfer.setData(
+      "listOrder",
+      currentTaskList.value.order.toString(),
+    );
+  }
   function onDragEnter(event: DragEvent) {
     if (!event.dataTransfer) return;
     const itemId = event.dataTransfer.getData("itemId");
@@ -38,21 +47,23 @@ export function useTaskListDragAndDrop(
     elementHeight.value = 0;
     counter.value = 0;
   }
-  function onDrop(event: DragEvent, id: string) {
+  function onDrop(event: DragEvent) {
     if (!event.dataTransfer) return;
     const itemId = event.dataTransfer.getData("itemId");
     const listId = event.dataTransfer.getData("listId");
     if (!itemId && !listId) return;
     else if (listId) {
       onDragLeave();
-      swapItems(taskListsStore.taskLists, listId, id);
+      swapItems(taskListsStore.taskLists, listId, currentTaskList.value.id);
       return;
     }
     const item = cardsStore.cards.find((item) => item.id === itemId);
-    item && (item.taskListId = id);
+    item && (item.taskListId = currentTaskList.value.id);
     onDragLeave();
   }
+
   return {
+    startDrag,
     onDragEnter,
     onDragLeave,
     onDrop,
