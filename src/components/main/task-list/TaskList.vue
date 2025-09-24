@@ -110,20 +110,9 @@ function onDragLeave(evt) {
 function onCardDrop(evt, id) {
   const itemId = evt.dataTransfer.getData("itemId");
   if (!itemId) return;
-  const draggedItemIndex = cardsStore.cards.findIndex(
-    (item) => item.id === itemId,
-  );
-  const droppedItemIndex = cardsStore.cards.findIndex((item) => item.id === id);
-
-  cardsStore.cards[draggedItemIndex].order =
-    cardsStore.cards[draggedItemIndex].order +
-    cardsStore.cards[droppedItemIndex].order;
-  cardsStore.cards[droppedItemIndex].order =
-    cardsStore.cards[draggedItemIndex].order -
-    cardsStore.cards[droppedItemIndex].order;
-  cardsStore.cards[draggedItemIndex].order =
-    cardsStore.cards[draggedItemIndex].order -
-    cardsStore.cards[droppedItemIndex].order;
+  const item = cardsStore.cards.find((item) => item.id === itemId);
+  item.taskListId = currentTaskList.value.id;
+  swapItems(cardsStore.cards, itemId, id);
 }
 </script>
 
