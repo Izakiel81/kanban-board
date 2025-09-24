@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCardDragAndDrop } from "../../../composables/useCardDragAndDrop";
 import { useCardsStore } from "../../../stores/cards";
 import DeleteButton from "../ui/DeleteButton.vue";
 import ModalDialog from "../ui/ModalDialog.vue";
@@ -7,8 +8,8 @@ import { type Card } from "../../../interfaces/Workspace";
 import { ref, computed, useTemplateRef } from "vue";
 
 const props = defineProps<{ card: Card }>();
-const emit = defineEmits(["editCard", "dragStart", "emitDrop"]);
 
+const cardsStore = useCardsStore();
 const currentCard = computed(() => props.card);
 
 const showModalDialog = ref(false);
@@ -22,17 +23,18 @@ const newCardDescription = ref(currentCard.value.description || "");
 const draggedOver = ref(false);
 const isAbove = ref(false);
 
+const { startDrag, onDrop } = useCardDragAndDrop(currentCard);
+
 let counter = 0;
 
 function closeDialog(newCard: Card) {
-  emit("editCard", newCard);
+  cardsStore.editCard(newCard);
 
   showModalDialog.value = false;
 }
 
 function deleteCard() {
-  emit("deleteCard", currentCard.id);
-
+  cardsStore.deleteCard(currentCard.value.id);
   showDeleteDialog.value = false;
 }
 
@@ -66,18 +68,12 @@ function onDragLeave(evt) {
   <div
     class="wrapper"
     draggable="true"
-    @dragstart.stop="emit('dragStart', $event, currentCard)"
+    @dragstart.stop="startDrag($event)"
     @click="showModalDialog = true"
     @dragover.prevent
     @dragenter.prevent.stop="onDragEnter($event)"
     @dragleave.prevent.stop="onDragLeave($event)"
-    @drop.stop="
-      (event) => {
-        if (event.dataTransfer.getData('itemId') === currentCard.id) return;
-        onDragLeave(event);
-        emit('emitDrop', event, currentCard.id);
-      }
-    "
+    @drop.stop="onDrop($event)"
   >
     <span
       class="drag-target"

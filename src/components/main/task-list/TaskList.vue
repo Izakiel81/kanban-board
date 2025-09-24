@@ -72,21 +72,6 @@ function editTitle() {
   newTaskListTitle.value = "";
   isEditingTitle.value = false;
 }
-
-function startCardDrag(evt, item) {
-  dragStart(evt);
-  evt.dataTransfer.setData("itemId", item.id);
-  evt.dataTransfer.setData("itemOrder", item.order);
-  evt.dataTransfer.setData("itemTaskListId", item.taskListId);
-}
-
-function onCardDrop(evt, id) {
-  const itemId = evt.dataTransfer.getData("itemId");
-  if (!itemId) return;
-  const item = cardsStore.cards.find((item) => item.id === itemId);
-  item.taskListId = currentTaskList.value.id;
-  swapItems(cardsStore.cards, itemId, id);
-}
 </script>
 
 <template>
@@ -147,13 +132,6 @@ function onCardDrop(evt, id) {
           v-for="card in currentCards"
           :key="card.id"
           :card="card"
-          @dragStart="(event, card) => startCardDrag(event, card)"
-          @emitDrop="(event, id) => onCardDrop(event, id)"
-          @editCard="
-            (card) => {
-              cardsStore.editCard(card);
-            }
-          "
         />
       </div>
       <div
