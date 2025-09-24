@@ -1,6 +1,9 @@
 import type { Ref } from "vue";
 import type { TaskList } from "../interfaces/Workspace";
 import { ref } from "vue";
+import { useTaskListsStore } from "../stores/tasklists";
+import { useCardsStore } from "../stores/cards";
+import { useDragAndDrop } from "./useDragAndDrop";
 
 export function useTaskListDragAndDrop(
   currentTaskList: Ref<TaskList>,
@@ -10,18 +13,22 @@ export function useTaskListDragAndDrop(
   cardIsDragged: Ref<boolean>,
 ) {
   const counter = ref(0);
+  const taskListsStore = useTaskListsStore();
+  const cardsStore = useCardsStore();
+  const { swapItems } = useDragAndDrop();
 
   function onDragEnter(event: DragEvent) {
-    const itemId = event.dataTransfer!.getData("itemId");
-    const listId = event.dataTransfer!.getData("listId");
+    if (!event.dataTransfer) return;
+    const itemId = event.dataTransfer.getData("itemId");
+    const listId = event.dataTransfer.getData("listId");
 
-    const listOrder = event.dataTransfer!.getData("listOrder");
+    const listOrder = event.dataTransfer.getData("listOrder");
     if ((!itemId && !listId) || listId === currentTaskList.value.id) return;
     counter.value++;
     if (itemId) cardIsDragged.value = true;
     else draggedOver.value = true;
     isOnRight.value = parseInt(listOrder) < currentTaskList.value.order;
-    elementHeight.value = parseInt(event.dataTransfer!.getData("height"));
+    elementHeight.value = parseInt(event.dataTransfer.getData("height"));
   }
   function onDragLeave() {
     counter.value--;
@@ -31,9 +38,23 @@ export function useTaskListDragAndDrop(
     elementHeight.value = 0;
     counter.value = 0;
   }
-
+  function onDrop(event: DragEvent, id: string) {
+    if (!event.dataTransfer) return;
+    const itemId = event.dataTransfer.getData("itemId");
+    const listId = event.dataTransfer.getData("listId");
+    if (!itemId && !listId) return;
+    else if (listId) {
+      onDragLeave();
+      swapItems(taskListsStore.taskLists, listId, id);
+      return;
+    }
+    const item = cardsStore.cards.find((item) => item.id === itemId);
+    item && (item.taskListId = id);
+    onDragLeave();
+  }
   return {
     onDragEnter,
     onDragLeave,
+    onDrop,
   };
 }
