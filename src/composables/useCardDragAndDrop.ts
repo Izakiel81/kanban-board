@@ -1,10 +1,16 @@
 import { useDragAndDrop } from "./useDragAndDrop";
 import { useCardsStore } from "../stores/cards";
 import type { Card } from "../interfaces/Workspace";
-import type { Ref } from "vue";
-export function useCardDragAndDrop(currentCard: Ref<Card>) {
+import { ref, type Ref } from "vue";
+export function useCardDragAndDrop(
+  currentCard: Ref<Card>,
+  draggedOver: Ref<boolean>,
+  isAbove: Ref<boolean>,
+  elementHeight: Ref<number>,
+) {
   const cardsStore = useCardsStore();
   const { dragStart, swapItems } = useDragAndDrop();
+  const counter = ref(0);
 
   function startDrag(event: DragEvent) {
     if (!event.dataTransfer) return;
@@ -20,10 +26,37 @@ export function useCardDragAndDrop(currentCard: Ref<Card>) {
     const item = cardsStore.cards.find((item) => item.id === itemId);
     item && (item.taskListId = currentCard.value.taskListId);
     swapItems(cardsStore.cards, itemId, currentCard.value.id);
+    onDragLeave();
   }
 
+  function onDragEnter(evt) {
+    if (
+      !evt.dataTransfer.getData("itemId") ||
+      evt.dataTransfer.getData("itemId") === currentCard.value.id
+    )
+      return;
+
+    counter.value++;
+
+    draggedOver.value = true;
+    isAbove.value =
+      parseInt(evt.dataTransfer.getData("itemOrder")) >
+        currentCard.value.order ||
+      evt.dataTransfer.getData("itemTaskListId") !==
+        currentCard.value.taskListId;
+    elementHeight.value = parseInt(evt.dataTransfer.getData("height"));
+  }
+  function onDragLeave() {
+    counter.value--;
+    if (counter.value > 0) return;
+
+    draggedOver.value = false;
+    elementHeight.value = 2;
+    counter.value = 0;
+  }
   return {
     startDrag,
     onDrop,
+    onDragLeave,
   };
 }
