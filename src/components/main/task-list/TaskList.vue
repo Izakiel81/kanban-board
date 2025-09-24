@@ -15,7 +15,7 @@ const emit = defineEmits(["listDragStart", "onListDrop"]);
 
 const currentTaskList = computed(() => props.taskList);
 
-const { startDrag, swapItems } = useDragAndDrop();
+const { dragStart, swapItems } = useDragAndDrop();
 
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
@@ -66,8 +66,8 @@ function editTitle() {
   isEditingTitle.value = false;
 }
 
-function startDragging(evt, item) {
-  startDrag();
+function startDrag(evt, item) {
+  dragStart(evt);
   evt.dataTransfer.setData("itemId", item.id);
   evt.dataTransfer.setData("itemOrder", item.order);
   evt.dataTransfer.setData("itemTaskListId", item.taskListId);
@@ -185,7 +185,7 @@ function onCardDrop(evt, id) {
           v-for="card in currentCards"
           :key="card.id"
           :card="card"
-          @dragStart="(event, card) => startDragging(event, card)"
+          @dragStart="(event, card) => startDrag(event, card)"
           @emitDrop="(event, id) => onCardDrop(event, id)"
           @editCard="
             (card) => {
