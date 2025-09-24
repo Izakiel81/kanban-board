@@ -40,7 +40,7 @@ const currentCards = computed(() =>
 const isAddingCard = ref(false);
 const newCardTitle = ref("");
 
-const { onDragLeave, onDragEnter, onDrop } = useTaskListDragAndDrop(
+const { startDrag, onDragLeave, onDragEnter, onDrop } = useTaskListDragAndDrop(
   currentTaskList,
   draggedOver,
   isOnRight,
@@ -75,7 +75,7 @@ function editTitle() {
   isEditingTitle.value = false;
 }
 
-function startDrag(evt, item) {
+function startCardDrag(evt, item) {
   dragStart(evt);
   evt.dataTransfer.setData("itemId", item.id);
   evt.dataTransfer.setData("itemOrder", item.order);
@@ -99,7 +99,7 @@ function onCardDrop(evt, id) {
     @drop.stop="onDrop($event, currentTaskList.id)"
     @dragenter.stop="onDragEnter($event)"
     @dragleave.stop="onDragLeave()"
-    @dragstart.stop="emit('listDragStart', $event, currentTaskList)"
+    @dragstart.stop="startDrag($event)"
     @mouseenter="showDeleteButton = true"
     @mouseleave="showDeleteButton = false"
   >
@@ -149,7 +149,7 @@ function onCardDrop(evt, id) {
           v-for="card in currentCards"
           :key="card.id"
           :card="card"
-          @dragStart="(event, card) => startDrag(event, card)"
+          @dragStart="(event, card) => startCardDrag(event, card)"
           @emitDrop="(event, id) => onCardDrop(event, id)"
           @editCard="
             (card) => {
