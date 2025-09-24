@@ -56,7 +56,7 @@ function dragEnter(evt) {
   elementHeight.value = evt.dataTransfer.getData("height");
 }
 
-function dragLeave(evt) {
+function dragLeave() {
   counter--;
   if (counter > 0) return;
   counter = 0;
@@ -91,7 +91,7 @@ function finishEditing() {
     @dragover.prevent
     @dragstart.stop="startDrag($event, currentBoard)"
     @dragenter.stop="dragEnter($event)"
-    @dragleave.stop="dragLeave($event)"
+    @dragleave.stop="dragLeave()"
     @drop="onDrop($event)"
     @click="router.push('/' + currentBoard.id)"
     @mouseover="showButtons = true"
