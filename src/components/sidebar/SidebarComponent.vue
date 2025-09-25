@@ -54,8 +54,6 @@ function finishAdding() {
         <BoardItem
           v-for="workspace in currentWorkspaces"
           :workspace="workspace"
-          @onDrop="(event, id) => drop(event, id)"
-          @deleteBoard="(id) => deleteWorkspace(id)"
         />
       </ul>
       <div>
