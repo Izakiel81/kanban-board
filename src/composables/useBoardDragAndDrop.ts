@@ -30,13 +30,24 @@ export function useBoardDragAndDrop(
     swapItems(boardsStore.workspaces, boardId, currentBoard.value.id);
     dragLeave();
   }
+
+  function dragEnter(event: DragEvent) {
+    if (!event.dataTransfer) return;
+    counter.value++;
+    const boardId = event.dataTransfer.getData("boardId");
+    const boardOrder = event.dataTransfer.getData("boardOrder");
+    if (!boardId || boardId === currentBoard.value.id) return;
+    draggedOver.value = true;
+    isAbove.value = parseInt(boardOrder) > currentBoard.value.order;
+    elementHeight.value = parseInt(event.dataTransfer.getData("height"));
+  }
+
   function dragLeave() {
     counter.value--;
     if (counter.value > 0) return;
     counter.value = 0;
     draggedOver.value = false;
-    isAbove.value = false;
     elementHeight.value = 0;
   }
-  return { startDrag, onDrop, dragLeave };
+  return { startDrag, onDrop, dragEnter, dragLeave };
 }

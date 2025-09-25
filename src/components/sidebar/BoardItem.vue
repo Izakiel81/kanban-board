@@ -15,13 +15,18 @@ const router = useRouter();
 
 const boardsStore = useWorkspacesStore();
 
-const elementHeight = ref(0);
 const draggedOver = ref(false);
 const isAbove = ref(false);
+const elementHeight = ref(0);
 
 const currentBoard = computed(() => workspace);
 
-const { startDrag } = useBoardDragAndDrop(currentBoard);
+const { startDrag } = useBoardDragAndDrop(
+  currentBoard,
+  draggedOver,
+  isAbove,
+  elementHeight,
+);
 
 const showDeleteDialog = ref(false);
 const showButtons = ref(false);
