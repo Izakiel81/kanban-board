@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type Workspace } from "../../interfaces/Workspace";
+import { useBoardDragAndDrop } from "../../composables/useBoardDragAndDrop";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import ModalDialog from "../main/ui/ModalDialog.vue";
 import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
@@ -14,11 +15,13 @@ const router = useRouter();
 
 const boardsStore = useWorkspacesStore();
 
-const currentBoard = computed(() => workspace);
-
 const elementHeight = ref(0);
 const draggedOver = ref(false);
 const isAbove = ref(false);
+
+const currentBoard = computed(() => workspace);
+
+const { startDrag } = useBoardDragAndDrop(currentBoard);
 
 const showDeleteDialog = ref(false);
 const showButtons = ref(false);
@@ -26,8 +29,6 @@ const isEditing = ref(false);
 
 const newBoardTitle = ref(currentBoard.value.title);
 const newBoardTitleRef = ref(null);
-
-const emit = defineEmits(["onDrop", "deleteBoard"]);
 
 let counter = 0;
 
@@ -56,11 +57,6 @@ function dragLeave() {
   isAbove.value = false;
   elementHeight.value = 0;
 }
-function onDrop(evt) {
-  if (evt.dataTransfer.getData("boardId") === currentBoard.value.id) return;
-  emit("onDrop", evt, currentBoard.value.id);
-  dragLeave(evt);
-}
 function startEditing() {
   isEditing.value = true;
   nextTick(() => {
@@ -81,7 +77,7 @@ function finishEditing() {
     class="board"
     v-if="!isEditing"
     @dragover.prevent
-    @dragstart.stop="startDrag($event, currentBoard)"
+    @dragstart.stop="startDrag($event)"
     @dragenter.stop="dragEnter($event)"
     @dragleave.stop="dragLeave()"
     @drop="onDrop($event)"

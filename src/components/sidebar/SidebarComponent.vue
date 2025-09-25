@@ -40,27 +40,6 @@ function finishAdding() {
     if (buttonRef.value) buttonRef.value.disabled = false;
   }, 200);
 }
-
-function drop(evt, id) {
-  const boardId = evt.dataTransfer.getData("boardId");
-  if (!boardId) return;
-  const draggedItemIndex = workspacesStore.workspaces.findIndex(
-    (item) => item.id === boardId,
-  );
-  const droppedItemIndex = workspacesStore.workspaces.findIndex(
-    (item) => item.id === id,
-  );
-
-  workspacesStore.workspaces[draggedItemIndex].order =
-    workspacesStore.workspaces[draggedItemIndex].order +
-    workspacesStore.workspaces[droppedItemIndex].order;
-  workspacesStore.workspaces[droppedItemIndex].order =
-    workspacesStore.workspaces[draggedItemIndex].order -
-    workspacesStore.workspaces[droppedItemIndex].order;
-  workspacesStore.workspaces[draggedItemIndex].order =
-    workspacesStore.workspaces[draggedItemIndex].order -
-    workspacesStore.workspaces[droppedItemIndex].order;
-}
 </script>
 
 <template>
