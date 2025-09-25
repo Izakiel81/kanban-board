@@ -21,7 +21,7 @@ const elementHeight = ref(0);
 
 const currentBoard = computed(() => workspace);
 
-const { startDrag } = useBoardDragAndDrop(
+const { startDrag, onDrop, dragEnter, dragLeave } = useBoardDragAndDrop(
   currentBoard,
   draggedOver,
   isAbove,
@@ -42,16 +42,6 @@ function deleteBoard(id: string) {
   if (boardsStore.workspaces.length === 0) {
     router.push("/");
   }
-}
-
-function dragEnter(evt) {
-  counter++;
-  const boardId = evt.dataTransfer.getData("boardId");
-  const boardOrder = evt.dataTransfer.getData("boardOrder");
-  if (!boardId || boardId === currentBoard.value.id) return;
-  draggedOver.value = true;
-  isAbove.value = parseInt(boardOrder) > currentBoard.value.order;
-  elementHeight.value = evt.dataTransfer.getData("height");
 }
 
 function startEditing() {
