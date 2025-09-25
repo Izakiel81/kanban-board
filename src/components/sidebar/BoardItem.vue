@@ -39,9 +39,7 @@ let counter = 0;
 
 function deleteBoard(id: string) {
   boardsStore.removeWorkspace(id);
-  if (boardsStore.workspaces.length === 0) {
-    router.push("/");
-  }
+  router.push("/");
 }
 
 function startEditing() {
