@@ -49,14 +49,6 @@ function dragEnter(evt) {
   elementHeight.value = evt.dataTransfer.getData("height");
 }
 
-function dragLeave() {
-  counter--;
-  if (counter > 0) return;
-  counter = 0;
-  draggedOver.value = false;
-  isAbove.value = false;
-  elementHeight.value = 0;
-}
 function startEditing() {
   isEditing.value = true;
   nextTick(() => {
