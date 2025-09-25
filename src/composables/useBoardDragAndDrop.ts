@@ -1,11 +1,17 @@
-import { type Ref } from "vue";
+import { ref, type Ref } from "vue";
 import type { Workspace } from "../interfaces/Workspace";
 import { useDragAndDrop } from "./useDragAndDrop";
 import { useWorkspacesStore } from "../stores/workspaces";
-export function useBoardDragAndDrop(currentBoard: Ref<Workspace>) {
+export function useBoardDragAndDrop(
+  currentBoard: Ref<Workspace>,
+  draggedOver: Ref<boolean>,
+  isAbove: Ref<boolean>,
+  elementHeight: Ref<number>,
+) {
   const { dragStart, swapItems } = useDragAndDrop();
   const boardsStore = useWorkspacesStore();
 
+  const counter = ref(0);
   function startDrag(event: DragEvent) {
     if (!event.dataTransfer) return;
     dragStart(event);
@@ -22,6 +28,15 @@ export function useBoardDragAndDrop(currentBoard: Ref<Workspace>) {
     if (!boardId) return;
 
     swapItems(boardsStore.workspaces, boardId, currentBoard.value.id);
+    dragLeave();
   }
-  return { startDrag, onDrop };
+  function dragLeave() {
+    counter.value--;
+    if (counter.value > 0) return;
+    counter.value = 0;
+    draggedOver.value = false;
+    isAbove.value = false;
+    elementHeight.value = 0;
+  }
+  return { startDrag, onDrop, dragLeave };
 }
