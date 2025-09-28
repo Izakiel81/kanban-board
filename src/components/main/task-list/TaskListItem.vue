@@ -26,6 +26,7 @@ const { startDrag, onDrop, onDragEnter, onDragLeave } = useCardDragAndDrop(
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
 const showButtons = ref(false);
+const isMouseOver = ref(false);
 const modalDialogTitleEdit = ref(false);
 const newCardTitle = ref(currentCard.value.title || "");
 const newCardDescription = ref(currentCard.value.description || "");
@@ -48,6 +49,8 @@ function deleteCard() {
     draggable="true"
     @dragstart.stop="startDrag($event)"
     @click="showModalDialog = true"
+    @mouseover="isMouseOver = true"
+    @mouseleave="isMouseOver = false"
     @dragover.prevent
     @dragenter.prevent.stop="onDragEnter($event)"
     @dragleave.prevent.stop="onDragLeave()"
@@ -61,11 +64,13 @@ function deleteCard() {
     />
     <div class="container">
       <p class="content">{{ currentCard.title }}</p>
-      <DeleteButton
-        :width="20"
-        :height="20"
-        @click.stop="() => (showDeleteDialog = true)"
-      />
+      <span class="delete-button" :style="{ opacity: isMouseOver ? 1 : 0 }">
+        <DeleteButton
+          :width="20"
+          :height="20"
+          @click.stop="() => (showDeleteDialog = true)"
+        />
+      </span>
     </div>
     <span
       class="drag-target"
@@ -155,6 +160,9 @@ function deleteCard() {
   transition:
     width 0.1s ease-out,
     height 0.1s ease-out;
+}
+.delete-button {
+  transition: opacity 0.2s ease-out;
 }
 #up {
   top: -2px;
