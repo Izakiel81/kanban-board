@@ -45,6 +45,7 @@ function finishAdding() {
 <template>
   <div class="sidebar">
     <header>
+      <span id="close" @click.stop="onCancel" />
       <img src="../../assets/logo.png" alt="logo" />
       <h1>Kanban board</h1>
       <hr />
