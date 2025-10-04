@@ -45,7 +45,9 @@ function finishAdding() {
 <template>
   <div class="sidebar">
     <header>
-      <span id="close" @click.stop="onCancel" />
+      <span class="fold-container">
+        <span id="fold" @click.stop="() => {}" />
+      </span>
       <img src="../../assets/logo.png" alt="logo" />
       <h1>Kanban board</h1>
       <hr />
@@ -126,6 +128,48 @@ header h1 {
 header hr {
   width: 100%;
   margin-bottom: 15px;
+}
+.fold-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 10px;
+}
+#fold {
+  cursor: pointer;
+  position: relative;
+  margin-right: 5px;
+  border-radius: 100%;
+  padding: 17px;
+  transition:
+    background-color 0.1s ease,
+    filter 0.1s ease-out;
+}
+
+#fold:hover {
+  background-color: #eee;
+}
+
+#fold:active {
+  filter: brightness(90%);
+}
+
+#fold::before,
+#fold::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #aaa;
+  border: 2px solid #aaa;
+  border-radius: 2px;
+  width: 17px;
+}
+#fold::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+#fold::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 main {
   flex-grow: 1;
