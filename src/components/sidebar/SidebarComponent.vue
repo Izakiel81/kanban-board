@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BoardItem from "./BoardItem.vue";
+import BurgerIcon from "./BurgerIcon.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
 import { watch, ref, computed, nextTick } from "vue";
 import { v4 as uuid } from "uuid";
@@ -43,6 +44,9 @@ function finishAdding() {
 </script>
 
 <template>
+  <div>
+    <BurgerIcon />
+  </div>
   <div class="sidebar">
     <header>
       <span class="fold-container">
