@@ -9,7 +9,9 @@ import EditButton from "../main/ui/EditButton.vue";
 import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
 
-const { workspace } = defineProps<{ workspace: Workspace }>();
+const { workspace } = defineProps<{
+  workspace: Workspace;
+}>();
 
 const router = useRouter();
 
@@ -55,6 +57,10 @@ function finishEditing() {
   newBoardTitle.value = currentBoard.value.title;
   isEditing.value = false;
 }
+
+function boardClick() {
+  router.push("/" + currentBoard.value.id);
+}
 </script>
 <template>
   <li
@@ -66,7 +72,7 @@ function finishEditing() {
     @dragenter.stop="dragEnter($event)"
     @dragleave.stop="dragLeave()"
     @drop="onDrop($event)"
-    @click="router.push('/' + currentBoard.id)"
+    @click="boardClick"
     @mouseover="showButtons = true"
     @mouseleave="showButtons = false"
   >

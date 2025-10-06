@@ -7,16 +7,14 @@ import { computed, ref } from "vue";
 
 const route = useRoute();
 const currentWorkspaceId = computed(() => route.params.id);
+
 const sidebarFolded = ref(false);
 </script>
 
 <template>
   <div id="container" :class="{ folded: sidebarFolded }">
     <aside class="sidebar">
-      <SidebarComponent
-        :currentWorkspaceId="currentWorkspaceId"
-        @fold="sidebarFolded = true"
-      />
+      <SidebarComponent @fold="sidebarFolded = true" />
     </aside>
 
     <main class="main">

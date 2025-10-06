@@ -16,7 +16,6 @@ const currentWorkspaceTitle = computed(() =>
   ),
 );
 
-console.log(currentWorkspaceTitle.value);
 const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
