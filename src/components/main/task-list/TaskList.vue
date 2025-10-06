@@ -90,7 +90,7 @@ function editTitle() {
       class="drag-area"
       id="left"
       :style="{
-        width: draggedOver & !isOnRight ? 230 + 'px' : 5 + 'px',
+        width: draggedOver & !isOnRight ? 230 + 'px' : 1 + 'px',
         height: draggedOver & !isOnRight ? elementHeight + 'px' : 0,
       }"
       :class="{ 'dragged-on': draggedOver & !isOnRight }"
@@ -170,7 +170,7 @@ function editTitle() {
       id="left"
       :class="{ 'dragged-on': draggedOver & isOnRight }"
       :style="{
-        width: draggedOver & isOnRight ? 230 + 'px' : 5 + 'px',
+        width: draggedOver & isOnRight ? 230 + 'px' : 1 + 'px',
         height: draggedOver & isOnRight ? elementHeight + 'px' : 0,
       }"
     >
@@ -208,8 +208,8 @@ function editTitle() {
 }
 .dragged-on {
   background-color: #555;
-  border-radius: 6px;
-  margin: 0 5px;
+  border-radius: 3px;
+  margin: 0 3px;
 }
 #card {
   margin: 0;
@@ -254,7 +254,7 @@ function editTitle() {
 
   padding: 10px;
 
-  border-radius: 8px;
+  border-radius: 2px;
 }
 .task-list-wrapper {
   display: flex;
@@ -272,7 +272,7 @@ function editTitle() {
 
   gap: 2px;
   background-color: #fff;
-  border-radius: 6px;
+  border-radius: 3px;
   padding: 4px 7px;
 }
 .new-card-container textarea {
@@ -303,7 +303,7 @@ function editTitle() {
   color: #fff;
   background-color: #007bff;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
 
   transition: filter 0.1s ease-in-out;
 }
@@ -323,7 +323,7 @@ function editTitle() {
   width: 28px;
   padding: 6px 10px;
 
-  border-radius: 5px;
+  border-radius: 2px;
 
   background-color: #ccc;
 
@@ -340,7 +340,7 @@ function editTitle() {
   content: "";
   position: absolute;
   width: 56%;
-  top: 46%;
+  top: 47%;
   left: 19%;
   border: 1px solid #fff;
   border-radius: 5px;
@@ -359,7 +359,7 @@ function editTitle() {
   height: 25px;
 
   border: 1px solid #ffffff7f;
-  border-radius: 5px;
+  border-radius: 3px;
 
   color: #fff;
   background-color: transparent;
