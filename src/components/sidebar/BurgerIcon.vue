@@ -8,7 +8,7 @@
   display: block;
   width: 20px;
   height: 1px;
-  border-top: 3px solid #aaa;
+  border-top: 3px solid #fff;
   border-radius: 4px;
   margin-top: 6px;
 }
@@ -17,7 +17,7 @@
   content: "";
   position: absolute;
   width: 100%;
-  border-top: 3px solid #aaa;
+  border-top: 3px solid #fff;
   border-radius: 4px;
 }
 
