@@ -142,7 +142,7 @@ function deleteCard() {
 
   gap: 2px;
   background-color: #fff;
-  border-radius: 6px;
+  border-radius: 3px;
   padding: 4px 7px;
 
   cursor: pointer;
@@ -172,13 +172,13 @@ function deleteCard() {
 }
 .dragged-on {
   background-color: #555;
-  border-radius: 6px;
+  border-radius: 3px;
   margin: 3px 0;
 }
 .content {
   user-select: none;
   font:
-    400 16px/20px "Poppins",
+    400 16px/23px "Poppins",
     sans-serif;
   overflow-wrap: anywhere;
 }
