@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BoardItem from "./BoardItem.vue";
-import BurgerIcon from "./BurgerIcon.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
 import { watch, ref, computed, nextTick } from "vue";
 import { v4 as uuid } from "uuid";
@@ -8,6 +7,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
+const emit = defineEmits(["fold"]);
 const workspacesStore = useWorkspacesStore();
 
 const currentWorkspaces = computed(() =>
@@ -44,13 +44,18 @@ function finishAdding() {
 </script>
 
 <template>
-  <div>
-    <BurgerIcon />
-  </div>
   <div class="sidebar">
     <header>
       <span class="fold-container">
-        <span id="fold" @click.stop="() => {}" />
+        <span
+          id="fold"
+          @click.stop="
+            () => {
+              showSidebar = false;
+              emit('fold');
+            }
+          "
+        />
       </span>
       <img src="../../assets/logo.png" alt="logo" />
       <h1>Kanban board</h1>
@@ -106,9 +111,11 @@ function finishAdding() {
   display: flex;
   flex-direction: column;
 
-  width: 250px;
-  height: 100vh;
+  max-width: 245px;
+  height: 99vh;
   background-color: #f4f4f4;
+
+  border-radius: 7px;
 
   font-family: "Poppins", sans-serif;
 }
@@ -118,7 +125,7 @@ header {
   align-items: center;
 
   gap: 10px;
-  padding: 20px 20px 0;
+  padding: 11px 11px 0;
 }
 header img {
   width: 100px;
@@ -177,7 +184,7 @@ header hr {
 }
 main {
   flex-grow: 1;
-  padding: 0 20px 20px;
+  padding: 0 4px 11px;
   overflow: auto;
 }
 main ul {
