@@ -47,7 +47,7 @@ const { show, onCancel, width, height } = defineProps<{
 
   background-color: #fff;
 
-  border-radius: 8px;
+  border-radius: 4px;
 
   font-family: "Poppins", sans-serif;
 }
