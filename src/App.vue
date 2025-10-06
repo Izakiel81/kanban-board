@@ -13,7 +13,10 @@ const sidebarFolded = ref(false);
 <template>
   <div id="container" :class="{ folded: sidebarFolded }">
     <aside class="sidebar">
-      <SidebarComponent :id="currentWorkspaceId" @fold="sidebarFolded = true" />
+      <SidebarComponent
+        :currentWorkspaceId="currentWorkspaceId"
+        @fold="sidebarFolded = true"
+      />
     </aside>
 
     <main class="main">

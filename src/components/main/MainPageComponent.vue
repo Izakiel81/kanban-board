@@ -1,13 +1,22 @@
 <script lang="ts" setup>
 import TaskList from "./task-list/TaskList.vue";
 import { useTaskListsStore } from "../../stores/tasklists";
+import { useWorkspacesStore } from "../../stores/workspaces";
 import { watch, ref, computed } from "vue";
 import { v4 as uuid } from "uuid";
 
 const props = defineProps<{ id?: string }>();
 const tasklistsStore = useTaskListsStore();
+const boardsStore = useWorkspacesStore();
 
 const currentWorkspaceId = computed(() => props.id);
+const currentWorkspaceTitle = computed(() =>
+  boardsStore.workspaces.filter(
+    (workspace) => workspace.id === currentWorkspaceId.value,
+  ),
+);
+
+console.log(currentWorkspaceTitle.value);
 const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
@@ -30,6 +39,12 @@ function addTaskList() {
 </script>
 
 <template>
+  <h1
+    class="title-container"
+    v-if="currentWorkspaceTitle && currentWorkspaceTitle.length > 0"
+  >
+    {{ currentWorkspaceTitle[0].title }}
+  </h1>
   <div class="container">
     <TaskList
       v-if="currentTaskLists"
@@ -60,6 +75,11 @@ function addTaskList() {
 </template>
 
 <style scoped>
+.title-container {
+  color: #fff;
+  padding: 0 10px;
+  font-family: "Poppins", sans-serif;
+}
 .container {
   display: flex;
   align-items: flex-start;
