@@ -79,12 +79,12 @@ function addTaskList() {
 
   background-color: #0000005f;
 
-  border-radius: 8px;
+  border-radius: 3px;
 }
 .new-list-container input {
   outline: none;
 
-  border: 2px solid #999;
+  border: 2px solid #fff;
   border-radius: 3px;
 
   padding: 2px 5px;
@@ -108,7 +108,7 @@ function addTaskList() {
   color: #fff;
   background-color: #007bff;
   border: none;
-  border-radius: 5px;
+  border-radius: 2px;
 
   transition: filter 0.1s ease-in-out;
 }
@@ -161,8 +161,8 @@ function addTaskList() {
 .add-list-container {
   display: flex;
 
-  border: 2px dashed #ccc;
-  border-radius: 8px;
+  border: 2px dashed #fff;
+  border-radius: 3px;
 
   min-width: 230px;
   min-height: 50px;
@@ -184,7 +184,7 @@ function addTaskList() {
   filter: brightness(90%);
 }
 .add-list-container h1 {
-  color: #ccc;
+  color: #fff;
   font:
     500 16px/20px "Poppins",
     sans-serif;
