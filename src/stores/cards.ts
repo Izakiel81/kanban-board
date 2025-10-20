@@ -7,7 +7,12 @@ export const useCardsStore = defineStore(
   () => {
     const cards: Ref<Card[]> = ref([]);
 
-    function addCard(card: Card) {
+    function addCard(card: {
+      id: string;
+      title: string;
+      description?: string;
+      taskListId: string;
+    }) {
       cards.value.push({
         ...card,
         order: cards.value.length

@@ -7,7 +7,7 @@ import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
 import DeleteButton from "../main/ui/DeleteButton.vue";
 import EditButton from "../main/ui/EditButton.vue";
 import { useRouter } from "vue-router";
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 
 const { workspace } = defineProps<{
   workspace: Workspace;
@@ -35,9 +35,7 @@ const showButtons = ref(false);
 const isEditing = ref(false);
 
 const newBoardTitle = ref(currentBoard.value.title);
-const newBoardTitleRef = ref(null);
-
-let counter = 0;
+const newBoardTitleRef = ref<HTMLInputElement | null>(null);
 
 function deleteBoard(id: string) {
   boardsStore.removeWorkspace(id);
@@ -78,16 +76,16 @@ function boardClick() {
   >
     <span
       class="drag-area"
-      :class="{ 'dragged-on': draggedOver & isAbove }"
+      :class="{ 'dragged-on': draggedOver && isAbove }"
       :style="{
-        width: draggedOver & isAbove ? '100%' : 0,
-        height: draggedOver & isAbove ? elementHeight + 'px' : 0,
+        width: draggedOver && isAbove ? '100%' : 0,
+        height: draggedOver && isAbove ? elementHeight + 'px' : 0,
       }"
     />
     <span class="board-title">
       {{ currentBoard.title }}
       <span class="buttons" :style="{ opacity: showButtons ? 1 : 0 }">
-        <EditButton :width="16" :height="16" @click.stop="isEditing = true" />
+        <EditButton :width="16" :height="16" @click.stop="startEditing" />
         <DeleteButton
           :width="16"
           :height="16"
@@ -98,10 +96,10 @@ function boardClick() {
     </span>
     <span
       class="drag-area"
-      :class="{ 'dragged-on': draggedOver & !isAbove }"
+      :class="{ 'dragged-on': draggedOver && !isAbove }"
       :style="{
-        width: draggedOver & !isAbove ? '100%' : 0,
-        height: draggedOver & !isAbove ? elementHeight + 'px' : 0,
+        width: draggedOver && !isAbove ? '100%' : 0,
+        height: draggedOver && !isAbove ? elementHeight + 'px' : 0,
       }"
     />
   </li>

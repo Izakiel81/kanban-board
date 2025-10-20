@@ -5,7 +5,7 @@ import DeleteButton from "../ui/DeleteButton.vue";
 import ModalDialog from "../ui/ModalDialog.vue";
 import ModalDialogButton from "../ui/ModalDialogButton.vue";
 import { type Card } from "../../../interfaces/Workspace";
-import { ref, computed, useTemplateRef } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps<{ card: Card }>();
 
@@ -25,7 +25,6 @@ const { startDrag, onDrop, onDragEnter, onDragLeave } = useCardDragAndDrop(
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
-const showButtons = ref(false);
 const isMouseOver = ref(false);
 const modalDialogTitleEdit = ref(false);
 const newCardTitle = ref(currentCard.value.title || "");
@@ -58,8 +57,8 @@ function deleteCard() {
   >
     <span
       class="drag-target"
-      :class="{ 'dragged-on': draggedOver & isAbove }"
-      :style="{ height: draggedOver & isAbove ? elementHeight + 'px' : '2px' }"
+      :class="{ 'dragged-on': draggedOver && isAbove }"
+      :style="{ height: draggedOver && isAbove ? elementHeight + 'px' : '2px' }"
       id="up"
     />
     <div class="container">
@@ -74,8 +73,10 @@ function deleteCard() {
     </div>
     <span
       class="drag-target"
-      :class="{ 'dragged-on': draggedOver & !isAbove }"
-      :style="{ height: draggedOver & !isAbove ? elementHeight + 'px' : '2px' }"
+      :class="{ 'dragged-on': draggedOver && !isAbove }"
+      :style="{
+        height: draggedOver && !isAbove ? elementHeight + 'px' : '2px',
+      }"
       id="down"
     />
     <ModalDialog

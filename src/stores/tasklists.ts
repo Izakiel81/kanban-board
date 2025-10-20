@@ -9,7 +9,11 @@ export const useTaskListsStore = defineStore(
     const taskLists: Ref<TaskList[]> = ref([]);
     const cardsStore = useCardsStore();
 
-    function addTaskList(taskList: TaskList) {
+    function addTaskList(taskList: {
+      id: string;
+      title: string;
+      workspaceId: string;
+    }) {
       taskLists.value.push({
         ...taskList,
         order: taskLists.value.length

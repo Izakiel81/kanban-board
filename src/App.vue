@@ -6,7 +6,7 @@ import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
 
 const route = useRoute();
-const currentWorkspaceId = computed(() => route.params.id);
+const currentWorkspaceId = computed(() => route.params.id as string);
 
 const sidebarFolded = ref(false);
 </script>
@@ -29,7 +29,10 @@ const sidebarFolded = ref(false);
       >
         <BurgerIcon />
       </div>
-      <MainPageComponent v-if="currentWorkspaceId" :id="currentWorkspaceId" />
+      <MainPageComponent
+        v-if="currentWorkspaceId"
+        :workspace_id="currentWorkspaceId"
+      />
     </main>
   </div>
 </template>

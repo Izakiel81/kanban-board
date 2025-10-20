@@ -9,7 +9,7 @@ export const useWorkspacesStore = defineStore(
   () => {
     const workspaces: Ref<Workspace[]> = ref([]);
     const taskLists = useTaskListsStore();
-    function addWorkspace(workspace?: Workspace) {
+    function addWorkspace(workspace?: { id: string; title: string }) {
       workspaces.value.push({
         ...(workspace ?? {
           id: uuid(),

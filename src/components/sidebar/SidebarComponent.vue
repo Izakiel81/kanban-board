@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import BoardItem from "./BoardItem.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
-import { watch, ref, computed, nextTick } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { v4 as uuid } from "uuid";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
 
 const emit = defineEmits(["fold"]);
 const workspacesStore = useWorkspacesStore();
@@ -17,8 +14,8 @@ const currentWorkspaces = computed(() =>
 const isAddingWorkspace = ref(false);
 const newWorkspaceTitle = ref("");
 
-const inputRef = ref(null);
-const buttonRef = ref(false);
+const inputRef = ref<HTMLInputElement | null>(null);
+const buttonRef = ref<HTMLInputElement | null>(null);
 
 function startAdding() {
   isAddingWorkspace.value = true;
@@ -36,9 +33,11 @@ function finishAdding() {
 
   newWorkspaceTitle.value = "";
   isAddingWorkspace.value = false;
-  if (buttonRef.value) buttonRef.value.disabled = true;
+  nextTick(() => {
+    buttonRef.value && (buttonRef.value.disabled = true);
+  });
   setTimeout(() => {
-    if (buttonRef.value) buttonRef.value.disabled = false;
+    buttonRef.value && (buttonRef.value.disabled = false);
   }, 200);
 }
 </script>
@@ -51,7 +50,6 @@ function finishAdding() {
           id="fold"
           @click.stop="
             () => {
-              showSidebar = false;
               emit('fold');
             }
           "
@@ -88,7 +86,7 @@ function finishAdding() {
           class="add-button"
           ref="buttonRef"
           @click="isAddingWorkspace ? finishAdding() : startAdding()"
-          :id="isAddingWorkspace ? 'done' : null"
+          :id="isAddingWorkspace ? 'done' : undefined"
         >
           {{ !isAddingWorkspace ? "+ Add board" : "Done" }}
         </button>

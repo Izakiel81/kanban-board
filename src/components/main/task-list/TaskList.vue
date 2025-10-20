@@ -6,17 +6,13 @@ import ModalDialogButton from "../../main/ui/ModalDialogButton.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
 import { useTaskListsStore } from "../../../stores/tasklists";
 import { useCardsStore } from "../../../stores/cards";
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, ref } from "vue";
 import { v4 as uuid } from "uuid";
-import { useDragAndDrop } from "../../../composables/useDragAndDrop";
 import { useTaskListDragAndDrop } from "../../../composables/useTaskListDragAndDrop";
 
 const props = defineProps<{ taskList: TaskList }>();
-const emit = defineEmits(["listDragStart", "onListDrop"]);
 
 const currentTaskList = computed(() => props.taskList);
-
-const { dragStart, swapItems } = useDragAndDrop();
 
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
@@ -79,7 +75,7 @@ function editTitle() {
     class="list-container"
     draggable="true"
     @dragover.prevent
-    @drop.stop="onDrop($event, currentTaskList.id)"
+    @drop.stop="onDrop($event)"
     @dragenter.stop="onDragEnter($event)"
     @dragleave.stop="onDragLeave()"
     @dragstart.stop="startDrag($event)"
@@ -90,10 +86,10 @@ function editTitle() {
       class="drag-area"
       id="left"
       :style="{
-        width: draggedOver & !isOnRight ? 230 + 'px' : 1 + 'px',
-        height: draggedOver & !isOnRight ? elementHeight + 'px' : 0,
+        width: draggedOver && !isOnRight ? 230 + 'px' : 1 + 'px',
+        height: draggedOver && !isOnRight ? elementHeight + 'px' : 0,
       }"
-      :class="{ 'dragged-on': draggedOver & !isOnRight }"
+      :class="{ 'dragged-on': draggedOver && !isOnRight }"
     ></span>
     <div class="list">
       <div class="title-container">
@@ -168,10 +164,10 @@ function editTitle() {
     <span
       class="drag-area"
       id="left"
-      :class="{ 'dragged-on': draggedOver & isOnRight }"
+      :class="{ 'dragged-on': draggedOver && isOnRight }"
       :style="{
-        width: draggedOver & isOnRight ? 230 + 'px' : 1 + 'px',
-        height: draggedOver & isOnRight ? elementHeight + 'px' : 0,
+        width: draggedOver && isOnRight ? 230 + 'px' : 1 + 'px',
+        height: draggedOver && isOnRight ? elementHeight + 'px' : 0,
       }"
     >
     </span>

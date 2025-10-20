@@ -2,14 +2,14 @@
 import TaskList from "./task-list/TaskList.vue";
 import { useTaskListsStore } from "../../stores/tasklists";
 import { useWorkspacesStore } from "../../stores/workspaces";
-import { watch, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { v4 as uuid } from "uuid";
 
-const props = defineProps<{ id?: string }>();
+const props = defineProps<{ workspace_id?: string }>();
 const tasklistsStore = useTaskListsStore();
 const boardsStore = useWorkspacesStore();
 
-const currentWorkspaceId = computed(() => props.id);
+const currentWorkspaceId = computed(() => props.workspace_id as string);
 const currentWorkspaceTitle = computed(() =>
   boardsStore.workspaces.filter(
     (workspace) => workspace.id === currentWorkspaceId.value,
@@ -21,7 +21,7 @@ const newTaskListTitle = ref("");
 
 const currentTaskLists = computed(() =>
   tasklistsStore
-    .getTaskListsByWorkspaceId(currentWorkspaceId.value)
+    .getTaskListsByWorkspaceId(currentWorkspaceId.value as string)
     .sort((a, b) => a.order - b.order),
 );
 
@@ -50,8 +50,6 @@ function addTaskList() {
       v-for="taskList in currentTaskLists"
       :key="taskList.id"
       :taskList="taskList"
-      @listDragStart="(event, list) => startDrag(event, list)"
-      @onListDrop="(event, list) => onListDrop(event, list)"
     />
     <div class="new-list-container" v-if="isAdding">
       <input v-model="newTaskListTitle" />
