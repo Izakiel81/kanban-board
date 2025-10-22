@@ -46,7 +46,10 @@ export function useElementDragAndDrop(
     if (!draggedElement.value) return;
     counter.value++;
     if (draggedElement.value.id === currentElement.value.id) return;
-    if ((draggedElement.value as Card).taskListId)
+    if (
+      (draggedElement.value as Card).taskListId &&
+      (currentElement.value as TaskList).workspaceId
+    )
       isCardDragged && (isCardDragged.value = true);
     else draggedOver.value = true;
     isAbove.value = draggedElement.value.order > currentElement.value.order;
