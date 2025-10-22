@@ -11,6 +11,7 @@ export function useElementDragAndDrop(
   draggedOver: Ref<boolean>,
   isAbove: Ref<boolean>,
   elementHeight: Ref<number>,
+  isCardDragged?: Ref<boolean>,
 ) {
   const { dragStart, swapItems } = useDragAndDrop();
 
@@ -31,6 +32,8 @@ export function useElementDragAndDrop(
     if (!draggedElement.value) return;
     counter.value++;
     if (draggedElement.value.id === currentElement.value.id) return;
+    if ((draggedElement.value as Card).taskListId)
+      isCardDragged && (isCardDragged.value = true);
     draggedOver.value = true;
     isAbove.value = draggedElement.value.order > currentElement.value.order;
     elementHeight.value = height.value;
@@ -42,6 +45,7 @@ export function useElementDragAndDrop(
     counter.value = 0;
     draggedOver.value = false;
     elementHeight.value = 0;
+    isCardDragged && (isCardDragged.value = false);
   }
   return { startDrag, onDrop, dragEnter, dragLeave };
 }

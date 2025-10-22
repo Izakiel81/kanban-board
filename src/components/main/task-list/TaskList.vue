@@ -8,7 +8,7 @@ import { useTaskListsStore } from "../../../stores/tasklists";
 import { useCardsStore } from "../../../stores/cards";
 import { computed, ref } from "vue";
 import { v4 as uuid } from "uuid";
-import { useTaskListDragAndDrop } from "../../../composables/useTaskListDragAndDrop";
+import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop.ts";
 
 const props = defineProps<{ taskList: TaskList }>();
 
@@ -21,7 +21,7 @@ const taskListsStore = useTaskListsStore();
 const cardsStore = useCardsStore();
 
 const elementHeight = ref(0);
-const isOnRight = ref(false);
+const isOnLeft = ref(false);
 const cardIsDragged = ref(false);
 const draggedOver = ref(false);
 const showDeleteButton = ref(false);
@@ -36,10 +36,11 @@ const currentCards = computed(() =>
 const isAddingCard = ref(false);
 const newCardTitle = ref("");
 
-const { startDrag, onDragLeave, onDragEnter, onDrop } = useTaskListDragAndDrop(
+const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
   currentTaskList,
+  taskListsStore.taskLists,
   draggedOver,
-  isOnRight,
+  isOnLeft,
   elementHeight,
   cardIsDragged,
 );
@@ -76,8 +77,8 @@ function editTitle() {
     draggable="true"
     @dragover.prevent
     @drop.stop="onDrop($event)"
-    @dragenter.stop="onDragEnter($event)"
-    @dragleave.stop="onDragLeave()"
+    @dragenter.stop="dragEnter($event)"
+    @dragleave.stop="dragLeave()"
     @dragstart.stop="startDrag($event)"
     @mouseenter="showDeleteButton = true"
     @mouseleave="showDeleteButton = false"
@@ -86,10 +87,10 @@ function editTitle() {
       class="drag-area"
       id="left"
       :style="{
-        width: draggedOver && !isOnRight ? 230 + 'px' : 1 + 'px',
-        height: draggedOver && !isOnRight ? elementHeight + 'px' : 0,
+        width: draggedOver && isOnLeft ? 230 + 'px' : 1 + 'px',
+        height: draggedOver && isOnLeft ? elementHeight + 'px' : 0,
       }"
-      :class="{ 'dragged-on': draggedOver && !isOnRight }"
+      :class="{ 'dragged-on': draggedOver && isOnLeft }"
     ></span>
     <div class="list">
       <div class="title-container">
@@ -164,10 +165,10 @@ function editTitle() {
     <span
       class="drag-area"
       id="left"
-      :class="{ 'dragged-on': draggedOver && isOnRight }"
+      :class="{ 'dragged-on': draggedOver && !isOnLeft }"
       :style="{
-        width: draggedOver && isOnRight ? 230 + 'px' : 1 + 'px',
-        height: draggedOver && isOnRight ? elementHeight + 'px' : 0,
+        width: draggedOver && !isOnLeft ? 230 + 'px' : 1 + 'px',
+        height: draggedOver && !isOnLeft ? elementHeight + 'px' : 0,
       }"
     >
     </span>
