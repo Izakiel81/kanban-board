@@ -76,8 +76,8 @@ function editTitle() {
     class="list-container"
     draggable="true"
     @dragover.prevent
-    @drop.stop="onDrop($event)"
-    @dragenter.stop="dragEnter($event)"
+    @drop.stop="onDrop()"
+    @dragenter.stop="dragEnter()"
     @dragleave.stop="dragLeave()"
     @dragstart.stop="startDrag($event)"
     @mouseenter="showDeleteButton = true"

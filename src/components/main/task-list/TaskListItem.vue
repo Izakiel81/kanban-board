@@ -52,9 +52,9 @@ function deleteCard() {
     @mouseover="isMouseOver = true"
     @mouseleave="isMouseOver = false"
     @dragover.prevent
-    @dragenter.prevent.stop="dragEnter($event)"
+    @dragenter.prevent.stop="dragEnter()"
     @dragleave.prevent.stop="dragLeave()"
-    @drop.stop="onDrop($event)"
+    @drop.stop="onDrop()"
   >
     <span
       class="drag-target"

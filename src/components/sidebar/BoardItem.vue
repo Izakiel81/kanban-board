@@ -69,9 +69,9 @@ function boardClick() {
     :key="currentBoard.id"
     @dragover.prevent
     @dragstart.stop="startDrag($event)"
-    @dragenter.stop="dragEnter($event)"
+    @dragenter.stop="dragEnter()"
     @dragleave.stop="dragLeave()"
-    @drop="onDrop($event)"
+    @drop="onDrop()"
     @click="boardClick"
     @mouseover="showButtons = true"
     @mouseleave="showButtons = false"
