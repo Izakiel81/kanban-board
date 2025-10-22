@@ -1,4 +1,5 @@
 import { type Ref } from "vue";
+import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 export function useDragAndDrop() {
   function dragStart(event: DragEvent, elementHeight: Ref<number>) {
     event.dataTransfer!.dropEffect = "move";
@@ -8,7 +9,7 @@ export function useDragAndDrop() {
     elementHeight.value = target.getBoundingClientRect().height;
   }
   function swapItems(
-    list: any[],
+    list: Array<Workspace | TaskList | Card>,
     draggedItemId: string,
     droppedItemId: string,
   ) {
@@ -25,6 +26,13 @@ export function useDragAndDrop() {
       draggedItemIndex === droppedItemIndex
     )
       return;
+    if (
+      (list[draggedItemIndex] as Card).taskListId &&
+      (list[droppedItemIndex] as Card).taskListId
+    )
+      (list[draggedItemIndex] as Card).taskListId = (
+        list[droppedItemIndex] as Card
+      ).taskListId;
 
     list[draggedItemIndex].order =
       list[draggedItemIndex].order + list[droppedItemIndex].order;
