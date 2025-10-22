@@ -25,10 +25,10 @@ const currentBoard = computed(() => workspace);
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentBoard,
+  boardsStore.workspaces,
   draggedOver,
   isAbove,
   elementHeight,
-  boardsStore.workspaces,
 );
 
 const showDeleteDialog = ref(false);
