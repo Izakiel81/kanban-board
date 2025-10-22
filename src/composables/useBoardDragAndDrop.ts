@@ -2,6 +2,10 @@ import { ref, type Ref } from "vue";
 import type { Workspace } from "../interfaces/Workspace";
 import { useDragAndDrop } from "./useDragAndDrop";
 import { useWorkspacesStore } from "../stores/workspaces";
+
+const draggedBoard = ref<Workspace | null>(null);
+const height = ref<number>(0);
+
 export function useBoardDragAndDrop(
   currentBoard: Ref<Workspace>,
   draggedOver: Ref<boolean>,
@@ -11,35 +15,30 @@ export function useBoardDragAndDrop(
   const { dragStart, swapItems } = useDragAndDrop();
   const boardsStore = useWorkspacesStore();
 
-  const counter = ref(0);
+  const counter = ref<number>(0);
   function startDrag(event: DragEvent) {
     if (!event.dataTransfer) return;
-    dragStart(event);
-    event.dataTransfer.setData("boardId", currentBoard.value.id);
-    event.dataTransfer.setData(
-      "boardOrder",
-      currentBoard.value.order.toString(),
-    );
+    dragStart(event, height);
+    draggedBoard.value = currentBoard.value;
   }
 
-  function onDrop(event: DragEvent) {
-    if (!event.dataTransfer) return;
-    const boardId = event.dataTransfer.getData("boardId");
-    if (!boardId) return;
-
-    swapItems(boardsStore.workspaces, boardId, currentBoard.value.id);
+  function onDrop() {
+    if (!draggedBoard.value) return;
+    swapItems(
+      boardsStore.workspaces,
+      draggedBoard.value.id,
+      currentBoard.value.id,
+    );
     dragLeave();
   }
 
-  function dragEnter(event: DragEvent) {
-    if (!event.dataTransfer) return;
+  function dragEnter() {
+    if (!draggedBoard.value) return;
     counter.value++;
-    const boardId = event.dataTransfer.getData("boardId");
-    const boardOrder = event.dataTransfer.getData("boardOrder");
-    if (!boardId || boardId === currentBoard.value.id) return;
+    if (draggedBoard.value.id === currentBoard.value.id) return;
     draggedOver.value = true;
-    isAbove.value = parseInt(boardOrder) > currentBoard.value.order;
-    elementHeight.value = parseInt(event.dataTransfer.getData("height"));
+    isAbove.value = draggedBoard.value.order > currentBoard.value.order;
+    elementHeight.value = height.value;
   }
 
   function dragLeave() {

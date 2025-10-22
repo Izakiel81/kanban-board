@@ -57,7 +57,7 @@ function finishEditing() {
 }
 
 function boardClick() {
-  router.push("/" + currentBoard.value.id);
+  router.push("/kanban-board/" + currentBoard.value.id);
 }
 </script>
 <template>
@@ -65,6 +65,7 @@ function boardClick() {
     draggable="true"
     class="board"
     v-if="!isEditing"
+    :key="currentBoard.id"
     @dragover.prevent
     @dragstart.stop="startDrag($event)"
     @dragenter.stop="dragEnter($event)"

@@ -64,6 +64,7 @@ function finishAdding() {
         <BoardItem
           v-for="workspace in currentWorkspaces"
           :workspace="workspace"
+          :key="workspace.id"
         />
       </ul>
       <div>

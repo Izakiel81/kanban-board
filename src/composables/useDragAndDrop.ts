@@ -1,17 +1,11 @@
+import { type Ref } from "vue";
 export function useDragAndDrop() {
-  function dragStart(event: DragEvent) {
+  function dragStart(event: DragEvent, elementHeight: Ref<number>) {
     event.dataTransfer!.dropEffect = "move";
     event.dataTransfer!.effectAllowed = "move";
 
     const target = event.target as HTMLElement;
-    event.dataTransfer!.setData(
-      "width",
-      target.getBoundingClientRect().width.toString(),
-    );
-    event.dataTransfer!.setData(
-      "height",
-      target.getBoundingClientRect().height.toString(),
-    );
+    elementHeight.value = target.getBoundingClientRect().height;
   }
   function swapItems(
     list: any[],
