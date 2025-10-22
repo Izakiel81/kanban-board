@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Workspace } from "../../interfaces/Workspace";
-import { useBoardDragAndDrop } from "../../composables/useBoardDragAndDrop";
+import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import ModalDialog from "../main/ui/ModalDialog.vue";
 import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
@@ -23,11 +23,12 @@ const elementHeight = ref(0);
 
 const currentBoard = computed(() => workspace);
 
-const { startDrag, onDrop, dragEnter, dragLeave } = useBoardDragAndDrop(
+const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentBoard,
   draggedOver,
   isAbove,
   elementHeight,
+  boardsStore.workspaces,
 );
 
 const showDeleteDialog = ref(false);

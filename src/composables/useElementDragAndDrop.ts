@@ -1,43 +1,38 @@
 import { ref, type Ref } from "vue";
-import type { Workspace } from "../interfaces/Workspace";
+import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 import { useDragAndDrop } from "./useDragAndDrop";
-import { useWorkspacesStore } from "../stores/workspaces";
 
-const draggedBoard = ref<Workspace | null>(null);
+const draggedElement = ref<Workspace | TaskList | Card | null>(null);
 const height = ref<number>(0);
 
-export function useBoardDragAndDrop(
-  currentBoard: Ref<Workspace>,
+export function useElementDragAndDrop(
+  currentElement: Ref<Workspace | TaskList | Card>,
+  elements: Array<Workspace | TaskList | Card>,
   draggedOver: Ref<boolean>,
   isAbove: Ref<boolean>,
   elementHeight: Ref<number>,
 ) {
   const { dragStart, swapItems } = useDragAndDrop();
-  const boardsStore = useWorkspacesStore();
 
   const counter = ref<number>(0);
   function startDrag(event: DragEvent) {
     if (!event.dataTransfer) return;
     dragStart(event, height);
-    draggedBoard.value = currentBoard.value;
+    draggedElement.value = currentElement.value;
   }
 
   function onDrop() {
-    if (!draggedBoard.value) return;
-    swapItems(
-      boardsStore.workspaces,
-      draggedBoard.value.id,
-      currentBoard.value.id,
-    );
+    if (!draggedElement.value) return;
+    swapItems(elements, draggedElement.value.id, currentElement.value.id);
     dragLeave();
   }
 
   function dragEnter() {
-    if (!draggedBoard.value) return;
+    if (!draggedElement.value) return;
     counter.value++;
-    if (draggedBoard.value.id === currentBoard.value.id) return;
+    if (draggedElement.value.id === currentElement.value.id) return;
     draggedOver.value = true;
-    isAbove.value = draggedBoard.value.order > currentBoard.value.order;
+    isAbove.value = draggedElement.value.order > currentElement.value.order;
     elementHeight.value = height.value;
   }
 

@@ -15,9 +15,6 @@ export function useCardDragAndDrop(
   function startDrag(event: DragEvent) {
     if (!event.dataTransfer) return;
     dragStart(event);
-    event.dataTransfer.setData("itemId", currentCard.value.id);
-    event.dataTransfer.setData("itemOrder", currentCard.value.order.toString());
-    event.dataTransfer.setData("itemTaskListId", currentCard.value.taskListId);
   }
 
   function onDrop(event: DragEvent) {
