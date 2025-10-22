@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCardDragAndDrop } from "../../../composables/useCardDragAndDrop";
+import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
 import { useCardsStore } from "../../../stores/cards";
 import DeleteButton from "../ui/DeleteButton.vue";
 import ModalDialog from "../ui/ModalDialog.vue";
@@ -16,8 +16,9 @@ const draggedOver = ref(false);
 const isAbove = ref(false);
 const elementHeight = ref(2);
 
-const { startDrag, onDrop, onDragEnter, onDragLeave } = useCardDragAndDrop(
+const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentCard,
+  cardsStore.cards,
   draggedOver,
   isAbove,
   elementHeight,
@@ -51,8 +52,8 @@ function deleteCard() {
     @mouseover="isMouseOver = true"
     @mouseleave="isMouseOver = false"
     @dragover.prevent
-    @dragenter.prevent.stop="onDragEnter($event)"
-    @dragleave.prevent.stop="onDragLeave()"
+    @dragenter.prevent.stop="dragEnter($event)"
+    @dragleave.prevent.stop="dragLeave()"
     @drop.stop="onDrop($event)"
   >
     <span
