@@ -44,7 +44,7 @@ function addTaskList() {
   >
     {{ currentWorkspaceTitle[0].title }}
   </h1>
-  <div class="container">
+  <div class="container" v-if="currentWorkspaceId">
     <TaskList
       v-if="currentTaskLists"
       v-for="taskList in currentTaskLists"
