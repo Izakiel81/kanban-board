@@ -1,6 +1,7 @@
 import { ref, type Ref } from "vue";
 import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 import { useDragAndDrop } from "./useDragAndDrop";
+import { useCardsStore } from "../stores/cards";
 
 const draggedElement = ref<Workspace | TaskList | Card | null>(null);
 const height = ref<number>(0);
@@ -15,6 +16,8 @@ export function useElementDragAndDrop(
 ) {
   const { dragStart, swapItems } = useDragAndDrop();
 
+  const cardsStore = useCardsStore();
+
   const counter = ref<number>(0);
   function startDrag(event: DragEvent) {
     if (!event.dataTransfer) return;
@@ -24,6 +27,17 @@ export function useElementDragAndDrop(
 
   function onDrop() {
     if (!draggedElement.value) return;
+    if (
+      (draggedElement.value as Card).taskListId &&
+      (currentElement.value as TaskList).workspaceId
+    ) {
+      const item = cardsStore.cards.find(
+        (item) => item.id === draggedElement.value!.id,
+      );
+      item && (item.taskListId = currentElement.value.id);
+      dragLeave();
+      return;
+    }
     swapItems(elements, draggedElement.value.id, currentElement.value.id);
     dragLeave();
   }
@@ -34,7 +48,7 @@ export function useElementDragAndDrop(
     if (draggedElement.value.id === currentElement.value.id) return;
     if ((draggedElement.value as Card).taskListId)
       isCardDragged && (isCardDragged.value = true);
-    draggedOver.value = true;
+    else draggedOver.value = true;
     isAbove.value = draggedElement.value.order > currentElement.value.order;
     elementHeight.value = height.value;
   }
