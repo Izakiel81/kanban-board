@@ -5,7 +5,6 @@
 
 ## 🚀 Demo  
 Check it out live: [https://izakiel81.github.io/kanban-board/](https://izakiel81.github.io/kanban-board/)  
-_(If deployed)_  
 
 ---
 
