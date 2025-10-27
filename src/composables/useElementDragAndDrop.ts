@@ -38,6 +38,21 @@ export function useElementDragAndDrop(
       dragLeave();
       return;
     }
+    if (
+      ((draggedElement.value as Card).taskListId &&
+        !(currentElement.value as Card).taskListId) ||
+      (!(draggedElement.value as Card).taskListId &&
+        (currentElement.value as Card).taskListId)
+    )
+      return;
+    if (
+      ((draggedElement.value as TaskList).workspaceId &&
+        !(currentElement.value as TaskList).workspaceId) ||
+      (!(draggedElement.value as TaskList).workspaceId &&
+        (currentElement.value as TaskList).workspaceId)
+    )
+      return;
+
     swapItems(elements, draggedElement.value.id, currentElement.value.id);
     dragLeave();
   }
@@ -46,6 +61,20 @@ export function useElementDragAndDrop(
     if (!draggedElement.value) return;
     counter.value++;
     if (draggedElement.value.id === currentElement.value.id) return;
+    if (
+      ((draggedElement.value as Card).taskListId &&
+        !(currentElement.value as Card).taskListId) ||
+      (!(draggedElement.value as Card).taskListId &&
+        (currentElement.value as Card).taskListId)
+    )
+      return;
+    if (
+      ((draggedElement.value as TaskList).workspaceId &&
+        !(currentElement.value as TaskList).workspaceId) ||
+      (!(draggedElement.value as TaskList).workspaceId &&
+        (currentElement.value as TaskList).workspaceId)
+    )
+      return;
     if (
       (draggedElement.value as Card).taskListId &&
       (currentElement.value as TaskList).workspaceId
