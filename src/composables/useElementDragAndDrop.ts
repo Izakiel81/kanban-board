@@ -54,7 +54,7 @@ export function useElementDragAndDrop(
         currentElement.value.type === "list");
     if (
       draggedElement.value.type !== currentElement.value.type &&
-      !isCardDragged
+      !isCardDragged?.value
     )
       return;
     draggedOver.value = !isCardDragged?.value;
