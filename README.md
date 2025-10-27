@@ -22,8 +22,6 @@ Check it out live: [https://izakiel81.github.io/kanban-board/](https://izakiel81
 ## 🎯 Features  
 - Drag & drop cards between columns (To Do → In Progress → Done)  
 - Add / edit / delete tasks (cards)  
-- Persist state (localStorage / backend API) _(if applicable)_  
+- Persist state (Pinia)  
 - Responsive design — works on mobile & desktop  
 - Friendly UI with animations & smooth UX  
-- Customizable columns and workflows _(optional)_  
-- Theme support (light/dark) _(optional)_
