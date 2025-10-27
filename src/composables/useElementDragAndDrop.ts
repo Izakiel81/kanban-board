@@ -28,8 +28,8 @@ export function useElementDragAndDrop(
   function onDrop() {
     if (!draggedElement.value) return;
     if (
-      (draggedElement.value as Card).taskListId &&
-      (currentElement.value as TaskList).workspaceId
+      draggedElement.value.type === "card" &&
+      currentElement.value.type === "list"
     ) {
       const item = cardsStore.cards.find(
         (item) => item.id === draggedElement.value!.id,
@@ -38,20 +38,7 @@ export function useElementDragAndDrop(
       dragLeave();
       return;
     }
-    if (
-      ((draggedElement.value as Card).taskListId &&
-        !(currentElement.value as Card).taskListId) ||
-      (!(draggedElement.value as Card).taskListId &&
-        (currentElement.value as Card).taskListId)
-    )
-      return;
-    if (
-      ((draggedElement.value as TaskList).workspaceId &&
-        !(currentElement.value as TaskList).workspaceId) ||
-      (!(draggedElement.value as TaskList).workspaceId &&
-        (currentElement.value as TaskList).workspaceId)
-    )
-      return;
+    if (draggedElement.value.type !== currentElement.value.type) return;
 
     swapItems(elements, draggedElement.value.id, currentElement.value.id);
     dragLeave();
@@ -62,25 +49,13 @@ export function useElementDragAndDrop(
     counter.value++;
     if (draggedElement.value.id === currentElement.value.id) return;
     if (
-      ((draggedElement.value as Card).taskListId &&
-        !(currentElement.value as Card).taskListId) ||
-      (!(draggedElement.value as Card).taskListId &&
-        (currentElement.value as Card).taskListId)
-    )
-      return;
-    if (
-      ((draggedElement.value as TaskList).workspaceId &&
-        !(currentElement.value as TaskList).workspaceId) ||
-      (!(draggedElement.value as TaskList).workspaceId &&
-        (currentElement.value as TaskList).workspaceId)
-    )
-      return;
-    if (
-      (draggedElement.value as Card).taskListId &&
-      (currentElement.value as TaskList).workspaceId
+      draggedElement.value.type === "card" &&
+      currentElement.value.type === "list"
     )
       isCardDragged && (isCardDragged.value = true);
     else draggedOver.value = true;
+
+    if (draggedElement.value.type !== currentElement.value.type) return;
     isAbove.value = draggedElement.value.order > currentElement.value.order;
     elementHeight.value = height.value;
   }

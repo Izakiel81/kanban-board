@@ -18,6 +18,7 @@ export const useCardsStore = defineStore(
         order: cards.value.length
           ? cards.value[cards.value.length - 1].order + 1
           : 0,
+        type: "card",
       });
     }
     function editCard(card: Card) {

@@ -19,6 +19,7 @@ export const useTaskListsStore = defineStore(
         order: taskLists.value.length
           ? taskLists.value[taskLists.value.length - 1].order + 1
           : 0,
+        type: "list",
       });
     }
 

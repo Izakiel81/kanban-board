@@ -18,6 +18,7 @@ export const useWorkspacesStore = defineStore(
         order: workspaces.value.length
           ? workspaces.value[workspaces.value.length - 1].order + 1
           : 0,
+        type: "board",
       });
     }
 
