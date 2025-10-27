@@ -48,14 +48,16 @@ export function useElementDragAndDrop(
     if (!draggedElement.value) return;
     counter.value++;
     if (draggedElement.value.id === currentElement.value.id) return;
+    isCardDragged &&
+      (isCardDragged.value =
+        draggedElement.value.type === "card" &&
+        currentElement.value.type === "list");
     if (
-      draggedElement.value.type === "card" &&
-      currentElement.value.type === "list"
+      draggedElement.value.type !== currentElement.value.type &&
+      !isCardDragged
     )
-      isCardDragged && (isCardDragged.value = true);
-    else draggedOver.value = true;
-
-    if (draggedElement.value.type !== currentElement.value.type) return;
+      return;
+    draggedOver.value = !isCardDragged?.value;
     isAbove.value = draggedElement.value.order > currentElement.value.order;
     elementHeight.value = height.value;
   }
