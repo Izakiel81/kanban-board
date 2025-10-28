@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import BoardItem from "./BoardItem.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
+import { useAppStatesStore } from "../../stores/app_store.ts";
 import { ref, computed, nextTick } from "vue";
 import { v4 as uuid } from "uuid";
 
-const emit = defineEmits(["fold"]);
 const workspacesStore = useWorkspacesStore();
+const appStates = useAppStatesStore();
 
 const currentWorkspaces = computed(() =>
   workspacesStore.workspaces.sort((a, b) => a.order - b.order),
@@ -46,14 +47,7 @@ function finishAdding() {
   <div class="sidebar">
     <header>
       <span class="fold-container">
-        <span
-          id="fold"
-          @click.stop="
-            () => {
-              emit('fold');
-            }
-          "
-        />
+        <span id="fold" @click.stop="appStates.showSidebar = false" />
       </span>
       <img src="../../assets/logo.png" alt="logo" />
       <h1>Kanban board</h1>

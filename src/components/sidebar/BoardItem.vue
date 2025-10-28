@@ -2,20 +2,19 @@
 import { type Workspace } from "../../interfaces/Workspace";
 import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
+import { useAppStatesStore } from "../../stores/app_store";
 import ModalDialog from "../main/ui/ModalDialog.vue";
 import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
 import DeleteButton from "../main/ui/DeleteButton.vue";
 import EditButton from "../main/ui/EditButton.vue";
-import { useRouter } from "vue-router";
 import { ref, computed, nextTick } from "vue";
 
 const { workspace } = defineProps<{
   workspace: Workspace;
 }>();
 
-const router = useRouter();
-
 const boardsStore = useWorkspacesStore();
+const appStates = useAppStatesStore();
 
 const draggedOver = ref(false);
 const isAbove = ref(false);
@@ -40,7 +39,7 @@ const newBoardTitleRef = ref<HTMLInputElement | null>(null);
 
 function deleteBoard(id: string) {
   boardsStore.removeWorkspace(id);
-  router.push("/");
+  appStates.currentBoardId = "";
 }
 
 function startEditing() {
@@ -58,7 +57,7 @@ function finishEditing() {
 }
 
 function boardClick() {
-  router.push("/kanban-board/" + currentBoard.value.id);
+  appStates.currentBoardId = currentBoard.value.id;
 }
 </script>
 <template>

@@ -2,28 +2,26 @@
 import BurgerIcon from "./components/sidebar/BurgerIcon.vue";
 import SidebarComponent from "./components/sidebar/SidebarComponent.vue";
 import MainPageComponent from "./components/main/MainPageComponent.vue";
-import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
+import { useAppStatesStore } from "./stores/app_store.ts";
 
-const route = useRoute();
-
-const currentWorkspaceId = computed(() => route.params.id as string);
-const sidebarFolded = ref(false);
+const appStates = useAppStatesStore();
+const currentWorkspaceId = computed(() => appStates.currentBoardId);
 </script>
 
 <template>
-  <div id="container" :class="{ folded: sidebarFolded }">
+  <div id="container" :class="{ folded: !appStates.showSidebar }">
     <aside class="sidebar">
-      <SidebarComponent @fold="sidebarFolded = true" />
+      <SidebarComponent />
     </aside>
 
     <main class="main">
       <div
-        v-if="sidebarFolded"
+        v-if="!appStates.showSidebar"
         class="burger-icon-container"
         @click.stop="
           () => {
-            sidebarFolded = false;
+            appStates.showSidebar = true;
           }
         "
       >
