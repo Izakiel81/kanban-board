@@ -59,7 +59,7 @@ function addCard() {
 }
 
 function editTitle() {
-  if (!newTaskListTitle) return;
+  if (!newTaskListTitle.value) return;
   taskListsStore.editTaskList({
     ...props.taskList,
     title: newTaskListTitle.value,
