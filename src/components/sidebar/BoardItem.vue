@@ -49,10 +49,9 @@ function startEditing() {
   });
 }
 function finishEditing() {
-  if (newBoardTitle.value) {
-    currentBoard.value.title = newBoardTitle.value;
-  }
-  newBoardTitle.value = currentBoard.value.title;
+  if (!newBoardTitle.value) return;
+
+  currentBoard.value.title = newBoardTitle.value;
   isEditing.value = false;
 }
 
