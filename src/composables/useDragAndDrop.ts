@@ -26,13 +26,6 @@ export function useDragAndDrop() {
       draggedItemIndex === droppedItemIndex
     )
       return;
-    if (
-      (list[draggedItemIndex] as Card).taskListId &&
-      (list[droppedItemIndex] as Card).taskListId
-    )
-      (list[draggedItemIndex] as Card).taskListId = (
-        list[droppedItemIndex] as Card
-      ).taskListId;
 
     list[draggedItemIndex].order =
       list[draggedItemIndex].order + list[droppedItemIndex].order;
@@ -40,6 +33,12 @@ export function useDragAndDrop() {
       list[draggedItemIndex].order - list[droppedItemIndex].order;
     list[draggedItemIndex].order =
       list[draggedItemIndex].order - list[droppedItemIndex].order;
+
+    if (
+      list[draggedItemIndex].type === "card" &&
+      list[droppedItemIndex].type === "card"
+    )
+      list[draggedItemIndex].taskListId = list[droppedItemIndex].taskListId;
   }
 
   return {
