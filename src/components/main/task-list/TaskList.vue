@@ -61,9 +61,8 @@ function addCard() {
 function editTitle() {
   if (!newTaskListTitle) return;
   taskListsStore.editTaskList({
-    id: props.taskList.id,
+    ...props.taskList,
     title: newTaskListTitle.value,
-    workspaceId: props.taskList.workspaceId,
   } as TaskList);
 
   newTaskListTitle.value = "";
