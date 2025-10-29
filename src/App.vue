@@ -2,7 +2,7 @@
 import BurgerIcon from "./components/sidebar/BurgerIcon.vue";
 import SidebarComponent from "./components/sidebar/SidebarComponent.vue";
 import MainPageComponent from "./components/main/MainPageComponent.vue";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useAppStatesStore } from "./stores/app_store.ts";
 
 const appStates = useAppStatesStore();
