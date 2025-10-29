@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import findMaxOrder from "./utils/findMaxOrder";
 import { ref, type Ref } from "vue";
 import { type TaskList } from "../interfaces/Workspace";
 import { useCardsStore } from "./cards";
@@ -14,11 +15,10 @@ export const useTaskListsStore = defineStore(
       title: string;
       workspaceId: string;
     }) {
+      let biggestOrder = findMaxOrder(taskLists.value);
       taskLists.value.push({
         ...taskList,
-        order: taskLists.value.length
-          ? taskLists.value[taskLists.value.length - 1].order + 1
-          : 0,
+        order: biggestOrder + 1,
         type: "list",
       });
     }
