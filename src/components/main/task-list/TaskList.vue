@@ -46,7 +46,7 @@ const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
 );
 
 function addCard() {
-  if (!newCardTitle) return;
+  if (!newCardTitle.value) return;
 
   cardsStore.addCard({
     id: uuid(),
@@ -94,6 +94,10 @@ function editTitle() {
     ></span>
     <div class="list">
       <div class="title-container">
+        <div class="dots">
+          <span />
+          <span />
+        </div>
         <h2 class="title" v-if="!isEditingTitle">
           <button class="title-button" @click="isEditingTitle = true">
             {{ currentTaskList.title }}
@@ -216,11 +220,46 @@ function editTitle() {
   display: flex;
   margin-bottom: 5px;
 }
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  width: 9px;
+  margin-right: 2px;
+}
+.dots span {
+  display: block;
+  position: relative;
+  background-color: #fff;
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+}
+.dots span::before,
+.dots span::after {
+  content: "";
+  position: absolute;
+  display: block;
+  background-color: #fff;
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+}
+
+.dots span::before {
+  top: -6px;
+}
+
+.dots span::after {
+  top: 6px;
+}
+
 .title {
-  width: 100%;
+  width: calc(100% - 20px);
 }
 .title-button {
   width: 100%;
+  height: 100%;
   text-align: left;
 
   background-color: transparent;
