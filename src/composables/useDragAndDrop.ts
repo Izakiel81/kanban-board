@@ -8,7 +8,7 @@ export function useDragAndDrop() {
     const target = event.target as HTMLElement;
     elementHeight.value = target.getBoundingClientRect().height;
   }
-  function swapItems(
+  function changeItemOrder(
     list: Array<Workspace | TaskList | Card>,
     draggedItemId: string,
     dropItemId: string,
@@ -42,6 +42,6 @@ export function useDragAndDrop() {
 
   return {
     dragStart,
-    swapItems,
+    changeItemOrder,
   };
 }

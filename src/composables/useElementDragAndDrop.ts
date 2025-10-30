@@ -14,7 +14,7 @@ export function useElementDragAndDrop(
   elementHeight: Ref<number>,
   isCardDragged?: Ref<boolean>,
 ) {
-  const { dragStart, swapItems } = useDragAndDrop();
+  const { dragStart, changeItemOrder } = useDragAndDrop();
 
   const cardsStore = useCardsStore();
 
@@ -40,7 +40,7 @@ export function useElementDragAndDrop(
     }
     if (draggedElement.value.type !== currentElement.value.type) return;
 
-    swapItems(elements, draggedElement.value.id, currentElement.value.id);
+    changeItemOrder(elements, draggedElement.value.id, currentElement.value.id);
     dragLeave();
   }
 
