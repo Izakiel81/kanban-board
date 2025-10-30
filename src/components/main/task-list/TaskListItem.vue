@@ -32,7 +32,7 @@ const newCardTitle = ref(currentCard.value.title || "");
 const newCardDescription = ref(currentCard.value.description || "");
 
 function closeDialog(newCard: Card) {
-  if (!newCardTitle.value) return;
+  if (!newCardTitle.value || !newCardTitle.value.trim()) return;
   cardsStore.editCard(newCard);
 
   showModalDialog.value = false;
