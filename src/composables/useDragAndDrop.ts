@@ -11,34 +11,33 @@ export function useDragAndDrop() {
   function swapItems(
     list: Array<Workspace | TaskList | Card>,
     draggedItemId: string,
-    droppedItemId: string,
+    dropItemId: string,
   ) {
     const draggedItemIndex = list.findIndex(
       (item) => item.id === draggedItemId,
     );
-    const droppedItemIndex = list.findIndex(
-      (item) => item.id === droppedItemId,
-    );
+    const dropItemIndex = list.findIndex((item) => item.id === dropItemId);
 
     if (
       draggedItemIndex === -1 ||
-      droppedItemIndex === -1 ||
-      draggedItemIndex === droppedItemIndex
+      dropItemIndex === -1 ||
+      draggedItemIndex === dropItemIndex
     )
       return;
 
-    list[draggedItemIndex].order =
-      list[draggedItemIndex].order + list[droppedItemIndex].order;
-    list[droppedItemIndex].order =
-      list[draggedItemIndex].order - list[droppedItemIndex].order;
-    list[draggedItemIndex].order =
-      list[draggedItemIndex].order - list[droppedItemIndex].order;
+    const [item] = list.splice(draggedItemIndex, 1);
+
+    list.splice(dropItemIndex, 0, item);
+
+    list.forEach((item, index) => {
+      item.order = index;
+    });
 
     if (
       list[draggedItemIndex].type === "card" &&
-      list[droppedItemIndex].type === "card"
+      list[dropItemIndex].type === "card"
     )
-      list[draggedItemIndex].taskListId = list[droppedItemIndex].taskListId;
+      list[draggedItemIndex].taskListId = list[dropItemIndex].taskListId;
   }
 
   return {
