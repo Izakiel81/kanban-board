@@ -49,7 +49,7 @@ function startEditing() {
   });
 }
 function finishEditing() {
-  if (!newBoardTitle.value) return;
+  if (!newBoardTitle.value || !newBoardTitle.value.trim()) return;
 
   currentBoard.value.title = newBoardTitle.value;
   isEditing.value = false;

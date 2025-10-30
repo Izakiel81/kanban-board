@@ -46,7 +46,7 @@ const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
 );
 
 function addCard() {
-  if (!newCardTitle.value) return;
+  if (!newCardTitle.value || !newCardTitle.value.trim()) return;
 
   cardsStore.addCard({
     id: uuid(),
@@ -57,9 +57,12 @@ function addCard() {
   isAddingCard.value = false;
   newCardTitle.value = "";
 }
-
+function startEditing() {
+  newTaskListTitle.value = currentTaskList.value.title;
+  isEditingTitle.value = true;
+}
 function editTitle() {
-  if (!newTaskListTitle.value) return;
+  if (!newTaskListTitle.value || !newTaskListTitle.value.trim()) return;
   taskListsStore.editTaskList({
     ...props.taskList,
     title: newTaskListTitle.value,
@@ -98,7 +101,7 @@ function editTitle() {
           <span />
         </div>
         <h2 class="title" v-if="!isEditingTitle">
-          <button class="title-button" @click="isEditingTitle = true">
+          <button class="title-button" @click="startEditing()">
             {{ currentTaskList.title }}
           </button>
         </h2>

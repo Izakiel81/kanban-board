@@ -25,7 +25,7 @@ function startAdding() {
   });
 }
 function finishAdding() {
-  newWorkspaceTitle.value
+  newWorkspaceTitle.value && newWorkspaceTitle.value.trim()
     ? workspacesStore.addWorkspace({
         id: uuid(),
         title: newWorkspaceTitle.value,
