@@ -25,11 +25,7 @@ const currentTaskLists = computed(() =>
 
 function addTaskList() {
   if (!newTaskListTitle.value) return;
-  tasklistsStore.addTaskList({
-    id: uuid(),
-    workspaceId: currentWorkspaceId.value,
-    title: newTaskListTitle.value,
-  });
+  boardsStore.addTaskList(appStates.currentBoardId, newTaskListTitle.value);
   isAdding.value = false;
   newTaskListTitle.value = "";
 }
