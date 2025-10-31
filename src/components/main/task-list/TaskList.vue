@@ -187,7 +187,7 @@ function editTitle() {
     <template #footer>
       <ModalDialogButton
         @click.stop="
-          taskListsStore.removeTaskList(currentTaskList.id);
+          boardsStore.deleteItem(currentTaskList.id, props.taskLists);
           isDeleting = false;
         "
         >Yes</ModalDialogButton
