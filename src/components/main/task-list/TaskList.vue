@@ -4,8 +4,8 @@ import DeleteButton from "../../main/ui/DeleteButton.vue";
 import ModalDialog from "../../main/ui/ModalDialog.vue";
 import ModalDialogButton from "../../main/ui/ModalDialogButton.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
-import { useTaskListsStore } from "../../../stores/tasklists";
-import { useCardsStore } from "../../../stores/cards";
+import { useAppStatesStore } from "../../../stores/app_store";
+import { useWorkspacesStore } from "../../../stores/workspaces";
 import { computed, ref } from "vue";
 import { v4 as uuid } from "uuid";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop.ts";
@@ -20,8 +20,8 @@ const currentTaskList = computed(() => props.taskList);
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
 
-const taskListsStore = useTaskListsStore();
-const cardsStore = useCardsStore();
+const appStates = useAppStatesStore();
+const boardsStore = useWorkspacesStore();
 
 const elementHeight = ref(0);
 const isOnLeft = ref(false);
@@ -31,9 +31,7 @@ const showDeleteButton = ref(false);
 const isDeleting = ref(false);
 
 const currentCards = computed(() =>
-  cardsStore
-    .getCardsByTaskListId(currentTaskList.value.id)
-    .sort((a, b) => a.order - b.order),
+  currentTaskList.value.cards.sort((a, b) => a.order - b.order),
 );
 
 const isAddingCard = ref(false);
@@ -51,11 +49,11 @@ const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
 function addCard() {
   if (!newCardTitle.value || !newCardTitle.value.trim()) return;
 
-  cardsStore.addCard({
-    id: uuid(),
-    taskListId: currentTaskList.value.id,
-    title: newCardTitle.value,
-  });
+  boardsStore.addCard(
+    appStates.currentBoardId,
+    currentTaskList.value.id,
+    newCardTitle.value,
+  );
 
   isAddingCard.value = false;
   newCardTitle.value = "";
@@ -138,6 +136,7 @@ function editTitle() {
           v-for="card in currentCards"
           :key="card.id"
           :card="card"
+          :cards="taskList.cards"
         />
       </div>
       <div
