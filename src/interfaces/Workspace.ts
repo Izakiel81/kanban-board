@@ -5,13 +5,13 @@ interface Base {
 }
 export interface Workspace extends Base {
   readonly type: "board";
+  lists: Array<TaskList>;
 }
 export interface Card extends Base {
-  taskListId: string;
-  description?: string;
   readonly type: "card";
+  description?: string;
 }
 export interface TaskList extends Base {
-  workspaceId: string;
   readonly type: "list";
+  cards: Array<Card>;
 }
