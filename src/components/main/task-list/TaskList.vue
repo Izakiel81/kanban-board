@@ -10,7 +10,10 @@ import { computed, ref } from "vue";
 import { v4 as uuid } from "uuid";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop.ts";
 
-const props = defineProps<{ taskList: TaskList }>();
+const props = defineProps<{
+  taskLists: Array<TaskLists>;
+  taskList: TaskList;
+}>();
 
 const currentTaskList = computed(() => props.taskList);
 
@@ -38,7 +41,7 @@ const newCardTitle = ref("");
 
 const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
   currentTaskList,
-  taskListsStore.taskLists,
+  props.taskLists,
   draggedOver,
   isOnLeft,
   elementHeight,
