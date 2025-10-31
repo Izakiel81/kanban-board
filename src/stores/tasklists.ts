@@ -2,13 +2,11 @@ import { defineStore } from "pinia";
 import findMaxOrder from "./utils/findMaxOrder";
 import { ref, type Ref } from "vue";
 import { type TaskList } from "../interfaces/Workspace";
-import { useCardsStore } from "./cards";
 
 export const useTaskListsStore = defineStore(
   "tasklists",
   () => {
     const taskLists: Ref<TaskList[]> = ref([]);
-    const cardsStore = useCardsStore();
 
     function addTaskList(taskList: {
       id: string;
@@ -20,6 +18,7 @@ export const useTaskListsStore = defineStore(
         ...taskList,
         order: biggestOrder + 1,
         type: "list",
+        cards: [],
       });
     }
 
@@ -31,22 +30,9 @@ export const useTaskListsStore = defineStore(
     }
 
     function removeTaskList(taskListId: string) {
-      cardsStore.cascadeDeleteCardsByTaskListId(taskListId);
       taskLists.value = taskLists.value.filter(
         (taskList) => taskList.id !== taskListId,
       );
-    }
-
-    function getTaskListsByWorkspaceId(workspaceId: string) {
-      return taskLists.value.filter(
-        (taskList) => taskList.workspaceId === workspaceId,
-      );
-    }
-
-    function cascadeDeleteTaskListsByWorkspaceId(workspaceId: string) {
-      taskLists.value.map((taskList) => {
-        if (taskList.workspaceId === workspaceId) removeTaskList(taskList.id);
-      });
     }
 
     return {
@@ -54,8 +40,6 @@ export const useTaskListsStore = defineStore(
       addTaskList,
       editTaskList,
       removeTaskList,
-      getTaskListsByWorkspaceId,
-      cascadeDeleteTaskListsByWorkspaceId,
     };
   },
   { persist: true },
