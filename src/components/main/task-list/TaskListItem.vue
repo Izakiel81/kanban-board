@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
-import { useCardsStore } from "../../../stores/cards";
+import { useWorkspacesStore } from "../../../stores/workspaces";
 import DeleteButton from "../ui/DeleteButton.vue";
 import ModalDialog from "../ui/ModalDialog.vue";
 import ModalDialogButton from "../ui/ModalDialogButton.vue";
@@ -9,7 +9,7 @@ import { ref, computed } from "vue";
 
 const props = defineProps<{ card: Card; cards: Array<Card> }>();
 
-const cardsStore = useCardsStore();
+const boardsStore = useWorkspacesStore();
 
 const currentCard = computed(() => props.card);
 const draggedOver = ref(false);
@@ -39,7 +39,7 @@ function closeDialog(newCard: Card) {
 }
 
 function deleteCard() {
-  cardsStore.deleteCard(currentCard.value.id);
+  boardsStore.deleteItem(currentCard.value.id, props.cards);
   showDeleteDialog.value = false;
 }
 </script>
