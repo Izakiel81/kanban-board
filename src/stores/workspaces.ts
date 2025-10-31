@@ -43,14 +43,54 @@ export const useWorkspacesStore = defineStore(
       );
     }
 
-    function addTaskList(workspaceId: string) {}
+    function addTaskList(boardId: string, newListTitle: string) {
+      const boardIndex = workspaces.value.findIndex(
+        (item) => item.id === boardId,
+      );
+      if (boardIndex === -1) return;
+      const biggestOrder = findMaxOrder(workspaces.value[boardIndex].lists);
+      workspaces.value[boardIndex].lists.push({
+        id: uuid(),
+        title: newListTitle,
+        order: biggestOrder + 1,
+        type: "list",
+        cards: [],
+      });
+    }
+
+    function addCard(
+      boardId: string,
+      taskListId: string,
+      newCardTitle: string,
+    ) {
+      const boardIndex = workspaces.value.findIndex(
+        (item) => item.id === boardId,
+      );
+      if (boardIndex === -1) return;
+      const taskListIndex = workspaces.value[boardIndex].lists.findIndex(
+        (item) => item.id === taskListId,
+      );
+      if (taskListIndex === -1) return;
+
+      const biggestOrder = findMaxOrder(
+        workspaces.value[boardIndex].lists[taskListIndex].cards,
+      );
+      workspaces.value[boardIndex].lists[taskListIndex].cards.push({
+        id: uuid(),
+        title: newCardTitle,
+        type: "card",
+        order: biggestOrder + 1,
+      });
+    }
+
     function editTaskList(newTaskList: TaskList) {}
-    function addCard(workspaceId: string) {}
     function editCard(newCard: Card) {}
 
     return {
       workspaces,
       addWorkspace,
+      addTaskList,
+      addCard,
       editWorkspace,
       removeWorkspace,
       deleteItem,
