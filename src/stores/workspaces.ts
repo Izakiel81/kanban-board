@@ -90,6 +90,7 @@ export const useWorkspacesStore = defineStore(
       workspaces.value[boardIndex].lists[taskListIndex].cards.push({
         id: uuid(),
         title: newCardTitle,
+        taskListId,
         type: "card",
         order: biggestOrder + 1,
       });

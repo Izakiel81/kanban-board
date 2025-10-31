@@ -9,6 +9,7 @@ export interface Workspace extends Base {
 }
 export interface Card extends Base {
   readonly type: "card";
+  taskListId: string;
   description?: string;
 }
 export interface TaskList extends Base {

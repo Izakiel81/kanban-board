@@ -8,6 +8,14 @@ export function useDragAndDrop() {
     const target = event.target as HTMLElement;
     elementHeight.value = target.getBoundingClientRect().height;
   }
+
+  function transferCardsBetweenLists(
+    listFrom: Array<TaskList>,
+    listTo: Array<TaskList>,
+    draggedCardId: string,
+    doppedCardId: string,
+  ) {}
+
   function changeItemOrder(
     list: Array<Workspace | TaskList | Card>,
     draggedItemId: string,
@@ -32,16 +40,11 @@ export function useDragAndDrop() {
     list.forEach((item, index) => {
       item.order = index;
     });
-
-    if (
-      list[draggedItemIndex].type === "card" &&
-      list[dropItemIndex].type === "card"
-    )
-      list[draggedItemIndex].taskListId = list[dropItemIndex].taskListId;
   }
 
   return {
     dragStart,
     changeItemOrder,
+    transferCardsBetweenLists,
   };
 }
