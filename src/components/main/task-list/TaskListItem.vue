@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
 import { useWorkspacesStore } from "../../../stores/workspaces";
+import { useAppStatesStore } from "../../../stores/app_store";
 import DeleteButton from "../ui/DeleteButton.vue";
 import ModalDialog from "../ui/ModalDialog.vue";
 import ModalDialogButton from "../ui/ModalDialogButton.vue";
 import { type Card } from "../../../interfaces/Workspace";
 import { ref, computed } from "vue";
 
-const props = defineProps<{ card: Card; cards: Array<Card> }>();
+const props = defineProps<{
+  card: Card;
+  cards: Array<Card>;
+  currentTaskListId: string;
+}>();
 
+const appStates = useAppStatesStore();
 const boardsStore = useWorkspacesStore();
 
 const currentCard = computed(() => props.card);
@@ -33,7 +39,12 @@ const newCardDescription = ref(currentCard.value.description || "");
 
 function closeDialog(newCard: Card) {
   if (!newCardTitle.value || !newCardTitle.value.trim()) return;
-  cardsStore.editCard(newCard);
+  boardsStore.editCard(
+    appStates.currentBoardId,
+    props.currentTaskListId,
+    currentCard.value.id,
+    newCard,
+  );
 
   showModalDialog.value = false;
 }
@@ -101,7 +112,12 @@ function deleteCard() {
           >
             {{ newCardTitle }}
           </h2>
-          <textarea v-model="newCardTitle" v-else />
+          <textarea
+            v-model="newCardTitle"
+            @blur="modalDialogTitleEdit = false"
+            @keyup.enter="modalDialogTitleEdit = false"
+            v-else
+          />
         </span>
       </template>
       <template #default>

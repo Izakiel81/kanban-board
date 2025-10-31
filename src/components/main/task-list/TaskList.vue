@@ -137,6 +137,7 @@ function editTitle() {
           :key="card.id"
           :card="card"
           :cards="taskList.cards"
+          :currentTaskListId="currentTaskList.id"
         />
       </div>
       <div

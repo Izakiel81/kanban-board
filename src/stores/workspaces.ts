@@ -112,15 +112,24 @@ export const useWorkspacesStore = defineStore(
       const boardIndex = workspaces.value.findIndex(
         (item) => item.id === boardId,
       );
-      if (boardIndex === -1) return;
+      if (boardIndex === -1) {
+        console.error("board is not found");
+        return;
+      }
       const taskListIndex = workspaces.value[boardIndex].lists.findIndex(
         (item) => item.id === taskListId,
       );
-      if (taskListIndex === -1) return;
+      if (taskListIndex === -1) {
+        console.error("list is not found");
+        return;
+      }
       const cardIndex = workspaces.value[boardIndex].lists[
         taskListIndex
       ].cards.findIndex((item) => item.id === cardId);
-      if (cardIndex === -1) return;
+      if (cardIndex === -1) {
+        console.error("card is not found");
+        return;
+      }
 
       workspaces.value[boardIndex].lists[taskListIndex].cards[cardIndex] =
         newCard;
