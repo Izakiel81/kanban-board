@@ -87,8 +87,44 @@ export const useWorkspacesStore = defineStore(
       });
     }
 
-    function editTaskList(newTaskList: TaskList) {}
-    function editCard(newCard: Card) {}
+    function editTaskList(
+      boardId: string,
+      taskListId: string,
+      newTaskList: TaskList,
+    ) {
+      const boardIndex = workspaces.value.findIndex(
+        (item) => item.id === boardId,
+      );
+      if (boardIndex === -1) return;
+      const taskListIndex = workspaces.value[boardIndex].lists.findIndex(
+        (item) => item.id === taskListId,
+      );
+      if (taskListIndex === -1) return;
+
+      workspaces.value[boardIndex].lists[taskListIndex] = newTaskList;
+    }
+    function editCard(
+      boardId: string,
+      taskListId: string,
+      cardId: string,
+      newCard: Card,
+    ) {
+      const boardIndex = workspaces.value.findIndex(
+        (item) => item.id === boardId,
+      );
+      if (boardIndex === -1) return;
+      const taskListIndex = workspaces.value[boardIndex].lists.findIndex(
+        (item) => item.id === taskListId,
+      );
+      if (taskListIndex === -1) return;
+      const cardIndex = workspaces.value[boardIndex].lists[
+        taskListIndex
+      ].cards.findIndex((item) => item.id === cardId);
+      if (cardIndex === -1) return;
+
+      workspaces.value[boardIndex].lists[taskListIndex].cards[cardIndex] =
+        newCard;
+    }
 
     return {
       workspaces,
@@ -97,6 +133,8 @@ export const useWorkspacesStore = defineStore(
       addTaskList,
       addCard,
       editWorkspace,
+      editTaskList,
+      editCard,
       removeWorkspace,
       deleteItem,
     };
