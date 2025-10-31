@@ -12,6 +12,10 @@ export const useWorkspacesStore = defineStore(
   "workspaces",
   () => {
     const workspaces: Ref<Workspace[]> = ref([]);
+
+    function getBoardById(id: string) {
+      return workspaces.value.find((item) => item.id === id);
+    }
     function addWorkspace(workspace?: { id: string; title: string }) {
       let biggestOrder = findMaxOrder(workspaces.value);
       workspaces.value.push({
@@ -88,6 +92,7 @@ export const useWorkspacesStore = defineStore(
 
     return {
       workspaces,
+      getBoardById,
       addWorkspace,
       addTaskList,
       addCard,

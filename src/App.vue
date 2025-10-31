@@ -4,9 +4,14 @@ import SidebarComponent from "./components/sidebar/SidebarComponent.vue";
 import MainPageComponent from "./components/main/MainPageComponent.vue";
 import { computed } from "vue";
 import { useAppStatesStore } from "./stores/app_store.ts";
+import { useWorkspacesStore } from "./stores/workspaces";
 
 const appStates = useAppStatesStore();
-const currentWorkspaceId = computed(() => appStates.currentBoardId);
+const boardsStore = useWorkspacesStore();
+
+const currentBoard = computed(() =>
+  boardsStore.getBoardById(appStates.currentBoardId),
+);
 </script>
 
 <template>
@@ -27,7 +32,7 @@ const currentWorkspaceId = computed(() => appStates.currentBoardId);
       >
         <BurgerIcon />
       </div>
-      <MainPageComponent :workspace_id="currentWorkspaceId" />
+      <MainPageComponent v-if="currentBoard" :taskLists="currentBoard.lists" />
     </main>
   </div>
 </template>

@@ -2,17 +2,17 @@
 import TaskList from "./task-list/TaskList.vue";
 import { useTaskListsStore } from "../../stores/tasklists";
 import { useWorkspacesStore } from "../../stores/workspaces";
+import { useAppStatesStore } from "../../stores/app_store";
 import { ref, computed } from "vue";
 import { v4 as uuid } from "uuid";
 
-const props = defineProps<{ workspace_id?: string }>();
-const tasklistsStore = useTaskListsStore();
+const props = defineProps<{ taskLists: Array<TaskList> }>();
 const boardsStore = useWorkspacesStore();
 
-const currentWorkspaceId = computed(() => props.workspace_id as string);
+const appStates = useAppStatesStore();
 const currentWorkspaceTitle = computed(() =>
   boardsStore.workspaces.filter(
-    (workspace) => workspace.id === currentWorkspaceId.value,
+    (workspace) => workspace.id === appStates.currentBoardId,
   ),
 );
 
@@ -20,9 +20,7 @@ const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
 const currentTaskLists = computed(() =>
-  tasklistsStore
-    .getTaskListsByWorkspaceId(currentWorkspaceId.value as string)
-    .sort((a, b) => a.order - b.order),
+  props.taskLists.sort((a, b) => a.order - b.order),
 );
 
 function addTaskList() {
@@ -44,7 +42,7 @@ function addTaskList() {
   >
     {{ currentWorkspaceTitle[0].title }}
   </h1>
-  <div class="container" v-if="currentWorkspaceId">
+  <div class="container" v-if="currentWorkspaceTitle">
     <TaskList
       v-if="currentTaskLists"
       v-for="taskList in currentTaskLists"
