@@ -64,7 +64,7 @@ function startEditing() {
 }
 function editTitle() {
   if (!newTaskListTitle.value || !newTaskListTitle.value.trim()) return;
-  taskListsStore.editTaskList({
+  boardsStore.editTaskList(appStates.currentBoardId, currentTaskList.value.id, {
     ...props.taskList,
     title: newTaskListTitle.value,
   } as TaskList);
