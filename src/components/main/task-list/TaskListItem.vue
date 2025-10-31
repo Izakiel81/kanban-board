@@ -7,7 +7,7 @@ import ModalDialogButton from "../ui/ModalDialogButton.vue";
 import { type Card } from "../../../interfaces/Workspace";
 import { ref, computed } from "vue";
 
-const props = defineProps<{ card: Card }>();
+const props = defineProps<{ card: Card; cards: Array<Card> }>();
 
 const cardsStore = useCardsStore();
 
@@ -18,7 +18,7 @@ const elementHeight = ref(2);
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentCard,
-  cardsStore.cards,
+  props.cards,
   draggedOver,
   isAbove,
   elementHeight,
