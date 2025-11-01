@@ -92,24 +92,12 @@ export const useWorkspacesStore = defineStore(
       taskListId: string,
       newCardTitle: string,
     ) {
-      const boardIndex = workspaces.value.findIndex(
-        (item) => item.id === boardId,
-      );
-      if (boardIndex === -1) {
-        console.error("board is not found");
-        return;
-      }
-      const taskListIndex = workspaces.value[boardIndex].lists.findIndex(
-        (item) => item.id === taskListId,
-      );
-      if (taskListIndex === -1) {
-        console.error("list is not found");
-        return;
-      }
-      const biggestOrder = findMaxOrder(
-        workspaces.value[boardIndex].lists[taskListIndex].cards,
-      );
-      workspaces.value[boardIndex].lists[taskListIndex].cards.push({
+      const board = getBoardById(boardId);
+      if (!board) return;
+      const taskList = getTaskListById(board, taskListId);
+      if (!taskList) return;
+      const biggestOrder = findMaxOrder(taskList.cards);
+      taskList.cards.push({
         id: uuid(),
         title: newCardTitle,
         taskListId,
@@ -123,21 +111,16 @@ export const useWorkspacesStore = defineStore(
       taskListId: string,
       newTaskList: TaskList,
     ) {
-      const boardIndex = workspaces.value.findIndex(
-        (item) => item.id === boardId,
-      );
-      if (boardIndex === -1) {
-        console.error("board is not found");
-        return;
-      }
-      const taskListIndex = workspaces.value[boardIndex].lists.findIndex(
+      const board = getBoardById(boardId);
+      if (!board) return;
+      const taskListIndex = board.lists.findIndex(
         (item) => item.id === taskListId,
       );
       if (taskListIndex === -1) {
-        console.error("list is not found");
+        console.error("Task list is not found");
         return;
       }
-      workspaces.value[boardIndex].lists[taskListIndex] = newTaskList;
+      board.lists[taskListIndex] = newTaskList;
     }
     function editCard(
       boardId: string,
@@ -145,30 +128,16 @@ export const useWorkspacesStore = defineStore(
       cardId: string,
       newCard: Card,
     ) {
-      const boardIndex = workspaces.value.findIndex(
-        (item) => item.id === boardId,
-      );
-      if (boardIndex === -1) {
-        console.error("board is not found");
-        return;
-      }
-      const taskListIndex = workspaces.value[boardIndex].lists.findIndex(
-        (item) => item.id === taskListId,
-      );
-      if (taskListIndex === -1) {
-        console.error("list is not found");
-        return;
-      }
-      const cardIndex = workspaces.value[boardIndex].lists[
-        taskListIndex
-      ].cards.findIndex((item) => item.id === cardId);
+      const board = getBoardById(boardId);
+      if (!board) return;
+      const taskList = getTaskListById(board, taskListId);
+      if (!taskList) return;
+      const cardIndex = taskList.cards.findIndex((item) => item.id === cardId);
       if (cardIndex === -1) {
         console.error("card is not found");
         return;
       }
-
-      workspaces.value[boardIndex].lists[taskListIndex].cards[cardIndex] =
-        newCard;
+      taskList.cards[cardIndex] = newCard;
     }
 
     return {
