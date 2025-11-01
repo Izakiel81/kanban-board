@@ -13,9 +13,36 @@ export const useWorkspacesStore = defineStore(
   () => {
     const workspaces: Ref<Workspace[]> = ref([]);
 
-    function getBoardById(id: string) {
-      return workspaces.value.find((item) => item.id === id);
+    function getBoardById(id: string): Workspace | undefined {
+      const boardResult = workspaces.value.find((item) => item.id === id);
+      if (!boardResult) {
+        console.error("Board is not found", "Board id: ", id);
+        return;
+      }
+      return boardResult;
     }
+
+    function getTaskListById(
+      board: Workspace,
+      id: string,
+    ): TaskList | undefined {
+      const taskListResult = board.lists.find((item) => item.id === id);
+      if (!taskListResult) {
+        console.error("List is not found", "List id: ", id);
+        return;
+      }
+      return taskListResult;
+    }
+
+    function getCardById(taskList: TaskList, id: string): Card | undefined {
+      const cardResult = taskList.cards.find((item) => item.id === id);
+      if (!cardResult) {
+        console.error("Card is not found", "Card id: ", id);
+        return;
+      }
+      return cardResult;
+    }
+
     function addWorkspace(workspace?: { id: string; title: string }) {
       let biggestOrder = findMaxOrder(workspaces.value);
       workspaces.value.push({
@@ -48,15 +75,10 @@ export const useWorkspacesStore = defineStore(
     }
 
     function addTaskList(boardId: string, newListTitle: string) {
-      const boardIndex = workspaces.value.findIndex(
-        (item) => item.id === boardId,
-      );
-      if (boardIndex === -1) {
-        console.error("board is not found");
-        return;
-      }
-      const biggestOrder = findMaxOrder(workspaces.value[boardIndex].lists);
-      workspaces.value[boardIndex].lists.push({
+      const board = getBoardById(boardId);
+      if (!board) return;
+      const biggestOrder = findMaxOrder(board.lists);
+      board.lists.push({
         id: uuid(),
         title: newListTitle,
         order: biggestOrder + 1,

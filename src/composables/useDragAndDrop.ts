@@ -10,8 +10,6 @@ export function useDragAndDrop() {
   }
 
   function transferCardsBetweenLists(
-    listFrom: Array<TaskList>,
-    listTo: Array<TaskList>,
     draggedCardId: string,
     doppedCardId: string,
   ) {}
