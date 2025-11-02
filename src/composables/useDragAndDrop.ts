@@ -51,8 +51,12 @@ export function useDragAndDrop() {
         "Card is not found",
         "Dragged card index: ",
         draggedCardIndex,
+        "Dragged card id",
+        draggedCardId,
         "Drop card index: ",
         dropCardIndex,
+        "Drop card id: ",
+        dropCardId,
       );
       return;
     }
@@ -65,8 +69,14 @@ export function useDragAndDrop() {
     } else {
       dropList.cards.splice(dropCardIndex, 0, item);
 
-      dropList.cards.forEach((item, index) => (item.order = index));
-      dragList.cards.forEach((item, index) => (item.order = index));
+      dropList.cards.forEach((item, index) => {
+        item.order = index;
+        item.taskListId = dropList.id;
+      });
+      dragList.cards.forEach((item, index) => {
+        item.order = index;
+        item.taskListId = dragList.id;
+      });
     }
   }
 
