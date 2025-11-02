@@ -17,7 +17,7 @@ export function useDragAndDrop() {
   function transferCardsBetweenLists(
     draggedCardId: string,
     dropCardId: string,
-    draggedCardTaskLitsId: string,
+    draggedCardTaskLitId: string,
     dropCardTaskListId: string,
   ) {
     const board = boardsStore.getBoardById(appStore.currentBoardId);
@@ -25,7 +25,7 @@ export function useDragAndDrop() {
       console.error("Board is not found");
       return;
     }
-    const dragList = boardsStore.getTaskListById(board, draggedCardTaskLitsId);
+    const dragList = boardsStore.getTaskListById(board, draggedCardTaskLitId);
     const dropList = boardsStore.getTaskListById(board, dropCardTaskListId);
 
     if (!dragList || !dropList) {
@@ -59,10 +59,15 @@ export function useDragAndDrop() {
 
     const [item] = dragList.cards.splice(draggedCardIndex, 1);
 
-    dropList.cards.splice(dropCardIndex, 0, item);
+    if (draggedCardTaskLitId === dropCardTaskListId) {
+      dragList.cards.splice(dropCardIndex, 0, item);
+      dragList.cards.forEach((item, index) => (item.order = index));
+    } else {
+      dropList.cards.splice(dropCardIndex, 0, item);
 
-    dropList.cards.forEach((item, index) => (item.order = index));
-    dragList.cards.forEach((item, index) => (item.order = index));
+      dropList.cards.forEach((item, index) => (item.order = index));
+      dragList.cards.forEach((item, index) => (item.order = index));
+    }
   }
 
   function changeItemOrder(
