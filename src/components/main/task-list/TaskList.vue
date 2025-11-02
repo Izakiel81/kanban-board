@@ -131,15 +131,6 @@ function editTitle() {
           />
         </span>
       </div>
-      <div class="task-list-wrapper">
-        <TaskListItem
-          v-for="card in currentCards"
-          :key="card.id"
-          :card="card"
-          :cards="taskList.cards"
-          :currentTaskListId="currentTaskList.id"
-        />
-      </div>
       <div
         id="card"
         class="drag-area"
@@ -149,6 +140,16 @@ function editTitle() {
           height: cardIsDragged ? elementHeight + 'px' : 0,
         }"
       ></div>
+
+      <div class="task-list-wrapper">
+        <TaskListItem
+          v-for="card in currentCards"
+          :key="card.id"
+          :card="card"
+          :cards="taskList.cards"
+          :currentTaskListId="currentTaskList.id"
+        />
+      </div>
       <button
         class="list-add"
         v-if="!isAddingCard"
