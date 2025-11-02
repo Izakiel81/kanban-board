@@ -34,6 +34,7 @@ export function useElementDragAndDrop(
       draggedElement.value.type === "card" &&
       currentElement.value.type === "list"
     ) {
+      if (draggedElement.value.taskListId === currentElement.value.id) return;
       const board = boardsStore.getBoardById(appStore.currentBoardId);
       if (!board) return;
 
@@ -88,10 +89,12 @@ export function useElementDragAndDrop(
     if (!draggedElement.value) return;
     counter.value++;
     if (draggedElement.value.id === currentElement.value.id) return;
-    isCardDragged &&
-      (isCardDragged.value =
+    if (isCardDragged) {
+      isCardDragged.value =
         draggedElement.value.type === "card" &&
-        currentElement.value.type === "list");
+        currentElement.value.type === "list" &&
+        draggedElement.value.taskListId !== currentElement.value.id;
+    }
     if (
       draggedElement.value.type !== currentElement.value.type &&
       !isCardDragged?.value
