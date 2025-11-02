@@ -7,11 +7,10 @@ import { type TaskList } from "../../../interfaces/Workspace";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
 import { computed, ref } from "vue";
-import { v4 as uuid } from "uuid";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop.ts";
 
 const props = defineProps<{
-  taskLists: Array<TaskLists>;
+  taskLists: Array<TaskList>;
   taskList: TaskList;
 }>();
 

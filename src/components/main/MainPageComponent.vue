@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import TaskList from "./task-list/TaskList.vue";
-import { useTaskListsStore } from "../../stores/tasklists";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
 import { ref, computed } from "vue";
-import { v4 as uuid } from "uuid";
 
-const props = defineProps<{ taskLists: Array<TaskList> }>();
+const props = defineProps<{ taskLists: Array<any> }>();
 const boardsStore = useWorkspacesStore();
 
 const appStates = useAppStatesStore();
