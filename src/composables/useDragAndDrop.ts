@@ -3,9 +3,9 @@ import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 import { useWorkspacesStore } from "../stores/workspaces";
 import { useAppStatesStore } from "../stores/app_store";
 
-const boardsStore = useWorkspacesStore();
-const appStore = useAppStatesStore();
 export function useDragAndDrop() {
+  const boardsStore = useWorkspacesStore();
+  const appStore = useAppStatesStore();
   function dragStart(event: DragEvent, elementHeight: Ref<number>) {
     event.dataTransfer!.dropEffect = "move";
     event.dataTransfer!.effectAllowed = "move";
@@ -17,7 +17,7 @@ export function useDragAndDrop() {
   function transferCardsBetweenLists(
     draggedCardId: string,
     dropCardId: string,
-    draggedCardTaskLitId: string,
+    draggedCardTaskListId: string,
     dropCardTaskListId: string,
   ) {
     const board = boardsStore.getBoardById(appStore.currentBoardId);
@@ -25,7 +25,7 @@ export function useDragAndDrop() {
       console.error("Board is not found");
       return;
     }
-    const dragList = boardsStore.getTaskListById(board, draggedCardTaskLitId);
+    const dragList = boardsStore.getTaskListById(board, draggedCardTaskListId);
     const dropList = boardsStore.getTaskListById(board, dropCardTaskListId);
 
     if (!dragList || !dropList) {
@@ -59,7 +59,7 @@ export function useDragAndDrop() {
 
     const [item] = dragList.cards.splice(draggedCardIndex, 1);
 
-    if (draggedCardTaskLitId === dropCardTaskListId) {
+    if (draggedCardTaskListId === dropCardTaskListId) {
       dragList.cards.splice(dropCardIndex, 0, item);
       dragList.cards.forEach((item, index) => (item.order = index));
     } else {

@@ -1,7 +1,8 @@
 import { ref, type Ref } from "vue";
 import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 import { useDragAndDrop } from "./useDragAndDrop";
-import { useCardsStore } from "../stores/cards";
+import { useAppStatesStore } from "../stores/app_store";
+import { useWorkspacesStore } from "../stores/workspaces";
 
 const draggedElement = ref<Workspace | TaskList | Card | null>(null);
 const height = ref<number>(0);
@@ -14,9 +15,11 @@ export function useElementDragAndDrop(
   elementHeight: Ref<number>,
   isCardDragged?: Ref<boolean>,
 ) {
-  const { dragStart, changeItemOrder } = useDragAndDrop();
+  const { dragStart, changeItemOrder, transferCardsBetweenLists } =
+    useDragAndDrop();
 
-  const cardsStore = useCardsStore();
+  const appStore = useAppStatesStore();
+  const boardsStore = useWorkspacesStore();
 
   const counter = ref<number>(0);
   function startDrag(event: DragEvent) {
@@ -31,17 +34,54 @@ export function useElementDragAndDrop(
       draggedElement.value.type === "card" &&
       currentElement.value.type === "list"
     ) {
-      const item = cardsStore.cards.find(
+      const board = boardsStore.getBoardById(appStore.currentBoardId);
+      if (!board) return;
+
+      const originalCards = boardsStore.getTaskListById(
+        board,
+        draggedElement.value.taskListId,
+      );
+      if (!originalCards) return;
+
+      const cardIndex = originalCards.cards.findIndex(
         (item) => item.id === draggedElement.value!.id,
       );
-      item && (item.taskListId = currentElement.value.id);
+      if (cardIndex === -1) return;
+
+      originalCards.cards.splice(cardIndex, 1);
+      originalCards.cards.forEach((item, index) => (item.order = index));
+
+      currentElement.value.cards.unshift(draggedElement.value);
+      currentElement.value.cards.forEach((item, index) => {
+        item.order = index;
+      });
+      draggedElement.value.taskListId = currentElement.value.id;
       dragLeave();
       return;
     }
-    if (draggedElement.value.type !== currentElement.value.type) return;
 
-    changeItemOrder(elements, draggedElement.value.id, currentElement.value.id);
-    dragLeave();
+    if (
+      draggedElement.value.type === "card" &&
+      currentElement.value.type === "card"
+    ) {
+      transferCardsBetweenLists(
+        draggedElement.value.id,
+        currentElement.value.id,
+        draggedElement.value.taskListId,
+        currentElement.value.taskListId,
+      );
+      dragLeave();
+      return;
+    }
+    if (draggedElement.value.type === currentElement.value.type) {
+      changeItemOrder(
+        elements,
+        draggedElement.value.id,
+        currentElement.value.id,
+      );
+      dragLeave();
+      return;
+    }
   }
 
   function dragEnter() {
