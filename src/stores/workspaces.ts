@@ -143,6 +143,8 @@ export const useWorkspacesStore = defineStore(
     return {
       workspaces,
       getBoardById,
+      getTaskListById,
+      getCardById,
       addWorkspace,
       addTaskList,
       addCard,

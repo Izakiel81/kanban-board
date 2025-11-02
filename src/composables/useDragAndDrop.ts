@@ -1,5 +1,10 @@
 import { type Ref } from "vue";
 import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
+import { useWorkspacesStore } from "../stores/workspaces";
+import { useAppStatesStore } from "../stores/app_store";
+
+const boardsStore = useWorkspacesStore();
+const appStore = useAppStatesStore();
 export function useDragAndDrop() {
   function dragStart(event: DragEvent, elementHeight: Ref<number>) {
     event.dataTransfer!.dropEffect = "move";
@@ -11,8 +16,54 @@ export function useDragAndDrop() {
 
   function transferCardsBetweenLists(
     draggedCardId: string,
-    doppedCardId: string,
-  ) {}
+    dropCardId: string,
+    draggedCardTaskLitsId: string,
+    dropCardTaskListId: string,
+  ) {
+    const board = boardsStore.getBoardById(appStore.currentBoardId);
+    if (!board) {
+      console.error("Board is not found");
+      return;
+    }
+    const dragList = boardsStore.getTaskListById(board, draggedCardTaskLitsId);
+    const dropList = boardsStore.getTaskListById(board, dropCardTaskListId);
+
+    if (!dragList || !dropList) {
+      console.error(
+        "List is undefined",
+        "Drag list: ",
+        dragList,
+        "Drop list: ",
+        dropList,
+      );
+      return;
+    }
+
+    const draggedCardIndex = dragList.cards.findIndex(
+      (item) => item.id === draggedCardId,
+    );
+    const dropCardIndex = dropList.cards.findIndex(
+      (item) => item.id === dropCardId,
+    );
+
+    if (draggedCardIndex === -1 || dropCardIndex === -1) {
+      console.error(
+        "Card is not found",
+        "Dragged card index: ",
+        draggedCardIndex,
+        "Drop card index: ",
+        dropCardIndex,
+      );
+      return;
+    }
+
+    const [item] = dragList.cards.splice(draggedCardIndex, 1);
+
+    dropList.cards.splice(dropCardIndex, 0, item);
+
+    dropList.cards.forEach((item, index) => (item.order = index));
+    dragList.cards.forEach((item, index) => (item.order = index));
+  }
 
   function changeItemOrder(
     list: Array<Workspace | TaskList | Card>,
