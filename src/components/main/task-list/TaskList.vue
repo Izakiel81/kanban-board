@@ -92,7 +92,7 @@ watch(isEditingTitle, async (isVisible) => {
 <template>
   <div
     class="list-container"
-    draggable="true"
+    :draggable="!isDeleting"
     @dragover.prevent
     @drop.stop="onDrop()"
     @dragenter.stop="dragEnter()"
