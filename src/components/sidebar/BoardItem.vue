@@ -84,7 +84,11 @@ function boardClick() {
     />
     <span class="board-title">
       {{ currentBoard.title }}
-      <span class="buttons" :style="{ opacity: showButtons ? 1 : 0 }">
+      <span
+        class="buttons"
+        id="edit-delete"
+        :style="{ opacity: showButtons ? 1 : 0 }"
+      >
         <EditButton :width="16" :height="16" @click.stop="startEditing" />
         <DeleteButton
           :width="16"
@@ -251,14 +255,16 @@ function boardClick() {
   gap: 5px;
 }
 .buttons {
-  position: absolute;
-  top: 0;
-  right: 0;
   display: flex;
   align-items: center;
   gap: 5px;
 
   transition: opacity 0.2s ease-out;
+}
+.buttons#edit-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 .buttons span {
   display: flex;

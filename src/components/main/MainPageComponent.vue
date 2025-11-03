@@ -22,7 +22,7 @@ const currentTaskLists = computed(() =>
 );
 
 function addTaskList() {
-  if (!newTaskListTitle.value) return;
+  if (!newTaskListTitle.value || !newTaskListTitle.value.trim()) return;
   boardsStore.addTaskList(appStates.currentBoardId, newTaskListTitle.value);
   isAdding.value = false;
   newTaskListTitle.value = "";
