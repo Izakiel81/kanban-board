@@ -2,6 +2,7 @@
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
 import { useWorkspacesStore } from "../../../stores/workspaces";
 import { useAppStatesStore } from "../../../stores/app_store";
+import { useModalStore } from "../../../stores/modals_store";
 import DeleteButton from "../ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import EditCardDialog from "../../main/ui/EditCardDialog.vue";
@@ -15,6 +16,7 @@ const props = defineProps<{
 
 const appStates = useAppStatesStore();
 const boardsStore = useWorkspacesStore();
+const modalStore = useModalStore();
 
 const currentCard = computed(() => props.card);
 const draggedOver = ref(false);
@@ -35,16 +37,20 @@ const isMouseOver = ref(false);
 
 function deleteCard() {
   boardsStore.deleteItem(currentCard.value.id, props.cards);
-  showDeleteDialog.value = false;
 }
 </script>
 
 <template>
   <div
     class="wrapper"
-    :draggable="!showModalDialog && !showDeleteDialog"
+    :draggable="!modalStore.modalIsActive"
     @dragstart.stop="startDrag($event)"
-    @click="showModalDialog = true"
+    @click="
+      () => {
+        showModalDialog = true;
+        modalStore.modalIsActive = true;
+      }
+    "
     @mouseover="isMouseOver = true"
     @mouseleave="isMouseOver = false"
     @dragover.prevent

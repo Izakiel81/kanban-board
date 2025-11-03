@@ -6,6 +6,7 @@ import AddForm from "../../main/ui/AddForm.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
+import { useModalStore } from "../../../stores/modals_store";
 import { computed, ref, watch, nextTick } from "vue";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop.ts";
 
@@ -21,6 +22,7 @@ const newTaskListTitle = ref(props.taskList.title || "");
 
 const appStates = useAppStatesStore();
 const boardsStore = useWorkspacesStore();
+const modalStore = useModalStore();
 
 const elementHeight = ref(0);
 const isOnLeft = ref(false);
@@ -78,7 +80,7 @@ watch(isEditingTitle, async (isVisible) => {
 <template>
   <div
     class="list-container"
-    :draggable="!isDeleting"
+    :draggable="!modalStore.modalIsActive"
     @dragover.prevent
     @drop.stop="onDrop()"
     @dragenter.stop="dragEnter()"
@@ -131,7 +133,12 @@ watch(isEditingTitle, async (isVisible) => {
             :width="20"
             :height="20"
             :color="'#d4d4d4'"
-            @click.stop="isDeleting = true"
+            @click.stop="
+              () => {
+                isDeleting = true;
+                modalStore.modalIsActive = true;
+              }
+            "
           />
         </span>
       </div>

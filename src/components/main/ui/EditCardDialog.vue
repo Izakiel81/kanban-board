@@ -2,6 +2,7 @@
 import ModalDialog from "./ModalDialog.vue";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
+import { useModalStore } from "../../../stores/modals_store";
 import type { Card } from "../../../interfaces/Workspace";
 import { ref } from "vue";
 
@@ -13,6 +14,7 @@ const { show, currentCard, onCancel } = defineProps<{
 
 const appStates = useAppStatesStore();
 const boardsStore = useWorkspacesStore();
+const modalStore = useModalStore();
 
 const modalDialogTitleEdit = ref<boolean>(false);
 const newCardTitle = ref<string>(currentCard.title);
@@ -33,6 +35,8 @@ function closeDialog() {
   );
 
   onCancel();
+
+  modalStore.modalIsActive = false;
 }
 </script>
 <template>

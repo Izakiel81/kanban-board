@@ -3,6 +3,7 @@ import { type Workspace } from "../../interfaces/Workspace";
 import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
+import { useModalStore } from "../../stores/modals_store";
 import DeleteDialog from "../main/ui/DeleteDialog.vue";
 import DeleteButton from "../main/ui/DeleteButton.vue";
 import EditButton from "../main/ui/EditButton.vue";
@@ -14,6 +15,7 @@ const { workspace } = defineProps<{
 
 const boardsStore = useWorkspacesStore();
 const appStates = useAppStatesStore();
+const modalStore = useModalStore();
 
 const draggedOver = ref(false);
 const isAbove = ref(false);
@@ -57,7 +59,7 @@ function boardClick() {
 </script>
 <template>
   <li
-    draggable="true"
+    :draggable="!modalStore.modalIsActive"
     class="board"
     v-if="!isEditing"
     :key="currentBoard.id"
@@ -90,7 +92,12 @@ function boardClick() {
           :width="16"
           :height="16"
           :fill="'#000'"
-          @click.stop="showDeleteDialog = true"
+          @click.stop="
+            () => {
+              showDeleteDialog = true;
+              modalStore.modalIsActive = true;
+            }
+          "
         />
       </span>
     </span>
