@@ -12,7 +12,10 @@ const newItemTitle = ref<string>("");
     class="new-item-container"
     :style="{ backgroundColor: wBackground ? '#fff' : 'transparent' }"
   >
-    <input v-model="newItemTitle" />
+    <input
+      v-model="newItemTitle"
+      :class="{ 'input-with-background': wBackground }"
+    />
     <span class="new-item-container-buttons">
       <button
         @click="
@@ -43,6 +46,7 @@ const newItemTitle = ref<string>("");
 
   border-radius: 3px;
 }
+
 .new-item-container input {
   outline: none;
 
@@ -56,6 +60,12 @@ const newItemTitle = ref<string>("");
 
 .new-item-container input:focus {
   border-color: #007bff;
+}
+.input-with-background {
+  border: 2px solid #ccc !important;
+}
+.input-with-background:focus {
+  border-color: #007bff !important;
 }
 .new-item-container-buttons {
   display: flex;
