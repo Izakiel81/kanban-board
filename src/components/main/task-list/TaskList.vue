@@ -204,9 +204,8 @@ watch(isEditingTitle, async (isVisible) => {
     :show="isDeleting"
     :title="'Are you sure you want to delete this list?'"
     :main="currentTaskList.title"
+    :onClick="() => {}"
     :onCancel="() => (isDeleting = false)"
-    :onClick="() => (boardsStore.deleteItem(currentTaskList.id, props.taskLists);
-          isDeleting = false;)"
   />
 </template>
 

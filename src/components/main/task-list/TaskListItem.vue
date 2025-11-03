@@ -3,6 +3,7 @@ import { useElementDragAndDrop } from "../../../composables/useElementDragAndDro
 import { useWorkspacesStore } from "../../../stores/workspaces";
 import { useAppStatesStore } from "../../../stores/app_store";
 import DeleteButton from "../ui/DeleteButton.vue";
+import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import ModalDialog from "../ui/ModalDialog.vue";
 import ModalDialogButton from "../ui/ModalDialogButton.vue";
 import { type Card } from "../../../interfaces/Workspace";
@@ -124,30 +125,13 @@ function deleteCard() {
         <textarea class="description-textarea" v-model="newCardDescription" />
       </template>
     </ModalDialog>
-    <ModalDialog
+    <DeleteDialog
       :show="showDeleteDialog"
+      :title="'Are you sure you want to delete this card?'"
+      :main="currentCard.title"
       :onCancel="() => (showDeleteDialog = false)"
-    >
-      <template #header>
-        <h3>Are you sure you want to delete this card?</h3>
-      </template>
-      <template #default>
-        <h2>{{ currentCard.title }}</h2>
-        <p>{{ currentCard.description }}</p>
-      </template>
-      <template #footer>
-        <ModalDialogButton :width="70" :height="30" @click.stop="deleteCard">
-          Yes
-        </ModalDialogButton>
-        <ModalDialogButton
-          :width="70"
-          :bgcolor="'#ff0000'"
-          @click.stop="() => (showDeleteDialog = false)"
-        >
-          Cancel
-        </ModalDialogButton>
-      </template>
-    </ModalDialog>
+      :onClick="deleteCard"
+    />
   </div>
 </template>
 <style scoped>

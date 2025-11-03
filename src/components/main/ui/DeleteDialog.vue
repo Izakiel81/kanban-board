@@ -10,7 +10,7 @@ const { show, onCancel } = defineProps<{
 }>();
 </script>
 <template>
-  <ModalDialog :show="show" :onCancel="onCancel()">
+  <ModalDialog :show="show" :onCancel="onCancel">
     <template #header>{{ title }}</template>
     <template #default>{{ main }}</template>
     <template #footer>
