@@ -34,7 +34,7 @@ const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   elementHeight,
 );
 
-const { onDragStart } = useMobileDragAndDrop();
+const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop();
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
@@ -56,6 +56,8 @@ function openDialog() {
     ref="elementRef"
     :draggable="!modalStore.modalIsActive"
     @touchstart="onDragStart($event, elementRef)"
+    @touchmove="onDrag($event, elementRef)"
+    @touchend="onDragEnd($event, elementRef)"
     @dragstart.stop="startDrag($event)"
     @click="openDialog"
     @mouseover="isMouseOver = true"
