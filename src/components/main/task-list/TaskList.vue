@@ -6,7 +6,7 @@ import ModalDialogButton from "../../main/ui/ModalDialogButton.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
-import { computed, ref } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop.ts";
 
 const props = defineProps<{
@@ -29,6 +29,8 @@ const draggedOver = ref(false);
 const showDeleteButton = ref(false);
 const isDeleting = ref(false);
 
+const textareaRef = ref(null);
+
 const currentCards = computed(() =>
   currentTaskList.value.cards.sort((a, b) => a.order - b.order),
 );
@@ -44,6 +46,12 @@ const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
   elementHeight,
   cardIsDragged,
 );
+
+function autoResize() {
+  if (!textareaRef.value) return;
+  textareaRef.value.style.height = "auto";
+  textareaRef.value.style.height = textareaRef.value.scrollHeight + "px";
+}
 
 function addCard() {
   if (!newCardTitle.value || !newCardTitle.value.trim()) return;
@@ -71,6 +79,13 @@ function editTitle() {
   newTaskListTitle.value = "";
   isEditingTitle.value = false;
 }
+
+watch(isEditingTitle, async (isVisible) => {
+  if (isVisible) {
+    await nextTick();
+    autoResize();
+  }
+});
 </script>
 
 <template>
@@ -95,7 +110,7 @@ function editTitle() {
       :class="{ 'dragged-on': draggedOver && isOnLeft }"
     ></span>
     <div class="list">
-      <div class="title-container">
+      <div class="title-container" ref="textareaContainerRef">
         <div class="dots">
           <span />
           <span />
@@ -108,8 +123,11 @@ function editTitle() {
         <textarea
           aria-multiline="true"
           class="title-textarea"
-          v-model="newTaskListTitle"
+          ref="textareaRef"
+          maxlength="300"
+          @input="autoResize"
           rows="1"
+          v-model="newTaskListTitle"
           v-else
           @blur="editTitle()"
           @keyup.enter="editTitle()"
@@ -276,6 +294,7 @@ function editTitle() {
 }
 .title-textarea {
   width: 100%;
+  height: 100%;
   min-height: 24px;
 
   field-sizing: content;
