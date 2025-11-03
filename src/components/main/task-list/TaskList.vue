@@ -444,7 +444,7 @@ watch(isEditingTitle, async (isVisible) => {
   padding: 1px 3px 22px 3px;
   border-radius: 3px;
 
-  background-color: #777;
+  background-color: #555;
 
   transition:
     opacity 0.2s ease-out,

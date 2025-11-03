@@ -80,7 +80,6 @@ function deleteCard() {
         <DeleteButton
           :width="20"
           :height="20"
-          :color="'#d4d4d4'"
           @click.stop="() => (showDeleteDialog = true)"
         />
       </span>
@@ -194,12 +193,12 @@ function deleteCard() {
   padding: 1px 3px 22px 3px;
   border-radius: 3px;
 
-  background-color: #777;
+  background-color: #fff;
 
   transition: opacity 0.2s ease-out;
 }
 .delete-button:hover {
-  background-color: #888;
+  background-color: #eee;
 }
 .delete-button:active {
   filter: brightness(90%);
