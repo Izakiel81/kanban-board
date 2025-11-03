@@ -248,7 +248,7 @@ watch(isEditingTitle, async (isVisible) => {
 .dots {
   display: flex;
   align-items: flex-start;
-  margin-top: 17px;
+  margin-top: 10px;
   gap: 3px;
   width: 9px;
   margin-right: 2px;
