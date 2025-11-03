@@ -42,8 +42,8 @@ const { show, onCancel, width, height } = defineProps<{
 
   display: flex;
   flex-direction: column;
-  width: 500px;
-  min-height: 200px;
+  width: 900px;
+  min-height: 400px;
 
   background-color: #fff;
 
