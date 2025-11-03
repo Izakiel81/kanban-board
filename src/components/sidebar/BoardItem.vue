@@ -155,6 +155,7 @@ function boardClick() {
     backgrouncolor 0.2s ease-out,
     filter 0.1s ease-out;
   overflow-wrap: break-word;
+  word-break: break-all;
 }
 .board:hover {
   background-color: white;
