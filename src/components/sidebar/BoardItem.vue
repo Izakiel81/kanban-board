@@ -164,6 +164,7 @@ function boardClick() {
   filter: brightness(0.9);
 }
 .board-title {
+  position: relative;
   font-weight: 500;
   display: flex;
   justify-content: space-between;
@@ -250,6 +251,9 @@ function boardClick() {
   gap: 5px;
 }
 .buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -264,6 +268,7 @@ function boardClick() {
   height: 20px;
   border-radius: 4px;
   cursor: pointer;
+  background-color: #fff;
 
   transition: background-color 0.2s ease-out;
 }
