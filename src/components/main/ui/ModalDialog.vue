@@ -115,4 +115,13 @@ footer {
 .cancel::after {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
+@media (max-width: 1000px) {
+  .wrapper {
+    width: 95%;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: auto;
+  }
+}
 </style>

@@ -64,7 +64,20 @@ function addCard(newCardTitle: string) {
     newCardTitle,
   );
 }
+function startEditing() {
+  newTaskListTitle.value = currentTaskList.value.title;
+  isEditingTitle.value = true;
+}
+function editTitle() {
+  if (!newTaskListTitle.value || !newTaskListTitle.value.trim()) return;
+  boardsStore.editTaskList(appStates.currentBoardId, currentTaskList.value.id, {
+    ...props.taskList,
+    title: newTaskListTitle.value,
+  } as TaskList);
 
+  newTaskListTitle.value = "";
+  isEditingTitle.value = false;
+}
 function deleteTaskList() {
   boardsStore.deleteItem(currentTaskList.value.id, props.taskLists);
 }

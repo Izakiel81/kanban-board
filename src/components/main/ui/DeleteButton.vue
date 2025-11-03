@@ -6,7 +6,7 @@ const { color, width, height } = defineProps<{
 }>();
 </script>
 <template>
-  <span>
+  <span class="container">
     <svg
       :width="width || 20"
       :height="height || 20"
@@ -20,4 +20,10 @@ const { color, width, height } = defineProps<{
     </svg>
   </span>
 </template>
-<style scoped></style>
+<style scoped>
+@media (hover: none) and (pointer: coarse) {
+  .container {
+    display: none;
+  }
+}
+</style>

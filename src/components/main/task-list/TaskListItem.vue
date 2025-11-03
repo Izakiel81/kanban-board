@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
+import { useMobileDragAndDrop } from "../../../composables/useMobileDragAndDrop";
 import { useWorkspacesStore } from "../../../stores/workspaces";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useModalStore } from "../../../stores/modals_store";
@@ -23,6 +24,8 @@ const draggedOver = ref(false);
 const isAbove = ref(false);
 const elementHeight = ref(2);
 
+const elementRef = ref<HTMLElement | null>(null);
+
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentCard,
   props.cards,
@@ -30,6 +33,8 @@ const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   isAbove,
   elementHeight,
 );
+
+const { onDragStart } = useMobileDragAndDrop();
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
@@ -48,7 +53,9 @@ function openDialog() {
 <template>
   <div
     class="wrapper"
+    ref="elementRef"
     :draggable="!modalStore.modalIsActive"
+    @touchstart="onDragStart($event, elementRef)"
     @dragstart.stop="startDrag($event)"
     @click="openDialog"
     @mouseover="isMouseOver = true"

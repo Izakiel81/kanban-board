@@ -14,6 +14,7 @@ const newItemTitle = ref<string>("");
   >
     <input
       v-model="newItemTitle"
+      maxLength="300"
       :class="{ 'input-with-background': wBackground }"
     />
     <span class="new-item-container-buttons">
