@@ -40,7 +40,7 @@ function deleteCard() {
 }
 function openDialog() {
   if (modalStore.modalIsActive) return;
-  showModalDialog = true;
+  showModalDialog.value = true;
   modalStore.modalIsActive = true;
 }
 </script>

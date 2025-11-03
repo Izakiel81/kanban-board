@@ -42,7 +42,7 @@ function closeDialog() {
 <template>
   <ModalDialog :show="show" :onCancel="closeDialog">
     <template #header>
-      <span>
+      <span class="container">
         <h2
           @click="modalDialogTitleEdit = true"
           v-if="!modalDialogTitleEdit"
@@ -51,6 +51,8 @@ function closeDialog() {
           {{ newCardTitle }}
         </h2>
         <textarea
+          class="title-textarea"
+          maxLength="300"
           v-model="newCardTitle"
           @blur="modalDialogTitleEdit = false"
           @keyup.enter="modalDialogTitleEdit = false"
@@ -65,9 +67,19 @@ function closeDialog() {
 </template>
 
 <style scoped>
-.modal-dialog-title {
+.container {
+  display: flex;
   width: 93%;
+  height: 100%;
+  overflow-y: auto;
+}
+.modal-dialog-title {
+  flex: 1;
   word-break: break-word;
+}
+.title-textarea {
+  resize: none;
+  flex: 1;
 }
 .description-textarea {
   resize: none;
@@ -75,5 +87,6 @@ function closeDialog() {
   width: 100%;
   padding: 8px;
   min-height: 250px;
+  height: 100%;
 }
 </style>
