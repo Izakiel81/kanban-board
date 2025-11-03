@@ -52,6 +52,7 @@ const { show, onCancel, width, height } = defineProps<{
   font-family: "Poppins", sans-serif;
 }
 header {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -78,7 +79,9 @@ footer {
 }
 .cancel {
   cursor: pointer;
-  position: relative;
+  position: absolute;
+  top: 10px;
+  right: 5px;
   margin-right: 5px;
   border-radius: 100%;
   padding: 17px;

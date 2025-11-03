@@ -202,6 +202,7 @@ function deleteCard() {
   overflow-wrap: anywhere;
 }
 .modal-dialog-title {
+  width: 93%;
   word-break: break-word;
 }
 .description-textarea {
