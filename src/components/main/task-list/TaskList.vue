@@ -164,7 +164,6 @@ watch(isEditingTitle, async (isVisible) => {
           :key="card.id"
           :card="card"
           :cards="taskList.cards"
-          :currentTaskListId="currentTaskList.id"
         />
       </div>
       <button

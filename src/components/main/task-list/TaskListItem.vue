@@ -12,7 +12,6 @@ import { ref, computed } from "vue";
 const props = defineProps<{
   card: Card;
   cards: Array<Card>;
-  currentTaskListId: string;
 }>();
 
 const appStates = useAppStatesStore();
@@ -42,7 +41,7 @@ function closeDialog(newCard: Card) {
   if (!newCardTitle.value || !newCardTitle.value.trim()) return;
   boardsStore.editCard(
     appStates.currentBoardId,
-    props.currentTaskListId,
+    currentCard.value.taskListId,
     currentCard.value.id,
     newCard,
   );
