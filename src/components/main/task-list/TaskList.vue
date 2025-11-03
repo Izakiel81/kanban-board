@@ -240,6 +240,7 @@ watch(isEditingTitle, async (isVisible) => {
   margin-bottom: 5px;
 }
 .title-container {
+  position: relative;
   display: flex;
   margin-bottom: 5px;
 }
@@ -279,7 +280,7 @@ watch(isEditingTitle, async (isVisible) => {
 }
 
 .title {
-  width: calc(100% - 20px);
+  width: calc(100% - 10px);
 }
 .title-button {
   width: 100%;
@@ -431,8 +432,9 @@ watch(isEditingTitle, async (isVisible) => {
 .delete-button {
   cursor: pointer;
 
-  position: relative;
-  top: 6px;
+  position: absolute;
+  top: 4px;
+  right: 5px;
 
   display: flex;
   justify-content: center;
@@ -441,6 +443,8 @@ watch(isEditingTitle, async (isVisible) => {
   height: 21px;
   padding: 1px 3px 22px 3px;
   border-radius: 3px;
+
+  background-color: #777;
 
   transition:
     opacity 0.2s ease-out,

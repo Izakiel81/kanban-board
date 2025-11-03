@@ -80,6 +80,7 @@ function deleteCard() {
         <DeleteButton
           :width="20"
           :height="20"
+          :color="'#d4d4d4'"
           @click.stop="() => (showDeleteDialog = true)"
         />
       </span>
@@ -156,6 +157,7 @@ function deleteCard() {
   flex-direction: column;
 }
 .container {
+  position: relative;
   display: flex;
   justify-content: space-between;
 
@@ -181,7 +183,26 @@ function deleteCard() {
     height 0.1s ease-out;
 }
 .delete-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+
+  width: 22px;
+  height: 21px;
+  padding: 1px 3px 22px 3px;
+  border-radius: 3px;
+
+  background-color: #777;
+
   transition: opacity 0.2s ease-out;
+}
+.delete-button:hover {
+  background-color: #888;
+}
+.delete-button:active {
+  filter: brightness(90%);
 }
 #up {
   top: -2px;
