@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
 import DeleteButton from "../../main/ui/DeleteButton.vue";
-import ModalDialog from "../../main/ui/ModalDialog.vue";
-import ModalDialogButton from "../../main/ui/ModalDialogButton.vue";
+import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
@@ -201,22 +200,14 @@ watch(isEditingTitle, async (isVisible) => {
     >
     </span>
   </div>
-  <ModalDialog :show="isDeleting" :onCancel="() => (isDeleting = false)">
-    <template #header>Are you sure you want to delete this list?</template>
-    <template #default>{{ currentTaskList.title }}</template>
-    <template #footer>
-      <ModalDialogButton
-        @click.stop="
-          boardsStore.deleteItem(currentTaskList.id, props.taskLists);
-          isDeleting = false;
-        "
-        >Yes</ModalDialogButton
-      >
-      <ModalDialogButton :bgcolor="'#ff0000'" @click.stop="isDeleting = false"
-        >Cancel</ModalDialogButton
-      >
-    </template>
-  </ModalDialog>
+  <DeleteDialog
+    :show="isDeleting"
+    :title="'Are you sure you want to delete this list?'"
+    :main="currentTaskList.title"
+    :onCancel="() => (isDeleting = false)"
+    :onClick="() => (boardsStore.deleteItem(currentTaskList.id, props.taskLists);
+          isDeleting = false;)"
+  />
 </template>
 
 <style scoped>
@@ -226,6 +217,7 @@ watch(isEditingTitle, async (isVisible) => {
 .drag-area {
   position: relative;
   height: 100%;
+  background-color: transparent;
 
   transition:
     width 0.1s ease-out,

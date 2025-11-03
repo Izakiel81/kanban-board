@@ -58,7 +58,7 @@ function deleteCard() {
 <template>
   <div
     class="wrapper"
-    draggable="true"
+    :draggable="!showModalDialog && !showDeleteDialog"
     @dragstart.stop="startDrag($event)"
     @click="showModalDialog = true"
     @mouseover="isMouseOver = true"
