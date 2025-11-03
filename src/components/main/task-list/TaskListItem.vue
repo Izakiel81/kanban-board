@@ -8,11 +8,16 @@ import DeleteButton from "../ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import EditCardDialog from "../../main/ui/EditCardDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 const props = defineProps<{
   card: Card;
   cards: Array<Card>;
+  elementsData: Array<{
+    element: HTMLElement;
+    rect: DOMRect;
+    data: Workspace | TaskList | Card;
+  }>;
 }>();
 
 const appStates = useAppStatesStore();
@@ -25,6 +30,13 @@ const isAbove = ref(false);
 const elementHeight = ref(2);
 
 const elementRef = ref<HTMLElement | null>(null);
+onMounted(() => {
+  props.elementsData.push({
+    element: elementRef.value,
+    rect: elementRef.value.getBoundingClientRect(),
+    data: currentCard.value,
+  });
+});
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentCard,
@@ -34,7 +46,10 @@ const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   elementHeight,
 );
 
-const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop();
+const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
+  currentCard,
+  props.elementsData,
+);
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);

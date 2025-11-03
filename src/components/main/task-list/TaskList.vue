@@ -17,6 +17,14 @@ const props = defineProps<{
 
 const currentTaskList = computed(() => props.taskList);
 
+const elementsData = ref<
+  Array<{
+    element: HTMLElement;
+    rect: DOMRect;
+    data: Workspace | TaskList | Card;
+  }>
+>([]);
+
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
 
@@ -171,6 +179,7 @@ watch(isEditingTitle, async (isVisible) => {
           :key="card.id"
           :card="card"
           :cards="taskList.cards"
+          :elementsData="elementsData"
         />
       </div>
       <button

@@ -11,6 +11,9 @@ export function useMobileDragAndDrop(
 ) {
   const {} = useDragAndDrop();
 
+  console.log(currentElement);
+  console.log(elementsData);
+
   const draggingCoordinates = ref<{ x: number; y: number } | null>(null);
   function onDragStart(e: TouchEvent, element: HTMLElement) {
     console.log("STARTED DRAGGING \n", "Event: ", e, "\nElement: ", element);
