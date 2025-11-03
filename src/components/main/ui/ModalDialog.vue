@@ -1,6 +1,7 @@
 <script setup lang="ts">
-const { show, onCancel, width, height } = defineProps<{
+const { show, onCancel, width, footer, height } = defineProps<{
   show: boolean;
+  footer?: boolean;
   onCancel: () => void;
   width?: number;
   height?: number;
@@ -19,7 +20,7 @@ const { show, onCancel, width, height } = defineProps<{
       <main>
         <slot name="default"></slot>
       </main>
-      <footer>
+      <footer v-if="footer">
         <slot name="footer"></slot>
       </footer>
     </div>
