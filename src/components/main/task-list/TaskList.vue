@@ -29,7 +29,7 @@ const draggedOver = ref(false);
 const showDeleteButton = ref(false);
 const isDeleting = ref(false);
 
-const textareaRef = ref(null);
+const textareaRef = ref<HTMLTextAreaElement | null>(null);
 
 const currentCards = computed(() =>
   currentTaskList.value.cards.sort((a, b) => a.order - b.order),
@@ -49,6 +49,7 @@ const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
 
 function autoResize() {
   if (!textareaRef.value) return;
+
   textareaRef.value.style.height = "auto";
   textareaRef.value.style.height = textareaRef.value.scrollHeight + "px";
 }
