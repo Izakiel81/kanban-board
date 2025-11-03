@@ -63,8 +63,24 @@ export function useMobileDragAndDrop(
   }
   function onDragEnd(e: TouchEvent, element: HTMLElement) {
     console.log("ENDED DRAGGING\n", "Event: ", e, "\nElement: ", element);
+    console.log("\nCurrentElement: ", currentElement.value);
+    console.log("\nDraggedElement: ", dropItem.value);
     console.log("Element coords: ", element.getBoundingClientRect());
     console.log("\nEnd coordinates:\n", draggingCoordinates.value);
+    if (!dropItem.value) return;
+    if (dropItem.value.id === currentElement.value.id) return;
+
+    if (
+      currentElement.value.type === "card" &&
+      dropItem.value.type === "card"
+    ) {
+      transferCardsBetweenLists(
+        currentElement.value.id,
+        dropItem.value.id,
+        currentElement.value.taskListId,
+        dropItem.value.taskListId,
+      );
+    }
   }
 
   return {
