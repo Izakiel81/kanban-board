@@ -14,7 +14,15 @@ const { show, onCancel } = defineProps<{
     <template #header>{{ title }}</template>
     <template #default>{{ main }}</template>
     <template #footer>
-      <ModalDialogButton @click.stop="onClick">Yes</ModalDialogButton>
+      <ModalDialogButton
+        @click.stop="
+          () => {
+            onClick();
+            onCancel();
+          }
+        "
+        >Yes</ModalDialogButton
+      >
       <ModalDialogButton :bgcolor="'#ff0000'" @click.stop="onCancel()"
         >Cancel</ModalDialogButton
       >

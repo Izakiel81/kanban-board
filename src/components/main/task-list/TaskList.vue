@@ -2,6 +2,7 @@
 import TaskListItem from "./TaskListItem.vue";
 import DeleteButton from "../../main/ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
+import AddForm from "../../main/ui/AddForm.vue";
 import { type TaskList } from "../../../interfaces/Workspace";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
@@ -35,7 +36,6 @@ const currentCards = computed(() =>
 );
 
 const isAddingCard = ref(false);
-const newCardTitle = ref("");
 
 const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
   currentTaskList,
@@ -53,31 +53,18 @@ function autoResize() {
   textareaRef.value.style.height = textareaRef.value.scrollHeight + "px";
 }
 
-function addCard() {
-  if (!newCardTitle.value || !newCardTitle.value.trim()) return;
+function addCard(newCardTitle: string) {
+  if (!newCardTitle || !newCardTitle.trim()) return;
 
   boardsStore.addCard(
     appStates.currentBoardId,
     currentTaskList.value.id,
-    newCardTitle.value,
+    newCardTitle,
   );
-
-  isAddingCard.value = false;
-  newCardTitle.value = "";
 }
-function startEditing() {
-  newTaskListTitle.value = currentTaskList.value.title;
-  isEditingTitle.value = true;
-}
-function editTitle() {
-  if (!newTaskListTitle.value || !newTaskListTitle.value.trim()) return;
-  boardsStore.editTaskList(appStates.currentBoardId, currentTaskList.value.id, {
-    ...props.taskList,
-    title: newTaskListTitle.value,
-  } as TaskList);
 
-  newTaskListTitle.value = "";
-  isEditingTitle.value = false;
+function deleteTaskList() {
+  boardsStore.deleteItem(currentTaskList.value.id, props.taskLists);
 }
 
 watch(isEditingTitle, async (isVisible) => {
@@ -173,20 +160,12 @@ watch(isEditingTitle, async (isVisible) => {
       >
         + Add Card
       </button>
-      <div class="new-card-container" v-else>
-        <textarea name="" id="" v-model="newCardTitle" rows="1"></textarea>
-        <span class="new-card-container-buttons">
-          <button @click="addCard()">Add card</button>
-          <span
-            id="close"
-            @click="
-              () => {
-                ((isAddingCard = false), (newCardTitle = ''));
-              }
-            "
-          />
-        </span>
-      </div>
+      <AddForm
+        v-else
+        :wBackground="true"
+        :onClick="addCard"
+        :onClose="() => (isAddingCard = false)"
+      />
     </div>
     <span
       class="drag-area"
@@ -203,7 +182,7 @@ watch(isEditingTitle, async (isVisible) => {
     :show="isDeleting"
     :title="'Are you sure you want to delete this list?'"
     :main="currentTaskList.title"
-    :onClick="() => {}"
+    :onClick="deleteTaskList"
     :onCancel="() => (isDeleting = false)"
   />
 </template>
@@ -317,94 +296,7 @@ watch(isEditingTitle, async (isVisible) => {
 
   gap: 5px;
 }
-.new-card-container {
-  margin-bottom: 5px;
 
-  display: flex;
-  flex-flow: wrap column;
-
-  gap: 2px;
-  background-color: #fff;
-  border-radius: 3px;
-  padding: 4px 7px;
-}
-.new-card-container textarea {
-  resize: none;
-
-  outline: none;
-
-  border: 2px solid #ccc;
-  border-radius: 3px;
-
-  padding: 2px 5px;
-
-  transition: border-color 0.3s ease-out;
-}
-.new-card-container textarea:focus {
-  border-color: #007bff;
-}
-.new-card-container-buttons {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.new-card-container-buttons button {
-  cursor: pointer;
-
-  padding: 6px 40px;
-
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 3px;
-
-  transition: filter 0.1s ease-in-out;
-}
-.new-card-container-buttons button:hover {
-  filter: brightness(90%);
-}
-.new-card-container-buttons button:active {
-  filter: brightness(80%);
-}
-#close {
-  cursor: pointer;
-
-  position: relative;
-  user-select: none;
-
-  height: 28px;
-  width: 28px;
-  padding: 6px 10px;
-
-  border-radius: 2px;
-
-  background-color: #ccc;
-
-  transition: filter 0.1s ease-in-out;
-}
-#close:hover {
-  filter: brightness(80%);
-}
-#close:active {
-  filter: brightness(90%);
-}
-#close::before,
-#close::after {
-  content: "";
-  position: absolute;
-  width: 56%;
-  top: 47%;
-  left: 19%;
-  border: 1px solid #fff;
-  border-radius: 5px;
-}
-
-#close::before {
-  transform: rotate(45deg);
-}
-#close::after {
-  transform: rotate(-45deg);
-}
 .list-add {
   cursor: pointer;
 

@@ -10,7 +10,7 @@ const newItemTitle = ref<string>("");
 <template>
   <div
     class="new-item-container"
-    :style="{ backgroundColor: wBackground ? '#fff' : 'transparent' }"
+    :style="{ backgroundColor: wBackground ? '#fff' : '#0000005f' }"
   >
     <input
       v-model="newItemTitle"
@@ -40,9 +40,7 @@ const newItemTitle = ref<string>("");
 
   padding: 5px;
 
-  min-width: 250px;
-
-  background-color: #0000005f;
+  width: 100%;
 
   border-radius: 3px;
 }

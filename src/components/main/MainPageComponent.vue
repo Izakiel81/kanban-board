@@ -43,12 +43,9 @@ function addTaskList(newTaskListTitle: string) {
       :taskList="taskList"
       :taskLists="taskLists"
     />
-    <AddForm
-      v-if="isAdding"
-      :onClose="() => (isAdding = false)"
-      :onClick="addTaskList"
-      :wBackground="true"
-    />
+    <div v-if="isAdding" style="width: 250px">
+      <AddForm :onClose="() => (isAdding = false)" :onClick="addTaskList" />
+    </div>
     <div class="add-list-container" @click="isAdding = true" v-else>
       <h1>+ Add list</h1>
     </div>
