@@ -3,8 +3,7 @@ import { type Workspace } from "../../interfaces/Workspace";
 import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
-import ModalDialog from "../main/ui/ModalDialog.vue";
-import ModalDialogButton from "../main/ui/ModalDialogButton.vue";
+import DeleteDialog from "../main/ui/DeleteDialog.vue";
 import DeleteButton from "../main/ui/DeleteButton.vue";
 import EditButton from "../main/ui/EditButton.vue";
 import { ref, computed, nextTick } from "vue";
@@ -119,30 +118,13 @@ function boardClick() {
       <span id="close" />
     </div>
   </div>
-  <ModalDialog
+  <DeleteDialog
     :show="showDeleteDialog"
-    :width="350"
+    :title="'Are you sure you want to delete this board?'"
+    :main="currentBoard.title"
+    :onClick="deleteBoard"
     :onCancel="() => (showDeleteDialog = false)"
-  >
-    <template #header>Are you sure you want to delete this board?</template>
-    <template #default>{{ currentBoard.title }}</template>
-    <template #footer>
-      <ModalDialogButton
-        :width="70"
-        :height="30"
-        @click.stop="deleteBoard(currentBoard.id)"
-      >
-        Yes
-      </ModalDialogButton>
-      <ModalDialogButton
-        :width="70"
-        :bgcolor="'#ff0000'"
-        @click.stop="() => (showDeleteDialog = false)"
-      >
-        Cancel
-      </ModalDialogButton>
-    </template>
-  </ModalDialog>
+  />
 </template>
 <style scoped>
 .board {
