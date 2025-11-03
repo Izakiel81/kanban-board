@@ -74,6 +74,9 @@ const currentBoard = computed(() =>
 }
 
 .main {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
   overflow-wrap: break-word;
   transition: padding 0.3s ease;
 }

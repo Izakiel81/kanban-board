@@ -74,6 +74,9 @@ function addTaskList() {
   display: flex;
   align-items: flex-start;
 
+  flex: 1;
+  overflow: auto;
+
   padding: 10px;
   gap: 2px;
 }
