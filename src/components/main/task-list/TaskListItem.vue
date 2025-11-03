@@ -4,8 +4,7 @@ import { useWorkspacesStore } from "../../../stores/workspaces";
 import { useAppStatesStore } from "../../../stores/app_store";
 import DeleteButton from "../ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
-import ModalDialog from "../ui/ModalDialog.vue";
-import ModalDialogButton from "../ui/ModalDialogButton.vue";
+import EditCardDialog from "../../main/ui/EditCardDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
 import { ref, computed } from "vue";
 
@@ -33,21 +32,6 @@ const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
 const isMouseOver = ref(false);
-const modalDialogTitleEdit = ref(false);
-const newCardTitle = ref(currentCard.value.title || "");
-const newCardDescription = ref(currentCard.value.description || "");
-
-function closeDialog(newCard: Card) {
-  if (!newCardTitle.value || !newCardTitle.value.trim()) return;
-  boardsStore.editCard(
-    appStates.currentBoardId,
-    currentCard.value.taskListId,
-    currentCard.value.id,
-    newCard,
-  );
-
-  showModalDialog.value = false;
-}
 
 function deleteCard() {
   boardsStore.deleteItem(currentCard.value.id, props.cards);
@@ -92,38 +76,11 @@ function deleteCard() {
       }"
       id="down"
     />
-    <ModalDialog
+    <EditCardDialog
       :show="showModalDialog"
-      :onCancel="
-        () =>
-          closeDialog({
-            ...currentCard,
-            title: newCardTitle,
-            description: newCardDescription,
-          })
-      "
-    >
-      <template #header>
-        <span>
-          <h2
-            @click="modalDialogTitleEdit = true"
-            v-if="!modalDialogTitleEdit"
-            class="modal-dialog-title"
-          >
-            {{ newCardTitle }}
-          </h2>
-          <textarea
-            v-model="newCardTitle"
-            @blur="modalDialogTitleEdit = false"
-            @keyup.enter="modalDialogTitleEdit = false"
-            v-else
-          />
-        </span>
-      </template>
-      <template #default>
-        <textarea class="description-textarea" v-model="newCardDescription" />
-      </template>
-    </ModalDialog>
+      :currentCard="currentCard"
+      :onCancel="() => (showModalDialog = false)"
+    />
     <DeleteDialog
       :show="showDeleteDialog"
       :title="'Are you sure you want to delete this card?'"
@@ -203,16 +160,5 @@ function deleteCard() {
     400 16px/23px "Poppins",
     sans-serif;
   overflow-wrap: anywhere;
-}
-.modal-dialog-title {
-  width: 93%;
-  word-break: break-word;
-}
-.description-textarea {
-  resize: none;
-  font-size: 16px;
-  width: 100%;
-  padding: 8px;
-  min-height: 250px;
 }
 </style>

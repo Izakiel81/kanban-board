@@ -15,8 +15,8 @@ const appStates = useAppStatesStore();
 const boardsStore = useWorkspacesStore();
 
 const modalDialogTitleEdit = ref<boolean>(false);
-const newCardTitle = ref<string>("");
-const newCardDescription = ref<string>("");
+const newCardTitle = ref<string>(currentCard.title);
+const newCardDescription = ref<string>(currentCard.description);
 
 function closeDialog() {
   if (!newCardTitle.value || !newCardTitle.value.trim()) return;
@@ -36,7 +36,7 @@ function closeDialog() {
 }
 </script>
 <template>
-  <ModalDialog :show="showModalDialog" :onCancel="closeDialog">
+  <ModalDialog :show="show" :onCancel="closeDialog">
     <template #header>
       <span>
         <h2
