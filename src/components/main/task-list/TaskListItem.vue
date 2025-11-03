@@ -38,6 +38,11 @@ const isMouseOver = ref(false);
 function deleteCard() {
   boardsStore.deleteItem(currentCard.value.id, props.cards);
 }
+function openDialog() {
+  if (modalStore.modalIsActive) return;
+  showModalDialog = true;
+  modalStore.modalIsActive = true;
+}
 </script>
 
 <template>
@@ -45,12 +50,7 @@ function deleteCard() {
     class="wrapper"
     :draggable="!modalStore.modalIsActive"
     @dragstart.stop="startDrag($event)"
-    @click="
-      () => {
-        showModalDialog = true;
-        modalStore.modalIsActive = true;
-      }
-    "
+    @click="openDialog"
     @mouseover="isMouseOver = true"
     @mouseleave="isMouseOver = false"
     @dragover.prevent
@@ -70,7 +70,12 @@ function deleteCard() {
         <DeleteButton
           :width="20"
           :height="20"
-          @click.stop="() => (showDeleteDialog = true)"
+          @click.stop="
+            () => {
+              showDeleteDialog = true;
+              modalStore.modalIsActive = true;
+            }
+          "
         />
       </span>
     </div>
