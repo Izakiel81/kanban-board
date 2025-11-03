@@ -4,7 +4,7 @@ import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
 import { useModalStore } from "../../../stores/modals_store";
 import type { Card } from "../../../interfaces/Workspace";
-import { ref } from "vue";
+import { ref, watch, nextTick } from "vue";
 
 const { show, currentCard, onCancel } = defineProps<{
   show: boolean;
@@ -19,6 +19,14 @@ const modalStore = useModalStore();
 const modalDialogTitleEdit = ref<boolean>(false);
 const newCardTitle = ref<string>(currentCard.title);
 const newCardDescription = ref<string>(currentCard.description);
+
+const textareaRef = ref<HTMLElementTextareat | null>(null);
+
+function autoResize() {
+  if (!textareaRef.value) return;
+  textareaRef.value.style.height = "auto";
+  textareaRef.value.style.height = textareaRef.value.scrollHeight + "px";
+}
 
 function closeDialog() {
   if (!newCardTitle.value || !newCardTitle.value.trim()) return;
@@ -38,6 +46,12 @@ function closeDialog() {
 
   modalStore.modalIsActive = false;
 }
+watch(modalDialogTitleEdit, async (isVisible) => {
+  if (isVisible) {
+    await nextTick();
+    autoResize();
+  }
+});
 </script>
 <template>
   <ModalDialog :show="show" :onCancel="closeDialog">
@@ -53,6 +67,8 @@ function closeDialog() {
         <textarea
           class="title-textarea"
           maxLength="300"
+          ref="textareaRef"
+          @input="autoResize"
           v-model="newCardTitle"
           @blur="modalDialogTitleEdit = false"
           @keyup.enter="modalDialogTitleEdit = false"
@@ -76,10 +92,14 @@ function closeDialog() {
 .modal-dialog-title {
   flex: 1;
   word-break: break-word;
+  font-size: 22px;
+  font-weight: bold;
 }
 .title-textarea {
   resize: none;
   flex: 1;
+  font-size: 22px;
+  font-weight: bold;
 }
 .description-textarea {
   resize: none;
