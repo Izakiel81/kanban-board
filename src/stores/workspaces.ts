@@ -43,14 +43,11 @@ export const useWorkspacesStore = defineStore(
       return cardResult;
     }
 
-    function addWorkspace(workspace?: { id: string; title: string }) {
+    function addWorkspace(title: string) {
       let biggestOrder = findMaxOrder(workspaces.value);
       workspaces.value.push({
-        ...(workspace ?? {
-          id: uuid(),
-          title: "Board " + (workspaces.value.length + 1),
-          length,
-        }),
+        id: uuid(),
+        title,
         order: biggestOrder + 1,
         type: "board",
         lists: [],

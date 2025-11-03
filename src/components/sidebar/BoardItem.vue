@@ -33,9 +33,6 @@ const showDeleteDialog = ref(false);
 const showButtons = ref(false);
 const isEditing = ref(false);
 
-const newBoardTitle = ref(currentBoard.value.title);
-const newBoardTitleRef = ref<HTMLInputElement | null>(null);
-
 function deleteBoard(id: string) {
   boardsStore.removeWorkspace(id);
   appStates.currentBoardId = "";
@@ -122,7 +119,7 @@ function boardClick() {
     :show="showDeleteDialog"
     :title="'Are you sure you want to delete this board?'"
     :main="currentBoard.title"
-    :onClick="deleteBoard"
+    :onClick="() => deleteBoard(currentBoard.id)"
     :onCancel="() => (showDeleteDialog = false)"
   />
 </template>

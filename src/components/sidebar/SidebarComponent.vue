@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BoardItem from "./BoardItem.vue";
+import AddForm from "../main/ui/AddForm.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
 import { useAppStatesStore } from "../../stores/app_store.ts";
 import { ref, computed, nextTick } from "vue";
@@ -18,28 +19,9 @@ const newWorkspaceTitle = ref("");
 const inputRef = ref<HTMLInputElement | null>(null);
 const buttonRef = ref<HTMLInputElement | null>(null);
 
-function startAdding() {
-  isAddingWorkspace.value = true;
-  nextTick(() => {
-    inputRef.value && inputRef.value.focus();
-  });
-}
-function finishAdding() {
-  newWorkspaceTitle.value && newWorkspaceTitle.value.trim()
-    ? workspacesStore.addWorkspace({
-        id: uuid(),
-        title: newWorkspaceTitle.value,
-      })
-    : workspacesStore.addWorkspace();
-
-  newWorkspaceTitle.value = "";
-  isAddingWorkspace.value = false;
-  nextTick(() => {
-    buttonRef.value && (buttonRef.value.disabled = true);
-  });
-  setTimeout(() => {
-    buttonRef.value && (buttonRef.value.disabled = false);
-  }, 200);
+function finishAdding(newTitle: string) {
+  if (!newTitle || !newTitle.trim()) return;
+  workspacesStore.addWorkspace(newTitle);
 }
 </script>
 
@@ -61,40 +43,15 @@ function finishAdding() {
           :key="workspace.id"
         />
       </ul>
-      <div>
-        <input
-          class="add-workspace-title"
-          ref="inputRef"
-          placeholder="Workspace title"
-          v-model="newWorkspaceTitle"
-          v-if="isAddingWorkspace"
-          @keyup.escape="
-            () => {
-              ((isAddingWorkspace = false), (newWorkspaceTitle = ''));
-            }
-          "
-        />
-      </div>
-
-      <div class="buttons">
-        <button
-          class="add-button"
-          ref="buttonRef"
-          @click="isAddingWorkspace ? finishAdding() : startAdding()"
-          :id="isAddingWorkspace ? 'done' : undefined"
-        >
-          {{ !isAddingWorkspace ? "+ Add board" : "Done" }}
-        </button>
-        <span
-          v-if="isAddingWorkspace"
-          id="close"
-          @click="
-            () => {
-              ((isAddingWorkspace = false), (newWorkspaceTitle = ''));
-            }
-          "
-        />
-      </div>
+      <AddForm
+        v-if="isAddingWorkspace"
+        :wBackground="true"
+        :onClose="() => (isAddingWorkspace = false)"
+        :onClick="finishAdding"
+      />
+      <button v-else class="add-button" @click="isAddingWorkspace = true">
+        + Add board
+      </button>
     </main>
   </div>
 </template>
@@ -192,46 +149,7 @@ main ul {
 
   margin: 3px 0;
 }
-#close {
-  display: flex;
-  cursor: pointer;
 
-  position: relative;
-  user-select: none;
-
-  height: 28px;
-  width: 28px;
-  padding: 6px 10px;
-
-  border-radius: 5px;
-
-  background-color: #ccc;
-
-  transition: filter 0.1s ease-in-out;
-}
-#close:hover {
-  filter: brightness(80%);
-}
-#close:active {
-  filter: brightness(90%);
-}
-#close::before,
-#close::after {
-  content: "";
-  position: absolute;
-  width: 56%;
-  top: 48%;
-  left: 18%;
-  border: 1px solid #fff;
-  border-radius: 5px;
-}
-
-#close::before {
-  transform: rotate(45deg);
-}
-#close::after {
-  transform: rotate(-45deg);
-}
 .add-workspace-title {
   outline: none;
 
@@ -265,16 +183,5 @@ main ul {
 }
 .add-button:active {
   filter: brightness(80%);
-}
-#done {
-  background-color: #007bff;
-  color: white;
-
-  height: 28px;
-  padding: 6px;
-  font-size: 14px;
-}
-#done:hover {
-  filter: brightness(90%);
 }
 </style>
