@@ -1,6 +1,9 @@
 import type { Card, TaskList, Workspace } from "../interfaces/Workspace.ts";
 import { ref, type Ref } from "vue";
 import { useDragAndDrop } from "./useDragAndDrop.ts";
+
+const dropItem = ref<Workspace | TaskList | Card>();
+
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
   elementsData: Array<{
@@ -9,7 +12,7 @@ export function useMobileDragAndDrop(
     data: Workspace | TaskList | Card;
   }>,
 ) {
-  const {} = useDragAndDrop();
+  const { transferCardsBetweenLists, changeItemOrder } = useDragAndDrop();
 
   const draggingCoordinates = ref<{ x: number; y: number } | null>(null);
   const isColliding = ref<boolean>(false);
@@ -47,13 +50,16 @@ export function useMobileDragAndDrop(
 
     isColliding.value = elementsData.some((item) => {
       if (checkCollide(item.rect)) {
+        dropItem.value = item.data;
         return true;
       }
       return false;
     });
     console.log("Colliding: ", isColliding.value);
-    console.log("Elements rects", elementsData);
-    console.log("\nFinger cords:\n", "X: ", clientX, "\nY: ", clientY);
+    console.log("\nCurrentElement: ", currentElement.value);
+    console.log("\nDraggedElement: ", dropItem.value);
+    console.log("\nElements rects", elementsData);
+    console.log("\nFinger cords:", "\nX: ", clientX, "\nY: ", clientY);
   }
   function onDragEnd(e: TouchEvent, element: HTMLElement) {
     console.log("ENDED DRAGGING\n", "Event: ", e, "\nElement: ", element);
