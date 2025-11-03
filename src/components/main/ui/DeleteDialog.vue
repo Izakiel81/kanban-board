@@ -22,15 +22,30 @@ function click() {
 }
 </script>
 <template>
-  <ModalDialog :show="show" :onCancel="onCancel" :footer="true">
-    <template #header>{{ title }}</template>
-    <template #default>{{ main }}</template>
+  <ModalDialog :width="550" :show="show" :onCancel="onCancel" :footer="true">
+    <template #header>
+      <h2 class="title">{{ title }}</h2>
+    </template>
+    <template #default>
+      <p class="main-text">{{ main }}</p>
+    </template>
     <template #footer>
-      <ModalDialogButton @click.stop="click">Yes</ModalDialogButton>
-      <ModalDialogButton :bgcolor="'#ff0000'" @click.stop="close"
-        >Cancel</ModalDialogButton
-      >
+      <ModalDialogButton :width="100" @click.stop="click">
+        Yes
+      </ModalDialogButton>
+      <ModalDialogButton :width="100" :bgcolor="'#ff0000'" @click.stop="close">
+        Cancel
+      </ModalDialogButton>
     </template>
   </ModalDialog>
 </template>
-<style scoped></style>
+<style scoped>
+.title {
+  font-size: 21px;
+  word-break: break-word;
+}
+.main-text {
+  overflow-y: auto;
+  word-break: break-word;
+}
+</style>
