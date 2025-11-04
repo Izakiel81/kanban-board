@@ -15,7 +15,7 @@ export function useMobileDragAndDrop(
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
 
-  function onDragStart(e: TouchEvent, element: HTMLElement) {
+  function onDragStart(element: HTMLElement) {
     element.style.width =
       element.getBoundingClientRect().width.toString() + "px";
     element.style.position = "fixed";
@@ -32,6 +32,29 @@ export function useMobileDragAndDrop(
 
     const elementBelow = document.elementFromPoint(clientX, clientY);
     const targetElement = elementBelow?.closest(`[${dataAttribute}]`);
+
+    if (currentElement.value.type === "card" && !targetElement) {
+      const listBelow = elementBelow?.closest(`[data-list-id]`);
+      if (listBelow) {
+        const targetListId = listBelow.getAttribute("data-list-id");
+        const board = boardsStore.getBoardById(appStore.currentBoardId);
+        if (!board || !targetListId) {
+          return;
+        }
+        const targetList = boardsStore.getTaskListById(board, targetListId);
+        if (!targetList) return;
+        const currentCardIndex = elements.findIndex(
+          (item) => item.id === currentElement.value.id,
+        );
+        if (!currentCardIndex) return;
+        elements.splice(currentCardIndex, 1);
+
+        targetList.cards.unshift(currentElement.value);
+        targetList.cards.forEach((item, index) => (item.order = index));
+
+        currentElement.value.taskListId = targetListId;
+      }
+    }
     if (targetElement) {
       const targetId = targetElement.getAttribute(dataAttribute);
       const target = elements.find((item) => item.id === targetId);
@@ -43,7 +66,7 @@ export function useMobileDragAndDrop(
     }
     dropItem.value = null;
   }
-  function onDragEnd(e: TouchEvent, element: HTMLElement) {
+  function onDragEnd(element: HTMLElement) {
     element.style = "";
     if (!dropItem.value) return;
     if (dropItem.value.id === currentElement.value.id) return;

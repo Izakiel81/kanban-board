@@ -105,6 +105,7 @@ watch(isEditingTitle, async (isVisible) => {
   <div
     class="list-container"
     :draggable="!modalStore.modalIsActive"
+    :data-list-id="currentTaskList.id"
     @dragover.prevent
     @drop.stop="onDrop()"
     @dragenter.stop="dragEnter()"
