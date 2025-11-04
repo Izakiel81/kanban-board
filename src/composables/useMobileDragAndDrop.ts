@@ -6,58 +6,59 @@ import { useAppStatesStore } from "../stores/app_store.ts";
 
 const dropItem = ref<Workspace | TaskList | Card | null>(null);
 const height = ref<number>(0);
+const width = ref<number>(0);
 
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
   elements: Array<Workspace | TaskList | Card>,
   dataAttribute: string,
-  isCardDragged?: Ref<boolean>,
 ) {
   const { transferCardsBetweenLists, changeItemOrder } = useDragAndDrop();
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
 
   const currentIndicator = ref<HTMLElement | null>();
+  const cardToList = ref<boolean>(false);
 
-  function onDragEnter(targetElement: HTMLElement) {
+  function onDragEnter(targetElement: HTMLElement, listBelow: HTMLElement) {
     if (!dropItem.value) return;
     if (currentIndicator.value) onDragLeave();
-    const indicatorId =
-      dropItem.value.order < currentElement.value.order ? "up" : "down";
-
-    currentIndicator.value = targetElement.querySelector(
-      `#${indicatorId}`,
-    ) as HTMLElement;
-
     if (currentElement.value.id === dropItem.value.id) return;
-    if (isCardDragged) {
-      isCardDragged.value =
-        dropItem.value.type === "list" &&
-        currentElement.value.type === "card" &&
-        currentElement.value.taskListId !== dropItem.value.id;
+
+    if (targetElement) {
+      const indicatorId =
+        dropItem.value.order < currentElement.value.order ? "up" : "down";
+      currentIndicator.value = targetElement.querySelector(
+        `#${indicatorId}`,
+      ) as HTMLElement;
+    } else {
+      currentIndicator.value = listBelow.querySelector(
+        "#card.drag-area",
+      ) as HTMLElement;
     }
-    if (
-      dropItem.value.type !== currentElement.value.type &&
-      !isCardDragged?.value
-    )
-      return;
+
     currentIndicator.value.classList.add("dragged-on");
     currentIndicator.value.style.height = `${height.value}px`;
+    currentIndicator.value.style.width = `${width.value}px`;
   }
   function onDragLeave() {
     if (currentIndicator.value) {
       currentIndicator.value?.classList.remove("dragged-on");
       currentIndicator.value.style.height = "2px";
+      currentIndicator.value.style.width = "2px";
       currentIndicator.value = null;
     }
+    cardToList.value = false;
   }
 
   function onDragStart(element: HTMLElement) {
     height.value = element.getBoundingClientRect().height;
+    width.value = element.getBoundingClientRect().width;
     element.style.width =
       element.getBoundingClientRect().width.toString() + "px";
     element.style.position = "fixed";
     element.style.opacity = "0.8";
+    element.style.zIndex = "2";
   }
 
   function onDrag(e: TouchEvent, element: HTMLElement) {
@@ -73,11 +74,14 @@ export function useMobileDragAndDrop(
 
     const elementBelow = document.elementFromPoint(clientX, clientY);
     const targetElement = elementBelow?.closest(`[${dataAttribute}]`);
-    if (targetElement) {
-      onDragEnter(targetElement as HTMLElement);
-    }
     const listBelow = elementBelow?.closest(`[data-list-id]`);
+    if (targetElement || listBelow) {
+      onDragEnter(targetElement as HTMLElement, listBelow as HTMLElement);
+    } else {
+      onDragLeave();
+    }
     if (currentElement.value.type === "card" && listBelow) {
+      console.log("HERE");
       const targetListId = listBelow.getAttribute("data-list-id");
       if (!targetListId) {
         return;
@@ -143,10 +147,11 @@ export function useMobileDragAndDrop(
 
       elements.splice(currentCardIndex, 1);
 
-      dropItem.value.cards.unshift(currentElement.value);
-      dropItem.value.cards.forEach((item, index) => (item.order = index));
+      console.log(dropItem.value.cards);
 
       currentElement.value.taskListId = dropItem.value.id;
+      dropItem.value.cards.unshift(currentElement.value);
+      dropItem.value.cards.forEach((item, index) => (item.order = index));
       return;
     }
 

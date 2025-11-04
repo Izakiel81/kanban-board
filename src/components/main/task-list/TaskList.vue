@@ -172,8 +172,8 @@ watch(isEditingTitle, async (isVisible) => {
         class="drag-area"
         :class="{ 'dragged-on': cardIsDragged }"
         :style="{
-          width: cardIsDragged ? '100%' : 0,
-          height: cardIsDragged ? elementHeight + 'px' : 0,
+          width: cardIsDragged ? '100%' : 2 + 'px',
+          height: cardIsDragged ? elementHeight + 'px' : 2 + 'px',
         }"
       ></div>
 
