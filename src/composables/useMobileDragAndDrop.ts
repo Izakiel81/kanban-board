@@ -30,25 +30,37 @@ export function useMobileDragAndDrop(
     element.style.top = (clientY + 5).toString() + "px";
     element.style.left = (clientX + 5).toString() + "px";
 
+    const board = boardsStore.getBoardById(appStore.currentBoardId);
+    if (!board) return;
+
     const elementBelow = document.elementFromPoint(clientX, clientY);
     const targetElement = elementBelow?.closest(`[${dataAttribute}]`);
     const listBelow = elementBelow?.closest(`[data-list-id]`);
-    if (currentElement.value.type === "card" && !targetElement && listBelow) {
+    if (currentElement.value.type === "card" && listBelow) {
       const targetListId = listBelow.getAttribute("data-list-id");
-      const board = boardsStore.getBoardById(appStore.currentBoardId);
-      if (!board || !targetListId) {
-        return;
-      }
+      if (!targetListId) return;
+
       const targetList = boardsStore.getTaskListById(board, targetListId);
       if (!targetList) return;
-      if (targetList && targetList.id !== currentElement.value.taskListId) {
-        dropItem.value = targetList;
-        return;
+      if (!targetElement) {
+        if (targetList && targetList.id !== currentElement.value.taskListId) {
+          dropItem.value = targetList;
+          return;
+        }
+      } else {
+        const targetId = targetElement.getAttribute(dataAttribute);
+        const target = targetList.cards.find((item) => item.id === targetId);
+
+        if (target && target.id !== currentElement.value.id) {
+          dropItem.value = target;
+          return;
+        }
       }
     }
 
     if (targetElement) {
       const targetId = targetElement.getAttribute(dataAttribute);
+
       const target = elements.find((item) => item.id === targetId);
 
       if (target && target.id !== currentElement.value.id) {
