@@ -80,6 +80,7 @@ export function useElementDragAndDrop(
         draggedElement.value.id,
         currentElement.value.id,
       );
+
       dragLeave();
       return;
     }

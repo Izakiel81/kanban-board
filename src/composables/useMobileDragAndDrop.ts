@@ -5,17 +5,64 @@ import { useWorkspacesStore } from "../stores/workspaces.ts";
 import { useAppStatesStore } from "../stores/app_store.ts";
 
 const dropItem = ref<Workspace | TaskList | Card | null>(null);
+const height = ref<number>(0);
 
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
   elements: Array<Workspace | TaskList | Card>,
   dataAttribute: string,
+  draggedOver: Ref<boolean>,
+  isAbove: Ref<boolean>,
+  elementHeight: Ref<number>,
+  isCardDragged?: Ref<boolean>,
 ) {
   const { transferCardsBetweenLists, changeItemOrder } = useDragAndDrop();
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
 
+  const counter = ref<number>(0);
+  const currentIndicator = ref<HTMLElement | null>();
+
+  function onDragEnter(targetElement: HTMLElement) {
+    if (!dropItem.value) return;
+    counter.value++;
+    if (currentIndicator.value) onDragLeave();
+    const indicatorId =
+      dropItem.value.order < currentElement.value.order ? "up" : "down";
+
+    currentIndicator.value = targetElement.querySelector(
+      `#${indicatorId}`,
+    ) as HTMLElement;
+
+    if (currentElement.value.id === dropItem.value.id) return;
+    if (isCardDragged) {
+      isCardDragged.value =
+        dropItem.value.type === "list" &&
+        currentElement.value.type === "card" &&
+        currentElement.value.taskListId !== dropItem.value.id;
+    }
+    if (
+      dropItem.value.type !== currentElement.value.type &&
+      !isCardDragged?.value
+    )
+      return;
+    currentIndicator.value.classList.add("dragged-on");
+    currentIndicator.value.style.height = `${height.value}px`;
+  }
+  function onDragLeave() {
+    counter.value--;
+    if (counter.value > 0) return;
+    counter.value = 0;
+    if (currentIndicator.value) {
+      currentIndicator.value?.classList.remove("dragged-on");
+      currentIndicator.value.style.height = "2px";
+      currentIndicator.value = null;
+    }
+    isCardDragged && (isCardDragged.value = false);
+  }
+
   function onDragStart(element: HTMLElement) {
+    height.value = element.getBoundingClientRect().height;
     element.style.width =
       element.getBoundingClientRect().width.toString() + "px";
     element.style.position = "fixed";
@@ -35,10 +82,17 @@ export function useMobileDragAndDrop(
 
     const elementBelow = document.elementFromPoint(clientX, clientY);
     const targetElement = elementBelow?.closest(`[${dataAttribute}]`);
+    if (targetElement) {
+      onDragEnter(targetElement as HTMLElement);
+    }
+    onDragLeave();
     const listBelow = elementBelow?.closest(`[data-list-id]`);
     if (currentElement.value.type === "card" && listBelow) {
+      counter.value++;
       const targetListId = listBelow.getAttribute("data-list-id");
-      if (!targetListId) return;
+      if (!targetListId) {
+        return;
+      }
 
       const targetList = boardsStore.getTaskListById(board, targetListId);
       if (!targetList) return;
@@ -59,6 +113,7 @@ export function useMobileDragAndDrop(
     }
 
     if (targetElement) {
+      counter.value++;
       const targetId = targetElement.getAttribute(dataAttribute);
 
       const target = elements.find((item) => item.id === targetId);
@@ -72,6 +127,7 @@ export function useMobileDragAndDrop(
   }
   function onDragEnd(element: HTMLElement) {
     element.style = "";
+    onDragLeave();
     if (!dropItem.value) return;
     if (dropItem.value.id === currentElement.value.id) return;
 
