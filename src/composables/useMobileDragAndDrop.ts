@@ -32,6 +32,7 @@ export function useMobileDragAndDrop(
         `#${indicatorId}`,
       ) as HTMLElement;
     } else {
+      if (currentElement.value.type !== "card") return;
       currentIndicator.value = listBelow.querySelector(
         "#card.drag-area",
       ) as HTMLElement;
@@ -81,7 +82,6 @@ export function useMobileDragAndDrop(
       onDragLeave();
     }
     if (currentElement.value.type === "card" && listBelow) {
-      console.log("HERE");
       const targetListId = listBelow.getAttribute("data-list-id");
       if (!targetListId) {
         return;
@@ -125,6 +125,22 @@ export function useMobileDragAndDrop(
 
     if (
       currentElement.value.type === "card" &&
+      dropItem.value.type === "list"
+    ) {
+      const currentCardIndex = elements.findIndex(
+        (item) => item.id === currentElement.value.id,
+      );
+      if (currentCardIndex === -1) return;
+
+      const [item] = elements.splice(currentCardIndex, 1);
+
+      currentElement.value.taskListId = dropItem.value.id;
+      dropItem.value.cards.unshift(item as Card);
+      dropItem.value.cards.forEach((item, index) => (item.order = index));
+      return;
+    }
+    if (
+      currentElement.value.type === "card" &&
       dropItem.value.type === "card"
     ) {
       transferCardsBetweenLists(
@@ -133,25 +149,6 @@ export function useMobileDragAndDrop(
         currentElement.value.taskListId,
         dropItem.value.taskListId,
       );
-      return;
-    }
-
-    if (
-      currentElement.value.type === "card" &&
-      dropItem.value.type === "list"
-    ) {
-      const currentCardIndex = elements.findIndex(
-        (item) => item.id === currentElement.value.id,
-      );
-      if (!currentCardIndex) return;
-
-      elements.splice(currentCardIndex, 1);
-
-      console.log(dropItem.value.cards);
-
-      currentElement.value.taskListId = dropItem.value.id;
-      dropItem.value.cards.unshift(currentElement.value);
-      dropItem.value.cards.forEach((item, index) => (item.order = index));
       return;
     }
 
