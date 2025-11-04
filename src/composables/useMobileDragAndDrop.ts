@@ -11,21 +11,16 @@ export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
   elements: Array<Workspace | TaskList | Card>,
   dataAttribute: string,
-  draggedOver: Ref<boolean>,
-  isAbove: Ref<boolean>,
-  elementHeight: Ref<number>,
   isCardDragged?: Ref<boolean>,
 ) {
   const { transferCardsBetweenLists, changeItemOrder } = useDragAndDrop();
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
 
-  const counter = ref<number>(0);
   const currentIndicator = ref<HTMLElement | null>();
 
   function onDragEnter(targetElement: HTMLElement) {
     if (!dropItem.value) return;
-    counter.value++;
     if (currentIndicator.value) onDragLeave();
     const indicatorId =
       dropItem.value.order < currentElement.value.order ? "up" : "down";
@@ -50,15 +45,11 @@ export function useMobileDragAndDrop(
     currentIndicator.value.style.height = `${height.value}px`;
   }
   function onDragLeave() {
-    counter.value--;
-    if (counter.value > 0) return;
-    counter.value = 0;
     if (currentIndicator.value) {
       currentIndicator.value?.classList.remove("dragged-on");
       currentIndicator.value.style.height = "2px";
       currentIndicator.value = null;
     }
-    isCardDragged && (isCardDragged.value = false);
   }
 
   function onDragStart(element: HTMLElement) {
@@ -85,10 +76,8 @@ export function useMobileDragAndDrop(
     if (targetElement) {
       onDragEnter(targetElement as HTMLElement);
     }
-    onDragLeave();
     const listBelow = elementBelow?.closest(`[data-list-id]`);
     if (currentElement.value.type === "card" && listBelow) {
-      counter.value++;
       const targetListId = listBelow.getAttribute("data-list-id");
       if (!targetListId) {
         return;
@@ -113,7 +102,6 @@ export function useMobileDragAndDrop(
     }
 
     if (targetElement) {
-      counter.value++;
       const targetId = targetElement.getAttribute(dataAttribute);
 
       const target = elements.find((item) => item.id === targetId);
