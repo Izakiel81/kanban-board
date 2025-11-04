@@ -17,14 +17,6 @@ const props = defineProps<{
 
 const currentTaskList = computed(() => props.taskList);
 
-const elementsData = ref<
-  Array<{
-    element: HTMLElement;
-    rect: DOMRect;
-    data: Workspace | TaskList | Card;
-  }>
->([]);
-
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
 
@@ -89,16 +81,6 @@ function editTitle() {
 function deleteTaskList() {
   boardsStore.deleteItem(currentTaskList.value.id, props.taskLists);
 }
-
-watch(currentTaskList.value.cards, () => {
-  elementsData.value = [];
-});
-watch(isEditingTitle, async (isVisible) => {
-  if (isVisible) {
-    await nextTick();
-    autoResize();
-  }
-});
 </script>
 
 <template>
@@ -183,7 +165,6 @@ watch(isEditingTitle, async (isVisible) => {
           :key="card.id"
           :card="card"
           :cards="taskList.cards"
-          :elementsData="elementsData"
         />
       </div>
       <button

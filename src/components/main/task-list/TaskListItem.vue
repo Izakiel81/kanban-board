@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DragAndDropContainer from "../../DragAndDropCntainer.vue";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
 import { useMobileDragAndDrop } from "../../../composables/useMobileDragAndDrop";
 import { useWorkspacesStore } from "../../../stores/workspaces";
@@ -15,30 +16,8 @@ const props = defineProps<{
   cards: Array<Card>;
 }>();
 
-const appStates = useAppStatesStore();
 const boardsStore = useWorkspacesStore();
 const modalStore = useModalStore();
-
-const currentCard = computed(() => props.card);
-const draggedOver = ref(false);
-const isAbove = ref(false);
-const elementHeight = ref(2);
-
-const elementRef = ref<HTMLElement | null>(null);
-
-const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
-  currentCard,
-  props.cards,
-  draggedOver,
-  isAbove,
-  elementHeight,
-);
-
-const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
-  currentCard,
-  props.cards,
-  "data-card-id",
-);
 
 const showModalDialog = ref(false);
 const showDeleteDialog = ref(false);
@@ -55,31 +34,16 @@ function openDialog() {
 </script>
 
 <template>
-  <div
-    class="wrapper"
-    ref="elementRef"
-    :draggable="!modalStore.modalIsActive"
-    :data-card-id="currentCard.id"
-    @touchstart="onDragStart(elementRef)"
-    @touchmove="onDrag($event, elementRef)"
-    @touchend="onDragEnd(elementRef)"
-    @dragstart.stop="startDrag($event)"
-    @click="openDialog"
-    @mouseover="isMouseOver = true"
-    @mouseleave="isMouseOver = false"
-    @dragover.prevent
-    @dragenter.prevent.stop="dragEnter()"
-    @dragleave.prevent.stop="dragLeave()"
-    @drop.stop="onDrop()"
+  <DragAndDropContainer
+    :dataAttribute="'data-card-id'"
+    :elements="props.cards"
+    :element="props.card"
+    :mouseOver="() => (isMouseOver = true)"
+    :mouseLeave="() => (isMouseOver = false)"
+    :onClick="openDialog"
   >
-    <span
-      class="drag-target"
-      :class="{ 'dragged-on': draggedOver && isAbove }"
-      :style="{ height: draggedOver && isAbove ? elementHeight + 'px' : '2px' }"
-      id="up"
-    />
     <div class="container">
-      <p class="content">{{ currentCard.title }}</p>
+      <p class="content">{{ props.card.title }}</p>
       <span class="delete-button" :style="{ opacity: isMouseOver ? 1 : 0 }">
         <DeleteButton
           :width="20"
@@ -93,27 +57,19 @@ function openDialog() {
         />
       </span>
     </div>
-    <span
-      class="drag-target"
-      :class="{ 'dragged-on': draggedOver && !isAbove }"
-      :style="{
-        height: draggedOver && !isAbove ? elementHeight + 'px' : '2px',
-      }"
-      id="down"
-    />
     <EditCardDialog
       :show="showModalDialog"
-      :currentCard="currentCard"
+      :currentCard="props.card"
       :onCancel="() => (showModalDialog = false)"
     />
     <DeleteDialog
       :show="showDeleteDialog"
       :title="'Are you sure you want to delete this card?'"
-      :main="currentCard.title"
+      :main="props.card.title"
       :onCancel="() => (showDeleteDialog = false)"
       :onClick="deleteCard"
     />
-  </div>
+  </DragAndDropContainer>
 </template>
 <style scoped>
 .wrapper {
