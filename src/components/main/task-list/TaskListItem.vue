@@ -8,7 +8,7 @@ import DeleteButton from "../ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import EditCardDialog from "../../main/ui/EditCardDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 
 const props = defineProps<{
   card: Card;
@@ -30,23 +30,13 @@ const isAbove = ref(false);
 const elementHeight = ref(2);
 
 const elementRef = ref<HTMLElement | null>(null);
+
 onMounted(() => {
   props.elementsData.push({
     element: elementRef.value,
     rect: elementRef.value.getBoundingClientRect(),
     data: currentCard.value,
   });
-  console.log("ElementsData:\n", props.elementsData);
-});
-watch(props.cards, () => {
-  console.log("ElementData:\n", elementRef.value);
-  console.log("\nElementDataRect:\n", elementRef.value.getBoundingClientRect());
-  props.elementsData.push({
-    element: elementRef.value,
-    rect: elementRef.value.getBoundingClientRect(),
-    data: currentCard.value,
-  });
-  console.log("ElementsData changed:\n", props.elementsData);
 });
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
@@ -59,7 +49,8 @@ const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
 
 const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
   currentCard,
-  props.elementsData,
+  props.cards,
+  "data-card-id",
 );
 
 const showModalDialog = ref(false);
@@ -81,6 +72,7 @@ function openDialog() {
     class="wrapper"
     ref="elementRef"
     :draggable="!modalStore.modalIsActive"
+    :data-card-id="currentCard.id"
     @touchstart="onDragStart($event, elementRef)"
     @touchmove="onDrag($event, elementRef)"
     @touchend="onDragEnd($event, elementRef)"

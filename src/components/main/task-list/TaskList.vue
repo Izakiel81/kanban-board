@@ -25,10 +25,6 @@ const elementsData = ref<
   }>
 >([]);
 
-watch(currentTaskList.value.cards, () => {
-  elementsData.value = [];
-});
-
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
 
@@ -94,6 +90,9 @@ function deleteTaskList() {
   boardsStore.deleteItem(currentTaskList.value.id, props.taskLists);
 }
 
+watch(currentTaskList.value.cards, () => {
+  elementsData.value = [];
+});
 watch(isEditingTitle, async (isVisible) => {
   if (isVisible) {
     await nextTick();
