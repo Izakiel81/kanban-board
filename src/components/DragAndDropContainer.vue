@@ -57,8 +57,8 @@ const upStyles = computed(() =>
         width: draggedOver.value && isAbove.value ? 230 + "px" : 1 + "px",
         height:
           draggedOver.value && isAbove.value ? elementHeight.value + "px" : 0,
-        top: "-2px",
-        left: "-4px",
+        top: draggedOver.value ? "-2px" : 0,
+        marginInline: draggedOver.value ? "4px" : 0,
       }
     : {
         height:
@@ -73,8 +73,8 @@ const downStyles = computed(() =>
         width: draggedOver.value && !isAbove.value ? 230 + "px" : 1 + "px",
         height:
           draggedOver.value && !isAbove.value ? elementHeight.value + "px" : 0,
-        top: "-2px",
-        left: "4px",
+        top: draggedOver.value ? "-2px" : 0,
+        marginInline: draggedOver.value ? "4px" : 0,
       }
     : {
         height:
