@@ -13,11 +13,6 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 const props = defineProps<{
   card: Card;
   cards: Array<Card>;
-  elementsData: Array<{
-    element: HTMLElement;
-    rect: DOMRect;
-    data: Workspace | TaskList | Card;
-  }>;
 }>();
 
 const appStates = useAppStatesStore();
@@ -30,14 +25,6 @@ const isAbove = ref(false);
 const elementHeight = ref(2);
 
 const elementRef = ref<HTMLElement | null>(null);
-
-onMounted(() => {
-  props.elementsData.push({
-    element: elementRef.value,
-    rect: elementRef.value.getBoundingClientRect(),
-    data: currentCard.value,
-  });
-});
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentCard,

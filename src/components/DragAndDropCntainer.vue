@@ -1,6 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue";
-const props = defineProps<{ horizontal?: boolean }>();
+import { ref, computed } from "vue";
+import { useAppStatesStore } from "../stores/app_store";
+import { useModalStore } from "../stores/modals_store";
+import { useElementDragAndDrop } from "../composables/useElementDragAndDrop";
+import { useMobileDragAndDrop } from "../composables/useMobileDragAndDrop";
+
+const appStates = useAppStatesStore();
+const modalStore = useModalStore();
+
+const { horizontal, dataAttribute, elements, element, isCardDragged } =
+  defineProps<{
+    horizontal?: boolean;
+    dataAttribute: string;
+    elements: Array<Workspace | TaskList | Card>;
+    element: Workspace | TaskList | Card;
+    isCardDragged?: boolean;
+  }>();
+
+const currentElement = computed(() => element);
 
 const draggedOver = ref(false);
 const isAbove = ref(false);
@@ -9,29 +26,29 @@ const elementHeight = ref(2);
 const elementRef = ref<HTMLElement | null>(null);
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
-  currentCard,
-  props.cards,
+  currentElement,
+  elements,
   draggedOver,
   isAbove,
   elementHeight,
+  isCardDragged,
 );
 
 const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
-  currentCard,
-  props.cards,
-  "data-card-id",
+  currentElement,
+  elements,
+  dataAttribute,
 );
-const {} = useMobileDragAndDrop();
 </script>
 <template>
-  <div ref="elementRef">
+  <div ref="elementRef" :[dataAttribute]="currentElement.id">
     <span
       class="drag-target"
       :class="{ 'dragged-on': draggedOver && isAbove }"
       :style="{ height: draggedOver && isAbove ? elementHeight + 'px' : '2px' }"
       id="up"
     />
-    <slot> </slot>
+    <slot></slot>
     <span
       class="drag-target"
       :class="{ 'dragged-on': draggedOver && !isAbove }"
@@ -42,4 +59,9 @@ const {} = useMobileDragAndDrop();
     />
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+</style>
