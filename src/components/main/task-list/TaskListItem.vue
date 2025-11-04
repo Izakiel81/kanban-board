@@ -51,9 +51,6 @@ const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
   currentCard,
   props.cards,
   "data-card-id",
-  draggedOver,
-  isAbove,
-  elementHeight,
 );
 
 const showModalDialog = ref(false);
