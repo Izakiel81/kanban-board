@@ -129,6 +129,7 @@ export function useMobileDragAndDrop(
         currentElement.value.taskListId,
         dropItem.value.taskListId,
       );
+      return;
     }
 
     if (
@@ -146,7 +147,10 @@ export function useMobileDragAndDrop(
       dropItem.value.cards.forEach((item, index) => (item.order = index));
 
       currentElement.value.taskListId = dropItem.value.id;
+      return;
     }
+
+    changeItemOrder(elements, currentElement.value.id, dropItem.value.id);
   }
 
   return {
