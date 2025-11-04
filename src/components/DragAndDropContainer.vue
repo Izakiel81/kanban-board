@@ -49,6 +49,7 @@ const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
   currentElement,
   elements,
   dataAttribute,
+  horizontal,
 );
 
 const upStyles = computed(() =>
@@ -91,12 +92,12 @@ const downStyles = computed(() =>
     :draggable="!modalStore.modalIsActive"
     :[dataAttribute]="currentElement.id"
     @click="onClick"
-    @touchstart="onDragStart(elementRef)"
-    @touchmove="onDrag($event, elementRef)"
-    @touchend="onDragEnd(elementRef)"
+    @touchstart.stop="onDragStart(elementRef)"
+    @touchmove.stop="onDrag($event, elementRef)"
+    @touchend.stop="onDragEnd(elementRef)"
     @dragstart.stop="startDrag($event)"
-    @mouseover="mouseOver"
-    @mouseleave="mouseLeave"
+    @mouseover.stop="mouseOver"
+    @mouseleave.stop="mouseLeave"
     @dragover.prevent
     @dragenter.prevent.stop="dragEnter()"
     @dragleave.prevent.stop="dragLeave()"

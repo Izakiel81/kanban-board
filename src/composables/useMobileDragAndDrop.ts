@@ -12,6 +12,7 @@ export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
   elements: Array<Workspace | TaskList | Card>,
   dataAttribute: string,
+  horizontal?: boolean,
 ) {
   const { transferCardsBetweenLists, changeItemOrder } = useDragAndDrop();
   const boardsStore = useWorkspacesStore();
@@ -44,6 +45,10 @@ export function useMobileDragAndDrop(
     currentIndicator.value.classList.add("dragged-on");
     currentIndicator.value.style.height = `${height.value}px`;
     currentIndicator.value.style.width = `${width.value}px`;
+    if (horizontal) {
+      currentIndicator.value.style.top = "-2px";
+      currentIndicator.value.style.marginInline = "4px";
+    }
   }
   function onDragLeave() {
     if (currentIndicator.value) {
