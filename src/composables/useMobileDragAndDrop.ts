@@ -33,6 +33,9 @@ export function useMobileDragAndDrop(
       ) as HTMLElement;
     } else {
       if (currentElement.value.type !== "card") return;
+      const targetListId = listBelow.getAttribute("data-list-id");
+      if (!targetListId || targetListId === currentElement.value.taskListId)
+        return;
       currentIndicator.value = listBelow.querySelector(
         "#card.drag-area",
       ) as HTMLElement;
