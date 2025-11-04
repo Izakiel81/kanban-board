@@ -25,6 +25,10 @@ const elementsData = ref<
   }>
 >([]);
 
+watch(currentTaskList.value.cards, () => {
+  elementsData.value = [];
+});
+
 const isEditingTitle = ref(false);
 const newTaskListTitle = ref(props.taskList.title || "");
 

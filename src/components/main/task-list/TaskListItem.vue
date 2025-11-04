@@ -8,7 +8,7 @@ import DeleteButton from "../ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import EditCardDialog from "../../main/ui/EditCardDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 
 const props = defineProps<{
   card: Card;
@@ -36,6 +36,17 @@ onMounted(() => {
     rect: elementRef.value.getBoundingClientRect(),
     data: currentCard.value,
   });
+  console.log("ElementsData:\n", props.elementsData);
+});
+watch(props.cards, () => {
+  console.log("ElementData:\n", elementRef.value);
+  console.log("\nElementDataRect:\n", elementRef.value.getBoundingClientRect());
+  props.elementsData.push({
+    element: elementRef.value,
+    rect: elementRef.value.getBoundingClientRect(),
+    data: currentCard.value,
+  });
+  console.log("ElementsData changed:\n", props.elementsData);
 });
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(

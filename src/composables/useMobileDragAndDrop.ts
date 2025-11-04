@@ -1,8 +1,8 @@
 import type { Card, TaskList, Workspace } from "../interfaces/Workspace.ts";
-import { ref, type Ref } from "vue";
+import { ref, type Ref, watch } from "vue";
 import { useDragAndDrop } from "./useDragAndDrop.ts";
 
-const dropItem = ref<Workspace | TaskList | Card>();
+const dropItem = ref<Workspace | TaskList | Card | null>(null);
 
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
@@ -30,43 +30,39 @@ export function useMobileDragAndDrop(
     return false;
   }
   function onDragStart(e: TouchEvent, element: HTMLElement) {
-    console.log("STARTED DRAGGING \n", "Event: ", e, "\nElement: ", element);
-    console.log("Element coords: ", element.getBoundingClientRect());
     const touch = e.touches[0];
     const clientX = touch.clientX;
     const clientY = touch.clientY;
     draggingCoordinates.value = { x: clientX, y: clientY };
-    console.log("\nFinger cords:\n", "X: ", clientX, "\nY: ", clientY);
+    element.style.width =
+      element.getBoundingClientRect().width.toString() + "px";
+    element.style.position = "fixed";
+    element.style.transform = "translate(-30%, -30%)";
+    element.style.opacity = "0.8";
   }
 
   function onDrag(e: TouchEvent, element: HTMLElement) {
-    console.log("DRAGGING\n", "Event: ", e, "\nElement: ", element);
-    console.log("Element coords: ", element.getBoundingClientRect());
-
     const touch = e.touches[0];
     const clientX = touch.clientX;
     const clientY = touch.clientY;
     draggingCoordinates.value = { x: clientX, y: clientY };
 
+    element.style.top = clientY.toString() + "px";
+    element.style.left = clientX.toString() + "px";
+
     isColliding.value = elementsData.some((item) => {
-      if (checkCollide(item.rect)) {
+      if (checkCollide(item.rect) && currentElement.value.id !== item.data.id) {
         dropItem.value = item.data;
         return true;
       }
       return false;
     });
-    console.log("Colliding: ", isColliding.value);
-    console.log("\nCurrentElement: ", currentElement.value);
-    console.log("\nDraggedElement: ", dropItem.value);
-    console.log("\nElements rects", elementsData);
-    console.log("\nFinger cords:", "\nX: ", clientX, "\nY: ", clientY);
   }
   function onDragEnd(e: TouchEvent, element: HTMLElement) {
-    console.log("ENDED DRAGGING\n", "Event: ", e, "\nElement: ", element);
-    console.log("\nCurrentElement: ", currentElement.value);
-    console.log("\nDraggedElement: ", dropItem.value);
-    console.log("Element coords: ", element.getBoundingClientRect());
-    console.log("\nEnd coordinates:\n", draggingCoordinates.value);
+    console.log("Current element: ", currentElement.value);
+    console.log("Drop element: ", dropItem.value);
+    console.log("Element rect:\n", element.getBoundingClientRect());
+    element.style = "";
     if (!dropItem.value) return;
     if (dropItem.value.id === currentElement.value.id) return;
 
