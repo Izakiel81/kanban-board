@@ -6,8 +6,9 @@ const { color, width, height } = defineProps<{
 }>();
 </script>
 <template>
-  <span class="container">
+  <span>
     <svg
+      class="delete-button-container"
       :width="width || 20"
       :height="height || 20"
       viewBox="0 0 24 24"
@@ -22,7 +23,7 @@ const { color, width, height } = defineProps<{
 </template>
 <style scoped>
 @media (hover: none) and (pointer: coarse) {
-  .container {
+  .delte-button-container {
     display: none;
   }
 }

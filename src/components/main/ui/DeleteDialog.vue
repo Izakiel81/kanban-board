@@ -4,7 +4,7 @@ import ModalDialogButton from "./ModalDialogButton.vue";
 import { useModalStore } from "../../../stores/modals_store";
 
 const modalStates = useModalStore();
-const { show, onCancel } = defineProps<{
+const { show, onCancel, title, main, onClick } = defineProps<{
   show: boolean;
   title: string;
   main: string;
