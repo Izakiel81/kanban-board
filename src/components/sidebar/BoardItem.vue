@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type Workspace } from "../../interfaces/Workspace";
+import DragAndDropContainer from "../DragAndDropContainer.vue";
 import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
@@ -17,23 +18,14 @@ const boardsStore = useWorkspacesStore();
 const appStates = useAppStatesStore();
 const modalStore = useModalStore();
 
-const draggedOver = ref(false);
-const isAbove = ref(false);
-const elementHeight = ref(0);
-
 const currentBoard = computed(() => workspace);
-
-const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
-  currentBoard,
-  boardsStore.workspaces,
-  draggedOver,
-  isAbove,
-  elementHeight,
-);
 
 const showDeleteDialog = ref(false);
 const showButtons = ref(false);
 const isEditing = ref(false);
+
+const newBoardTitleRef = ref<HTMLElementTextarea | null>(null);
+const newBoardTitle = ref<string>(currentBoard.value.title);
 
 function deleteBoard(id: string) {
   boardsStore.removeWorkspace(id);
@@ -58,57 +50,37 @@ function boardClick() {
 }
 </script>
 <template>
-  <li
-    :draggable="!modalStore.modalIsActive"
-    class="board"
-    v-if="!isEditing"
-    :key="currentBoard.id"
-    @dragover.prevent
-    @dragstart.stop="startDrag($event)"
-    @dragenter.stop="dragEnter()"
-    @dragleave.stop="dragLeave()"
-    @drop="onDrop()"
-    @click="boardClick"
-    @mouseover="showButtons = true"
-    @mouseleave="showButtons = false"
-  >
-    <span
-      class="drag-area"
-      :class="{ 'dragged-on': draggedOver && isAbove }"
-      :style="{
-        width: draggedOver && isAbove ? '100%' : 0,
-        height: draggedOver && isAbove ? elementHeight + 'px' : 0,
-      }"
-    />
-    <span class="board-title">
-      {{ currentBoard.title }}
-      <span
-        class="buttons"
-        id="edit-delete"
-        :style="{ opacity: showButtons ? 1 : 0 }"
-      >
-        <EditButton :width="16" :height="16" @click.stop="startEditing" />
-        <DeleteButton
-          :width="16"
-          :height="16"
-          :fill="'#000'"
-          @click.stop="
-            () => {
-              showDeleteDialog = true;
-              modalStore.modalIsActive = true;
-            }
-          "
-        />
+  <li class="board" v-if="!isEditing" :key="currentBoard.id">
+    <DragAndDropContainer
+      :dataAttribute="'data-board-id'"
+      :elements="boardsStore.workspaces"
+      :element="currentBoard"
+      :mouseOver="() => (showButtons = true)"
+      :mouseLeave="() => (showButtons = false)"
+      :onClick="boardClick"
+    >
+      <span class="board-title">
+        {{ currentBoard.title }}
+        <span
+          class="buttons"
+          id="edit-delete"
+          :style="{ opacity: showButtons ? 1 : 0 }"
+        >
+          <EditButton :width="16" :height="16" @click.stop="startEditing" />
+          <DeleteButton
+            :width="16"
+            :height="16"
+            :fill="'#000'"
+            @click.stop="
+              () => {
+                showDeleteDialog = true;
+                modalStore.modalIsA;
+              }
+            "
+          />
+        </span>
       </span>
-    </span>
-    <span
-      class="drag-area"
-      :class="{ 'dragged-on': draggedOver && !isAbove }"
-      :style="{
-        width: draggedOver && !isAbove ? '100%' : 0,
-        height: draggedOver && !isAbove ? elementHeight + 'px' : 0,
-      }"
-    />
+    </DragAndDropContainer>
   </li>
   <div class="edit-board" v-else>
     <textarea
@@ -266,16 +238,5 @@ function boardClick() {
 }
 .buttons span:hover {
   background-color: #ddd;
-}
-.drag-area {
-  height: 0;
-  transition:
-    width 0.1s ease-out,
-    height 0.1s ease-out;
-}
-.dragged-on {
-  background-color: #555;
-  border-radius: 6px;
-  margin: 3px 0;
 }
 </style>
