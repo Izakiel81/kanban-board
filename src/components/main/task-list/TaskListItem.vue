@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DragAndDropContainer from "../../DragAndDropCntainer.vue";
+import DragAndDropContainer from "../../DragAndDropContainer.vue";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
 import { useMobileDragAndDrop } from "../../../composables/useMobileDragAndDrop";
 import { useWorkspacesStore } from "../../../stores/workspaces";

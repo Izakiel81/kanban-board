@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive } from "vue";
+import { ref, computed } from "vue";
 import { useAppStatesStore } from "../stores/app_store";
 import { useModalStore } from "../stores/modals_store";
 import { useElementDragAndDrop } from "../composables/useElementDragAndDrop";
@@ -51,26 +51,34 @@ const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
   dataAttribute,
 );
 
-const upStyles = reactive(
+const upStyles = computed(() =>
   horizontal
     ? {
-        width: draggedOver && isAbove ? 230 + "px" : 1 + "px",
-        height: draggedOver && isAbove ? elementHeight + "px" : 0,
+        width: draggedOver.value && isAbove.value ? 230 + "px" : 1 + "px",
+        height:
+          draggedOver.value && isAbove.value ? elementHeight.value + "px" : 0,
         top: 0,
       }
     : {
-        height: draggedOver && isAbove ? elementHeight + "px" : "2px",
+        height:
+          draggedOver.value && isAbove.value
+            ? elementHeight.value + "px"
+            : "2px",
       },
 );
-const downStyles = reactive(
+const downStyles = computed(() =>
   horizontal
     ? {
-        width: draggedOver && !isAbove ? 230 + "px" : 1 + "px",
-        height: draggedOver && !isAbove ? elementHeight + "px" : 0,
+        width: draggedOver.value && !isAbove.value ? 230 + "px" : 1 + "px",
+        height:
+          draggedOver.value && !isAbove.value ? elementHeight.value + "px" : 0,
         top: 0,
       }
     : {
-        height: draggedOver && !isAbove ? elementHeight + "px" : "2px",
+        height:
+          draggedOver.value && !isAbove.value
+            ? elementHeight.value + "px"
+            : "2px",
       },
 );
 </script>
