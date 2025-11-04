@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
+import DragAndDropContainer from "../../DragAndDropContainer.vue";
 import DeleteButton from "../../main/ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import AddForm from "../../main/ui/AddForm.vue";
@@ -84,27 +85,16 @@ function deleteTaskList() {
 </script>
 
 <template>
-  <div
-    class="list-container"
-    :draggable="!modalStore.modalIsActive"
-    :data-list-id="currentTaskList.id"
-    @dragover.prevent
-    @drop.stop="onDrop()"
-    @dragenter.stop="dragEnter()"
-    @dragleave.stop="dragLeave()"
-    @dragstart.stop="startDrag($event)"
-    @mouseenter="showDeleteButton = true"
-    @mouseleave="showDeleteButton = false"
+  <DragAndDropContainer
+    :horizontal="true"
+    :dataAttribute="'data-list-id'"
+    :elements="props.taskLists"
+    :element="currentTaskList"
+    :isCardDragged="isCardDragged"
+    :mouseEnter="() => (showDeleteButton = true)"
+    :mouseLeave="() => (showDeleteButton = false)"
+    :onClick="() => {}"
   >
-    <span
-      class="drag-area"
-      id="left"
-      :style="{
-        width: draggedOver && isOnLeft ? 230 + 'px' : 1 + 'px',
-        height: draggedOver && isOnLeft ? elementHeight + 'px' : 0,
-      }"
-      :class="{ 'dragged-on': draggedOver && isOnLeft }"
-    ></span>
     <div class="list">
       <div class="title-container" ref="textareaContainerRef">
         <div class="dots">
@@ -181,17 +171,7 @@ function deleteTaskList() {
         :onClose="() => (isAddingCard = false)"
       />
     </div>
-    <span
-      class="drag-area"
-      id="left"
-      :class="{ 'dragged-on': draggedOver && !isOnLeft }"
-      :style="{
-        width: draggedOver && !isOnLeft ? 230 + 'px' : 1 + 'px',
-        height: draggedOver && !isOnLeft ? elementHeight + 'px' : 0,
-      }"
-    >
-    </span>
-  </div>
+  </DragAndDropContainer>
   <DeleteDialog
     :show="isDeleting"
     :title="'Are you sure you want to delete this list?'"
