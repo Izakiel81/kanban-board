@@ -26,7 +26,6 @@ const boardsStore = useWorkspacesStore();
 const modalStore = useModalStore();
 
 const elementHeight = ref(0);
-const isOnLeft = ref(false);
 const cardIsDragged = ref(false);
 const draggedOver = ref(false);
 const showDeleteButton = ref(false);
@@ -39,15 +38,6 @@ const currentCards = computed(() =>
 );
 
 const isAddingCard = ref(false);
-
-const { startDrag, dragLeave, dragEnter, onDrop } = useElementDragAndDrop(
-  currentTaskList,
-  props.taskLists,
-  draggedOver,
-  isOnLeft,
-  elementHeight,
-  cardIsDragged,
-);
 
 function autoResize() {
   if (!textareaRef.value) return;
@@ -90,8 +80,7 @@ function deleteTaskList() {
     :dataAttribute="'data-list-id'"
     :elements="props.taskLists"
     :element="currentTaskList"
-    :isCardDragged="isCardDragged"
-    :mouseEnter="() => (showDeleteButton = true)"
+    :mouseOver="() => (showDeleteButton = true)"
     :mouseLeave="() => (showDeleteButton = false)"
     :onClick="() => {}"
   >

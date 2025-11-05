@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useAppStatesStore } from "../stores/app_store";
 import { useModalStore } from "../stores/modals_store";
 import { useElementDragAndDrop } from "../composables/useElementDragAndDrop";
@@ -11,9 +11,8 @@ const modalStore = useModalStore();
 const {
   horizontal,
   dataAttribute,
-  elements,
   element,
-  isCardDragged,
+  elements,
   mouseOver,
   mouseLeave,
   onClick,
@@ -22,19 +21,25 @@ const {
   dataAttribute: string;
   elements: Array<Workspace | TaskList | Card>;
   element: Workspace | TaskList | Card;
-  isCardDragged?: boolean;
   mouseOver: () => void;
   mouseLeave: () => void;
   onClick: () => void;
 }>();
+
+const emit = defineEmits(["cardIsDragged"]);
 
 const currentElement = computed(() => element);
 
 const draggedOver = ref(false);
 const isAbove = ref(false);
 const elementHeight = ref(2);
+const isCardDragged = ref(false);
 
 const elementRef = ref<HTMLElement | null>(null);
+
+watch(isCardDragged, (newValue) => {
+  emit.cardIsDragged();
+});
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
   currentElement,
@@ -59,7 +64,7 @@ const upStyles = computed(() =>
         height:
           draggedOver.value && isAbove.value ? elementHeight.value + "px" : 0,
         top: draggedOver.value ? "-2px" : 0,
-        marginInline: draggedOver.value ? "4px" : 0,
+        marginInline: draggedOver.value ? "3px" : 0,
       }
     : {
         height:
@@ -75,7 +80,7 @@ const downStyles = computed(() =>
         height:
           draggedOver.value && !isAbove.value ? elementHeight.value + "px" : 0,
         top: draggedOver.value ? "-2px" : 0,
-        marginInline: draggedOver.value ? "4px" : 0,
+        marginInline: draggedOver.value ? "3px" : 0,
       }
     : {
         height:
@@ -107,14 +112,14 @@ const downStyles = computed(() =>
       class="drag-target"
       :class="{ 'dragged-on': draggedOver && isAbove }"
       :style="upStyles"
-      id="up"
+      :id="horizontal ? 'left' : 'up'"
     />
     <slot></slot>
     <span
       class="drag-target"
       :class="{ 'dragged-on': draggedOver && !isAbove }"
       :style="downStyles"
-      id="down"
+      :id="horizontal ? 'right' : 'down'"
     />
   </div>
 </template>

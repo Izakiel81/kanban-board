@@ -27,11 +27,19 @@ export function useMobileDragAndDrop(
     if (currentElement.value.id === dropItem.value.id) return;
 
     if (targetElement) {
-      const indicatorId =
-        dropItem.value.order < currentElement.value.order ? "up" : "down";
-      currentIndicator.value = targetElement.querySelector(
-        `#${indicatorId}`,
-      ) as HTMLElement;
+      if (horizontal) {
+        const indicatorId =
+          dropItem.value.order < currentElement.value.order ? "left" : "right";
+        currentIndicator.value = targetElement.querySelector(
+          `#${indicatorId}`,
+        ) as HTMLElement;
+      } else {
+        const indicatorId =
+          dropItem.value.order < currentElement.value.order ? "up" : "down";
+        currentIndicator.value = targetElement.querySelector(
+          `#${indicatorId}`,
+        ) as HTMLElement;
+      }
     } else {
       if (currentElement.value.type !== "card") return;
       const targetListId = listBelow.getAttribute("data-list-id");
@@ -46,8 +54,8 @@ export function useMobileDragAndDrop(
     currentIndicator.value.style.height = `${height.value}px`;
     currentIndicator.value.style.width = `${width.value}px`;
     if (horizontal) {
-      currentIndicator.value.style.top = "-2px";
-      currentIndicator.value.style.marginInline = "4px";
+      currentIndicator.value.style.top = "-3px";
+      currentIndicator.value.style.marginInline = "3px";
     }
   }
   function onDragLeave() {
@@ -55,6 +63,8 @@ export function useMobileDragAndDrop(
       currentIndicator.value?.classList.remove("dragged-on");
       currentIndicator.value.style.height = "2px";
       currentIndicator.value.style.width = "2px";
+      currentIndicator.value.style.top = "0";
+      currentIndicator.value.style.marginInline = "0";
       currentIndicator.value = null;
     }
     cardToList.value = false;
@@ -83,7 +93,12 @@ export function useMobileDragAndDrop(
 
     const elementBelow = document.elementFromPoint(clientX, clientY);
     const targetElement = elementBelow?.closest(`[${dataAttribute}]`);
-    const listBelow = elementBelow?.closest(`[data-list-id]`);
+    const listBelow =
+      dataAttribute !== "data-list-id"
+        ? elementBelow?.closest(`[data-list-id]`)
+        : undefined;
+
+    console.log(listBelow);
     if (targetElement || listBelow) {
       onDragEnter(targetElement as HTMLElement, listBelow as HTMLElement);
     } else {
