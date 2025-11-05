@@ -38,7 +38,10 @@ const isCardDragged = ref(false);
 const elementRef = ref<HTMLElement | null>(null);
 
 watch(isCardDragged, (newValue) => {
-  emit.cardIsDragged();
+  emit("cardIsDragged", {
+    isCardDragged: newValue,
+    elementHeight: elementHeight.value,
+  });
 });
 
 const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(

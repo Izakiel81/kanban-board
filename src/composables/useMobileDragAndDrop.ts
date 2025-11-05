@@ -98,7 +98,6 @@ export function useMobileDragAndDrop(
         ? elementBelow?.closest(`[data-list-id]`)
         : undefined;
 
-    console.log(listBelow);
     if (targetElement || listBelow) {
       onDragEnter(targetElement as HTMLElement, listBelow as HTMLElement);
     } else {

@@ -27,7 +27,6 @@ const modalStore = useModalStore();
 
 const elementHeight = ref(0);
 const cardIsDragged = ref(false);
-const draggedOver = ref(false);
 const showDeleteButton = ref(false);
 const isDeleting = ref(false);
 
@@ -83,6 +82,12 @@ function deleteTaskList() {
     :mouseOver="() => (showDeleteButton = true)"
     :mouseLeave="() => (showDeleteButton = false)"
     :onClick="() => {}"
+    @cardIsDragged="
+      ($event) => {
+        cardIsDragged = $event.isCardDragged;
+        elementHeight = $event.elementHeight;
+      }
+    "
   >
     <div class="list">
       <div class="title-container" ref="textareaContainerRef">
