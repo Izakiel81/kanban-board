@@ -92,6 +92,15 @@ const downStyles = computed(() =>
             : "2px",
       },
 );
+
+let touchTimeout;
+
+function touchStart(element: HTMLElement) {
+  touchTimeout = setTimeout(() => onDragStart(element), 120);
+}
+function touchEnd(element: HTMLElement) {
+  clearTimeout(touchTimeout);
+}
 </script>
 <template>
   <div
@@ -100,9 +109,9 @@ const downStyles = computed(() =>
     :draggable="!modalStore.modalIsActive"
     :[dataAttribute]="currentElement.id"
     @click="onClick"
-    @touchstart.stop="onDragStart(elementRef)"
+    @touchstart.stop="touchStart(elementRef)"
     @touchmove.stop="onDrag($event, elementRef)"
-    @touchend.stop="onDragEnd(elementRef)"
+    @touchend.stop="touchEnd(elementRef)"
     @dragstart.stop="startDrag($event)"
     @mouseover.stop="mouseOver"
     @mouseleave.stop="mouseLeave"

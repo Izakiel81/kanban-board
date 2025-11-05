@@ -50,15 +50,16 @@ function boardClick() {
 }
 </script>
 <template>
-  <li class="board" v-if="!isEditing" :key="currentBoard.id">
-    <DragAndDropContainer
-      :dataAttribute="'data-board-id'"
-      :elements="boardsStore.workspaces"
-      :element="currentBoard"
-      :mouseOver="() => (showButtons = true)"
-      :mouseLeave="() => (showButtons = false)"
-      :onClick="boardClick"
-    >
+  <DragAndDropContainer
+    :dataAttribute="'data-board-id'"
+    :elements="boardsStore.workspaces"
+    :element="currentBoard"
+    :mouseOver="() => (showButtons = true)"
+    :mouseLeave="() => (showButtons = false)"
+    :onClick="boardClick"
+    v-if="!isEditing"
+  >
+    <li class="board" :key="currentBoard.id">
       <span class="board-title">
         {{ currentBoard.title }}
         <span
@@ -80,8 +81,8 @@ function boardClick() {
           />
         </span>
       </span>
-    </DragAndDropContainer>
-  </li>
+    </li>
+  </DragAndDropContainer>
   <div class="edit-board" v-else>
     <textarea
       v-model="newBoardTitle"
