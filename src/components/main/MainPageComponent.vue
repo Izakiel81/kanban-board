@@ -3,7 +3,7 @@ import TaskList from "./task-list/TaskList.vue";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
 import AddForm from "./ui/AddForm.vue";
-import { ref, computed } from "vue";
+import { ref, computed, provide } from "vue";
 
 const props = defineProps<{ taskLists: Array<any> }>();
 const boardsStore = useWorkspacesStore();
@@ -18,6 +18,8 @@ const currentWorkspaceTitle = computed(() =>
 const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
+const parentRef = ref<HTMLElement | null>(null);
+
 const currentTaskLists = computed(() =>
   props.taskLists.sort((a, b) => a.order - b.order),
 );
@@ -26,6 +28,7 @@ function addTaskList(newTaskListTitle: string) {
   if (!newTaskListTitle || !newTaskListTitle.trim()) return;
   boardsStore.addTaskList(appStates.currentBoardId, newTaskListTitle);
 }
+provide("parentRef", parentRef.value);
 </script>
 
 <template>
@@ -35,7 +38,7 @@ function addTaskList(newTaskListTitle: string) {
   >
     {{ currentWorkspaceTitle[0].title }}
   </h1>
-  <div class="container" v-if="currentWorkspaceTitle">
+  <div class="container" v-if="currentWorkspaceTitle" ref="parentRef">
     <TaskList
       v-if="currentTaskLists"
       v-for="taskList in currentTaskLists"

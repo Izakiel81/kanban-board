@@ -3,7 +3,7 @@ import BoardItem from "./BoardItem.vue";
 import AddForm from "../main/ui/AddForm.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
 import { useAppStatesStore } from "../../stores/app_store.ts";
-import { ref, computed, nextTick } from "vue";
+import { ref, computed, nextTick, provide } from "vue";
 import { v4 as uuid } from "uuid";
 
 const workspacesStore = useWorkspacesStore();
@@ -18,11 +18,13 @@ const newWorkspaceTitle = ref("");
 
 const inputRef = ref<HTMLInputElement | null>(null);
 const buttonRef = ref<HTMLInputElement | null>(null);
+const parentRef = ref<HTMLElement | null>(null);
 
 function finishAdding(newTitle: string) {
   if (!newTitle || !newTitle.trim()) return;
   workspacesStore.addWorkspace(newTitle);
 }
+provide("parentRef", parentRef.value);
 </script>
 
 <template>
@@ -35,7 +37,7 @@ function finishAdding(newTitle: string) {
       <h1>Kanban board</h1>
       <hr />
     </header>
-    <main>
+    <main ref="parentRef">
       <ul>
         <BoardItem
           v-for="workspace in currentWorkspaces"
