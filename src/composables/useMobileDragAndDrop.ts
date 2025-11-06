@@ -88,6 +88,9 @@ export function useMobileDragAndDrop(
     element.style.top = (clientY + 5).toString() + "px";
     element.style.left = (clientX + 5).toString() + "px";
 
+    console.log("Event: ", e);
+    console.log("\nElement: ", element);
+
     const board = boardsStore.getBoardById(appStore.currentBoardId);
     if (!board) return;
 
