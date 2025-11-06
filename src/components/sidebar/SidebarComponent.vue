@@ -19,12 +19,12 @@ const newWorkspaceTitle = ref("");
 const inputRef = ref<HTMLInputElement | null>(null);
 const buttonRef = ref<HTMLInputElement | null>(null);
 const parentRef = ref<HTMLElement | null>(null);
+provide("parentRef", parentRef);
 
 function finishAdding(newTitle: string) {
   if (!newTitle || !newTitle.trim()) return;
   workspacesStore.addWorkspace(newTitle);
 }
-provide("parentRef", parentRef.value);
 </script>
 
 <template>

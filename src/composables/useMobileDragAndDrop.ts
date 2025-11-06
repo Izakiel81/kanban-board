@@ -10,6 +10,7 @@ const width = ref<number>(0);
 
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
+  parentElement: HTMLElement,
   elements: Array<Workspace | TaskList | Card>,
   dataAttribute: string,
   horizontal?: boolean,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, inject } from "vue";
 import { useAppStatesStore } from "../stores/app_store";
 import { useModalStore } from "../stores/modals_store";
 import { useElementDragAndDrop } from "../composables/useElementDragAndDrop";
@@ -35,6 +35,8 @@ const isAbove = ref(false);
 const elementHeight = ref(2);
 const isCardDragged = ref(false);
 
+const parentRef = inject("parentRef");
+
 const elementRef = ref<HTMLElement | null>(null);
 
 watch(isCardDragged, (newValue) => {
@@ -55,6 +57,7 @@ const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
 
 const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
   currentElement,
+  parentRef.value,
   elements,
   dataAttribute,
   horizontal,

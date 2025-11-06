@@ -19,6 +19,7 @@ const isAdding = ref(false);
 const newTaskListTitle = ref("");
 
 const parentRef = ref<HTMLElement | null>(null);
+provide("parentRef", parentRef);
 
 const currentTaskLists = computed(() =>
   props.taskLists.sort((a, b) => a.order - b.order),
@@ -28,7 +29,6 @@ function addTaskList(newTaskListTitle: string) {
   if (!newTaskListTitle || !newTaskListTitle.trim()) return;
   boardsStore.addTaskList(appStates.currentBoardId, newTaskListTitle);
 }
-provide("parentRef", parentRef.value);
 </script>
 
 <template>
