@@ -8,6 +8,43 @@ type Edge = "top" | "bottom" | "left" | "right";
 export function useDragAndDrop() {
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
+
+  let currentVelocityX = 0;
+  let currentVelocityY = 0;
+  let animationId: number | null = null;
+
+  function startScrollingAnimation(
+    parentElement: HTMLElement,
+    targetSpeedX: number,
+    targetSpeedY: number,
+  ) {
+    if (animationId !== null) return;
+
+    function animate() {
+      currentVelocityX += (targetSpeedX - currentVelocityX) * 0.1;
+      currentVelocityY += (targetSpeedY - currentVelocityY) * 0.1;
+
+      parentElement.scrollBy({
+        left: currentVelocityX,
+        top: currentVelocityY,
+        behavior: "smooth",
+      });
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  function stopScrollAnimation() {
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    currentVelocityX = 0;
+    currentVelocityY = 0;
+  }
+
   function dragStart(event: DragEvent, elementHeight: Ref<number>) {
     event.dataTransfer!.dropEffect = "move";
     event.dataTransfer!.effectAllowed = "move";
@@ -51,8 +88,6 @@ export function useDragAndDrop() {
           deltaX = computeDelta(distances[edge], edge, 20, threshold);
       }
     }
-
-    parentElement.scrollBy({ top: deltaY, left: deltaX, behavior: "smooth" });
   }
 
   function transferCardsBetweenLists(
