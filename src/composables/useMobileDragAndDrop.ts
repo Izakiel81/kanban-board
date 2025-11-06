@@ -15,7 +15,8 @@ export function useMobileDragAndDrop(
   dataAttribute: string,
   horizontal?: boolean,
 ) {
-  const { transferCardsBetweenLists, changeItemOrder } = useDragAndDrop();
+  const { transferCardsBetweenLists, changeItemOrder, dragScroll } =
+    useDragAndDrop();
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
 
@@ -89,11 +90,8 @@ export function useMobileDragAndDrop(
     element.style.top = (clientY + 5).toString() + "px";
     element.style.left = (clientX + 5).toString() + "px";
 
-    if (parentElement.value) {
-      if (clientX >= parentElement.value.getBoundingClientRect().width - 50) {
-        parentElement.value.scrollBy({ left: 10, behavior: "smooth" });
-      }
-    }
+    if (parentElement.value)
+      dragScroll(parentElement.value, { x: clientX, y: clientY });
 
     const board = boardsStore.getBoardById(appStore.currentBoardId);
     if (!board) return;

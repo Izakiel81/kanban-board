@@ -3,6 +3,8 @@ import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 import { useWorkspacesStore } from "../stores/workspaces";
 import { useAppStatesStore } from "../stores/app_store";
 
+type Edge = "top" | "bottom" | "left" | "right";
+
 export function useDragAndDrop() {
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
@@ -12,6 +14,43 @@ export function useDragAndDrop() {
 
     const target = event.target as HTMLElement;
     elementHeight.value = target.getBoundingClientRect().height;
+  }
+
+  function computeDelta(
+    distance: number,
+    edegeType: Edge,
+    maxSpeed = 20,
+    threshold = 50,
+  ) {
+    const speed = Math.max(0, ((threshold - distance) / threshold) * maxSpeed);
+    return edegeType === "top" || edegeType === "left" ? -speed : speed;
+  }
+
+  function dragScroll(
+    parentElement: HTMLElement,
+    pointer: { x: number; y: number },
+  ) {
+    const rect = parentElement.getBoundingClientRect();
+    const threshold = 50;
+
+    const distanceToTop = pointer.y - rect.top;
+    const distanceToBottom = rect.bottom - pointer.y;
+    const distanceToLeft = pointer.x - rect.left;
+    const distanceToRight = rect.right - pointer.x;
+
+    let deltaX = 0;
+    let deltaY = 0;
+
+    if (distanceToTop < threshold)
+      deltaY = computeDelta(distanceToTop, "top", 20, threshold);
+    if (distanceToBottom < threshold)
+      deltaY = computeDelta(distanceToBottom, "bottom", 20, threshold);
+    if (distanceToLeft < threshold)
+      deltaX = computeDelta(distanceToLeft, "left", 20, threshold);
+    if (distanceToRight < threshold)
+      deltaX = computeDelta(distanceToRight, "right", 20, threshold);
+
+    parentElement.scrollBy({ top: deltaY, left: deltaX, behavior: "smooth" });
   }
 
   function transferCardsBetweenLists(
@@ -110,5 +149,6 @@ export function useDragAndDrop() {
     dragStart,
     changeItemOrder,
     transferCardsBetweenLists,
+    dragScroll,
   };
 }
