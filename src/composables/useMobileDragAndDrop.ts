@@ -10,7 +10,7 @@ const width = ref<number>(0);
 
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
-  parentElement: HTMLElement,
+  parentElement: Ref<HTMLElement | null>,
   elements: Array<Workspace | TaskList | Card>,
   dataAttribute: string,
   horizontal?: boolean,
@@ -89,8 +89,11 @@ export function useMobileDragAndDrop(
     element.style.top = (clientY + 5).toString() + "px";
     element.style.left = (clientX + 5).toString() + "px";
 
-    console.log("Event: ", e);
-    console.log("\nElement: ", element);
+    if (parentElement.value) {
+      if (clientX >= parentElement.value.getBoundingClientRect().width - 50) {
+        parentElement.value.scrollBy({ left: 10, behavior: "smooth" });
+      }
+    }
 
     const board = boardsStore.getBoardById(appStore.currentBoardId);
     if (!board) return;

@@ -57,7 +57,7 @@ const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
 
 const { onDragStart, onDrag, onDragEnd } = useMobileDragAndDrop(
   currentElement,
-  parentRef.value,
+  parentRef,
   elements,
   dataAttribute,
   horizontal,
