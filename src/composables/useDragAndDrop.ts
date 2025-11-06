@@ -33,22 +33,24 @@ export function useDragAndDrop() {
     const rect = parentElement.getBoundingClientRect();
     const threshold = 50;
 
-    const distanceToTop = pointer.y - rect.top;
-    const distanceToBottom = rect.bottom - pointer.y;
-    const distanceToLeft = pointer.x - rect.left;
-    const distanceToRight = rect.right - pointer.x;
+    const distances: Record<Edge, number> = {
+      top: pointer.y - rect.top,
+      bottom: rect.bottom - pointer.y,
+      left: pointer.x - rect.left,
+      right: rect.right - pointer.x,
+    };
 
     let deltaX = 0;
     let deltaY = 0;
 
-    if (distanceToTop < threshold)
-      deltaY = computeDelta(distanceToTop, "top", 20, threshold);
-    if (distanceToBottom < threshold)
-      deltaY = computeDelta(distanceToBottom, "bottom", 20, threshold);
-    if (distanceToLeft < threshold)
-      deltaX = computeDelta(distanceToLeft, "left", 20, threshold);
-    if (distanceToRight < threshold)
-      deltaX = computeDelta(distanceToRight, "right", 20, threshold);
+    for (const edge of ["top", "bottom", "left", "right"] as Edge[]) {
+      if (distances[edge] <= threshold) {
+        if (edge === "top" || edge === "bottom")
+          deltaY = computeDelta(distances[edge], edge, 20, threshold);
+        if (edge === "left" || edge === "right")
+          deltaX = computeDelta(distances[edge], edge, 20, threshold);
+      }
+    }
 
     parentElement.scrollBy({ top: deltaY, left: deltaX, behavior: "smooth" });
   }
