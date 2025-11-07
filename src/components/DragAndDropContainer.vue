@@ -35,6 +35,8 @@ const isAbove = ref(false);
 const elementHeight = ref(2);
 const isCardDragged = ref(false);
 
+const dragStartedMobile = ref(false);
+
 const parentRef = inject("parentRef");
 
 const elementRef = ref<HTMLElement | null>(null);
@@ -101,7 +103,10 @@ let touchTimeout;
 
 function touchStart(event: TouchEvent, element: HTMLElement) {
   if (modalStore.modalIsActive || event.touches.length > 1) return;
-  touchTimeout = setTimeout(() => onDragStart(element), 120);
+  touchTimeout = setTimeout(() => {
+    dragStartedMobile.value = true;
+    onDragStart(element);
+  }, 120);
 }
 function isTouching(event: TouchEvent, element: HTMLElement) {
   if (modalStore.modalIsActive || event.touches.length > 1) return;
@@ -111,7 +116,10 @@ function isTouching(event: TouchEvent, element: HTMLElement) {
 function touchEnd(element: HTMLElement) {
   if (modalStore.modalIsActive) return;
   clearTimeout(touchTimeout);
-  onDragEnd(element);
+  if (dragStartedMobile.value) {
+    onDragEnd(element);
+    dragStartedMobile.value = false;
+  }
 }
 </script>
 <template>

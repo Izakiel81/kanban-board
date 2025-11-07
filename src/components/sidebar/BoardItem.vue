@@ -105,6 +105,7 @@ function boardClick() {
 </template>
 <style scoped>
 .board {
+  flex: 1;
   user-select: none;
 
   display: flex;
@@ -239,5 +240,11 @@ function boardClick() {
 }
 .buttons span:hover {
   background-color: #ddd;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .board {
+    background-color: #f4f4f4;
+  }
 }
 </style>
