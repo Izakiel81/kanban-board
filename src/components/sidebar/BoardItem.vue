@@ -28,8 +28,8 @@ const isEditing = ref(false);
 const newBoardTitleRef = ref<HTMLElementTextarea | null>(null);
 const newBoardTitle = ref<string>(currentBoard.value.title);
 
-function deleteBoard(id: string) {
-  boardsStore.removeWorkspace(id);
+function deleteBoard() {
+  boardsStore.removeWorkspace(currentBoard.value.id);
   appStates.currentBoardId = "";
 }
 
@@ -49,6 +49,16 @@ function finishEditing() {
 function boardClick() {
   appStates.currentBoardId = currentBoard.value.id;
 }
+const CONTEXT_MENU_ITEMS = [
+  {
+    title: "Delete",
+    onClick: () => {
+      showDeleteDialog = true;
+      modalStore.modalIsActive = true;
+    },
+  },
+  { title: "Edit", onClick: startEditing },
+];
 </script>
 <template>
   <DragAndDropContainer
@@ -63,7 +73,7 @@ function boardClick() {
     <li class="board" :key="currentBoard.id">
       <span class="board-title">
         {{ currentBoard.title }}
-        <ContextMenu :items="[{ title: '1', onClick: () => {} }]" />
+        <ContextMenu :items="CONTEXT_MENU_ITEMS" />
         <span
           class="buttons"
           id="edit-delete"
@@ -77,7 +87,7 @@ function boardClick() {
             @click.stop="
               () => {
                 showDeleteDialog = true;
-                modalStore.modalIsA;
+                modalStore.modalIsActive = true;
               }
             "
           />
