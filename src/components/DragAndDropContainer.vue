@@ -46,8 +46,9 @@ watch(isCardDragged, (newValue) => {
   });
 });
 
-const { startDrag, onDrop, dragEnter, dragLeave } = useElementDragAndDrop(
+const { startDrag, onDrop, dragEnter, drag, dragLeave } = useElementDragAndDrop(
   currentElement,
+  parentRef,
   elements,
   draggedOver,
   isAbove,
@@ -126,6 +127,7 @@ function touchEnd(element: HTMLElement) {
     @dragstart.stop="startDrag($event)"
     @mouseover.stop="mouseOver"
     @mouseleave.stop="mouseLeave"
+    @drag.prevent.stop="drag($event)"
     @dragover.prevent
     @dragenter.prevent.stop="dragEnter()"
     @dragleave.prevent.stop="dragLeave()"

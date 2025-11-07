@@ -3,12 +3,17 @@ import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 import { useDragAndDrop } from "./useDragAndDrop";
 import { useAppStatesStore } from "../stores/app_store";
 import { useWorkspacesStore } from "../stores/workspaces";
+import { useDragScroll } from "./useDragScroll";
 
 const draggedElement = ref<Workspace | TaskList | Card | null>(null);
 const height = ref<number>(0);
 
+const THRESHOLD = 200;
+const MAX_SPEED = 60;
+
 export function useElementDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
+  parentElement: Ref<HTMLElement | null>,
   elements: Array<Workspace | TaskList | Card>,
   draggedOver: Ref<boolean>,
   isAbove: Ref<boolean>,
@@ -17,6 +22,12 @@ export function useElementDragAndDrop(
 ) {
   const { dragStart, changeItemOrder, transferCardsBetweenLists } =
     useDragAndDrop();
+
+  const { scrollDrag, stopScrollAnimation } = useDragScroll(
+    parentElement,
+    THRESHOLD,
+    MAX_SPEED,
+  );
 
   const appStore = useAppStatesStore();
   const boardsStore = useWorkspacesStore();
@@ -86,6 +97,13 @@ export function useElementDragAndDrop(
     }
   }
 
+  function drag(event: DragEvent) {
+    const clientX = event.clientX;
+    const clientY = event.clientY;
+
+    scrollDrag({ x: clientX, y: clientY });
+  }
+
   function dragEnter() {
     if (!draggedElement.value) return;
     counter.value++;
@@ -109,10 +127,11 @@ export function useElementDragAndDrop(
   function dragLeave() {
     counter.value--;
     if (counter.value > 0) return;
+    stopScrollAnimation();
     counter.value = 0;
     draggedOver.value = false;
     elementHeight.value = 0;
     isCardDragged && (isCardDragged.value = false);
   }
-  return { startDrag, onDrop, dragEnter, dragLeave };
+  return { startDrag, onDrop, dragEnter, drag, dragLeave };
 }
