@@ -53,7 +53,7 @@ const CONTEXT_MENU_ITEMS = [
   {
     title: "Delete",
     onClick: () => {
-      showDeleteDialog = true;
+      showDeleteDialog.value = true;
       modalStore.modalIsActive = true;
     },
   },
@@ -73,7 +73,19 @@ const CONTEXT_MENU_ITEMS = [
     <li class="board" :key="currentBoard.id">
       <span class="board-title">
         {{ currentBoard.title }}
-        <ContextMenu :items="CONTEXT_MENU_ITEMS" />
+        <ContextMenu
+          :show="modalStore.activeContextMenuId === currentBoard.id"
+          :dots_click="
+            () => {
+              if (currentBoard.id === modalStore.activeContextMenuId) {
+                modalStore.activeContextMenuId = '';
+              } else {
+                modalStore.activeContextMenuId = currentBoard.id;
+              }
+            }
+          "
+          :items="CONTEXT_MENU_ITEMS"
+        />
         <span
           class="buttons"
           id="edit-delete"

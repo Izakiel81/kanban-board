@@ -1,21 +1,33 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useModalStore } from "../../stores/modals_store";
 
 interface Item {
   title: string;
   onClick: () => void;
 }
 
-const { items } = defineProps<{ items: Array<Item> }>();
+const modalStore = useModalStore();
+
+const { items, dots_click, show } = defineProps<{
+  items: Array<Item>;
+  dots_click: () => void;
+  show: boolean;
+}>();
 </script>
 <template>
   <div class="container">
-    <span class="dots" />
-    <div class="items-container">
+    <span class="dots" @click.stop="dots_click" />
+    <div class="items-container" v-if="show">
       <span
         class="item"
         v-for="item in items"
-        @click.prevent.stop="item.onClick"
+        @click.prevent.stop="
+          () => {
+            item.onClick();
+            modalStore.activeContextMenuId = '';
+          }
+        "
         >{{ item.title }}</span
       >
     </div>
