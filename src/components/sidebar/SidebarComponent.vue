@@ -186,4 +186,13 @@ main ul {
 .add-button:active {
   filter: brightness(80%);
 }
+@media (max-width: 600px) {
+  .sidebar {
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    max-width: 100%;
+    width: 100%;
+  }
+}
 </style>

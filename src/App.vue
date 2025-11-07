@@ -80,4 +80,15 @@ const currentBoard = computed(() =>
   overflow-wrap: break-word;
   transition: padding 0.3s ease;
 }
+@media (max-width: 600px) {
+  #container {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    z-index: 9999;
+  }
+}
 </style>
