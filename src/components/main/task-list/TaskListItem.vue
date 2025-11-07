@@ -66,6 +66,7 @@ const CONTEXT_MENU_ITEMS = [
             }
           }
         "
+        :position="{ top: 20, left: -60 }"
       />
       <span class="delete-button" :style="{ opacity: isMouseOver ? 1 : 0 }">
         <DeleteButton

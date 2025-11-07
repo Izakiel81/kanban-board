@@ -51,8 +51,9 @@ const { items, dots_click, show, theme, position } = defineProps<{
 }
 
 .light {
-  background-color: #fafafa;
+  background-color: #fafafa !important;
   color: #252525;
+  border-radius: 2px;
 }
 
 .context-menu-items-container {
@@ -66,7 +67,7 @@ const { items, dots_click, show, theme, position } = defineProps<{
 
   background-color: #3e3e3e;
   color: #fff;
-  border-radius: 5px;
+  border-radius: 2px;
 }
 
 .context-menu-item {
@@ -96,7 +97,7 @@ const { items, dots_click, show, theme, position } = defineProps<{
   width: 5px;
   height: 5px;
 
-  background-color: #3e3e3e;
+  background-color: inherit;
   border-radius: 100%;
 }
 .context-menu-dots::after {

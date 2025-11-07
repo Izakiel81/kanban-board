@@ -137,6 +137,8 @@ const CONTEXT_MENU_ITEMS = [
               }
             }
           "
+          :position="{ top: 24, left: -60 }"
+          :theme="'light'"
           :items="CONTEXT_MENU_ITEMS"
         />
         <span
