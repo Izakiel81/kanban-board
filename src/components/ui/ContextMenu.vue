@@ -87,4 +87,9 @@ const { items, dots_click, show } = defineProps<{
 .dots::after {
   right: 16px;
 }
+@media (min-width: 1024px) and (pointer: fine) {
+  .container {
+    display: none;
+  }
+}
 </style>

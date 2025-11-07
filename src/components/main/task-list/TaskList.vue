@@ -328,7 +328,7 @@ function deleteTaskList() {
 .delete-button:active {
   filter: brightness(90%);
 }
-@media (hover: none) and (pointer: coarse) {
+@media (max-width: 1024px) and (hover: none) and (pointer: coarse) {
   .delete-button {
     display: none;
   }
