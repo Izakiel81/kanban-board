@@ -25,7 +25,7 @@ const showDeleteDialog = ref(false);
 const isMouseOver = ref(false);
 
 function deleteCard() {
-  boardsStore.deleteItem(currentCard.value.id, props.cards);
+  boardsStore.deleteItem(props.card.id, props.cards);
 }
 function openDialog() {
   if (modalStore.modalIsActive) return;
@@ -56,13 +56,13 @@ const CONTEXT_MENU_ITEMS = [
       <p class="content">{{ props.card.title }}</p>
       <ContextMenu
         :items="CONTEXT_MENU_ITEMS"
-        :show="modalStore.activeContextMenuId === card.id"
+        :show="modalStore.activeContextMenuId === props.card.id"
         :dots_click="
           () => {
-            if (card.id === modalStore.activeContextMenuId) {
+            if (props.card.id === modalStore.activeContextMenuId) {
               modalStore.activeContextMenuId = '';
             } else {
-              modalStore.activeContextMenuId = card.id;
+              modalStore.activeContextMenuId = props.card.id;
             }
           }
         "
