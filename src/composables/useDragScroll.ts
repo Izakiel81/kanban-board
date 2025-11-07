@@ -7,10 +7,10 @@ export function useDragScroll(
   threshold: number,
   maxSpeed: number,
 ) {
-  const currentVelocityY = ref<number>(0);
-  const currentVelocityX = ref<number>(0);
+  let currentVelocityY = 0;
+  let currentVelocityX = 0;
 
-  const animationId = ref<number | null>(null);
+  let animationId: number | null = null;
 
   function calculateDelta(distance: number, edge: Edge) {
     const delta = Math.max(0, ((threshold - distance) / threshold) * maxSpeed);
@@ -21,22 +21,20 @@ export function useDragScroll(
     targetVelocityX: number,
     targetVelocityY: number,
   ) {
-    if (animationId.value !== null || !parentElement.value) return;
+    if (animationId !== null || !parentElement) return;
 
     function animate() {
-      currentVelocityX.value +=
-        (targetVelocityX - currentVelocityX.value) * 0.2;
+      currentVelocityX += (targetVelocityX - currentVelocityX) * 0.2;
 
-      currentVelocityY.value +=
-        (targetVelocityY - currentVelocityY.value) * 0.2;
+      currentVelocityY += (targetVelocityY - currentVelocityY) * 0.2;
 
       parentElement.value?.scrollBy({
-        left: currentVelocityX.value,
-        top: currentVelocityY.value,
+        left: currentVelocityX,
+        top: currentVelocityY,
         behavior: "auto",
       });
 
-      animationId.value = requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     }
     animate();
   }
@@ -55,13 +53,16 @@ export function useDragScroll(
     let targetVelocityX = 0;
     let targetVelocityY = 0;
 
-    for (const edge of ["top", "bottom", "left", "right"] as Edge[]) {
-      if (distances[edge] <= threshold) {
-        if (edge === "top" || edge === "bottom")
-          targetVelocityY = calculateDelta(distances[edge], edge);
-        if (edge === "left" || edge === "right")
-          targetVelocityX = calculateDelta(distances[edge], edge);
-      }
+    if (distances.top <= threshold) {
+      targetVelocityY = calculateDelta(distances.top, "top");
+    } else if (distances.bottom <= threshold) {
+      targetVelocityY = calculateDelta(distances.bottom, "bottom");
+    }
+
+    if (distances.left <= threshold) {
+      targetVelocityX = calculateDelta(distances.left, "left");
+    } else if (distances.right <= threshold) {
+      targetVelocityX = calculateDelta(distances.right, "right");
     }
 
     if (targetVelocityX !== 0 || targetVelocityY !== 0) {
@@ -72,15 +73,14 @@ export function useDragScroll(
   }
 
   function stopScrollAnimation() {
-    if (animationId.value !== null) {
-      cancelAnimationFrame(animationId.value);
-      animationId.value = null;
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
     }
-    currentVelocityX.value = 0;
-    currentVelocityY.value = 0;
+    currentVelocityX = 0;
+    currentVelocityY = 0;
   }
   return {
-    startScrollAnimation,
     scrollDrag,
     stopScrollAnimation,
   };
