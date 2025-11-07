@@ -3,47 +3,9 @@ import type { Card, TaskList, Workspace } from "../interfaces/Workspace";
 import { useWorkspacesStore } from "../stores/workspaces";
 import { useAppStatesStore } from "../stores/app_store";
 
-type Edge = "top" | "bottom" | "left" | "right";
-
 export function useDragAndDrop() {
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
-
-  let currentVelocityX = 0;
-  let currentVelocityY = 0;
-  let animationId: number | null = null;
-
-  function startScrollingAnimation(
-    parentElement: HTMLElement,
-    targetSpeedX: number,
-    targetSpeedY: number,
-  ) {
-    if (animationId !== null) return;
-
-    function animate() {
-      currentVelocityX += (targetSpeedX - currentVelocityX) * 0.1;
-      currentVelocityY += (targetSpeedY - currentVelocityY) * 0.1;
-
-      parentElement.scrollBy({
-        left: currentVelocityX,
-        top: currentVelocityY,
-        behavior: "smooth",
-      });
-
-      animationId = requestAnimationFrame(animate);
-    }
-
-    animate();
-  }
-
-  function stopScrollAnimation() {
-    if (animationId !== null) {
-      cancelAnimationFrame(animationId);
-      animationId = null;
-    }
-    currentVelocityX = 0;
-    currentVelocityY = 0;
-  }
 
   function dragStart(event: DragEvent, elementHeight: Ref<number>) {
     event.dataTransfer!.dropEffect = "move";
@@ -51,43 +13,6 @@ export function useDragAndDrop() {
 
     const target = event.target as HTMLElement;
     elementHeight.value = target.getBoundingClientRect().height;
-  }
-
-  function computeDelta(
-    distance: number,
-    edegeType: Edge,
-    maxSpeed = 20,
-    threshold = 50,
-  ) {
-    const speed = Math.max(0, ((threshold - distance) / threshold) * maxSpeed);
-    return edegeType === "top" || edegeType === "left" ? -speed : speed;
-  }
-
-  function dragScroll(
-    parentElement: HTMLElement,
-    pointer: { x: number; y: number },
-  ) {
-    const rect = parentElement.getBoundingClientRect();
-    const threshold = 50;
-
-    const distances: Record<Edge, number> = {
-      top: pointer.y - rect.top,
-      bottom: rect.bottom - pointer.y,
-      left: pointer.x - rect.left,
-      right: rect.right - pointer.x,
-    };
-
-    let deltaX = 0;
-    let deltaY = 0;
-
-    for (const edge of ["top", "bottom", "left", "right"] as Edge[]) {
-      if (distances[edge] <= threshold) {
-        if (edge === "top" || edge === "bottom")
-          deltaY = computeDelta(distances[edge], edge, 20, threshold);
-        if (edge === "left" || edge === "right")
-          deltaX = computeDelta(distances[edge], edge, 20, threshold);
-      }
-    }
   }
 
   function transferCardsBetweenLists(
@@ -186,6 +111,5 @@ export function useDragAndDrop() {
     dragStart,
     changeItemOrder,
     transferCardsBetweenLists,
-    dragScroll,
   };
 }
