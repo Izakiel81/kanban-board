@@ -3,10 +3,14 @@ import { ref, type Ref } from "vue";
 import { useDragAndDrop } from "./useDragAndDrop.ts";
 import { useWorkspacesStore } from "../stores/workspaces.ts";
 import { useAppStatesStore } from "../stores/app_store.ts";
+import { useDragScroll } from "./useDragScroll.ts";
 
 const dropItem = ref<Workspace | TaskList | Card | null>(null);
 const height = ref<number>(0);
 const width = ref<number>(0);
+
+const THRESHOLD = 150;
+const MAX_SPEED = 40;
 
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
@@ -15,8 +19,14 @@ export function useMobileDragAndDrop(
   dataAttribute: string,
   horizontal?: boolean,
 ) {
-  const { transferCardsBetweenLists, changeItemOrder, dragScroll } =
-    useDragAndDrop();
+  const { transferCardsBetweenLists, changeItemOrder } = useDragAndDrop();
+
+  const { scrollDrag, stopScrollAnimation } = useDragScroll(
+    parentElement,
+    THRESHOLD,
+    MAX_SPEED,
+  );
+
   const boardsStore = useWorkspacesStore();
   const appStore = useAppStatesStore();
 
@@ -87,11 +97,10 @@ export function useMobileDragAndDrop(
     const clientX = touch.clientX;
     const clientY = touch.clientY;
 
+    scrollDrag({ x: clientX, y: clientY });
+
     element.style.top = (clientY + 5).toString() + "px";
     element.style.left = (clientX + 5).toString() + "px";
-
-    if (parentElement.value)
-      dragScroll(parentElement.value, { x: clientX, y: clientY });
 
     const board = boardsStore.getBoardById(appStore.currentBoardId);
     if (!board) return;
@@ -147,6 +156,7 @@ export function useMobileDragAndDrop(
   function onDragEnd(element: HTMLElement) {
     element.style = "";
     onDragLeave();
+    stopScrollAnimation();
     if (!dropItem.value) return;
     if (dropItem.value.id === currentElement.value.id) return;
 

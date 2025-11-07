@@ -25,10 +25,10 @@ export function useDragScroll(
 
     function animate() {
       currentVelocityX.value +=
-        (targetVelocityX - currentVelocityX.value) * 0.1;
+        (targetVelocityX - currentVelocityX.value) * 0.2;
 
       currentVelocityY.value +=
-        (targetVelocityY - currentVelocityY.value) * 0.1;
+        (targetVelocityY - currentVelocityY.value) * 0.2;
 
       parentElement.value?.scrollBy({
         left: currentVelocityX.value,
