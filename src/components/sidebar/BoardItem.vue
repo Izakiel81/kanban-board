@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { type Workspace } from "../../interfaces/Workspace";
 import DragAndDropContainer from "../ui/DragAndDropContainer.vue";
+import ContextMenu from "../ui/ContextMenu.vue";
 import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
@@ -62,6 +63,7 @@ function boardClick() {
     <li class="board" :key="currentBoard.id">
       <span class="board-title">
         {{ currentBoard.title }}
+        <ContextMenu :items="[{ title: '1', onClick: () => {} }]" />
         <span
           class="buttons"
           id="edit-delete"
