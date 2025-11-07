@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DragAndDropContainer from "../../ui/DragAndDropContainer.vue";
+import ContextMenu from "../../ui/ContextMenu.vue";
 import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
 import { useMobileDragAndDrop } from "../../../composables/useMobileDragAndDrop";
 import { useWorkspacesStore } from "../../../stores/workspaces";
@@ -31,6 +32,15 @@ function openDialog() {
   showModalDialog.value = true;
   modalStore.modalIsActive = true;
 }
+const CONTEXT_MENU_ITEMS = [
+  {
+    title: "Delete",
+    onClick: () => {
+      showDeleteDialog.value = true;
+      modalStore.modalIsActive = true;
+    },
+  },
+];
 </script>
 
 <template>
@@ -44,6 +54,19 @@ function openDialog() {
   >
     <div class="container">
       <p class="content">{{ props.card.title }}</p>
+      <ContextMenu
+        :items="CONTEXT_MENU_ITEMS"
+        :show="modalStore.activeContextMenuId === card.id"
+        :dots_click="
+          () => {
+            if (card.id === modalStore.activeContextMenuId) {
+              modalStore.activeContextMenuId = '';
+            } else {
+              modalStore.activeContextMenuId = card.id;
+            }
+          }
+        "
+      />
       <span class="delete-button" :style="{ opacity: isMouseOver ? 1 : 0 }">
         <DeleteButton
           :width="20"

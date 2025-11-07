@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
+import ContextMenu from "../../ui/ContextMenu.vue";
 import DragAndDropContainer from "../../ui/DragAndDropContainer.vue";
 import DeleteButton from "../../main/ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
@@ -71,6 +72,15 @@ function editTitle() {
 function deleteTaskList() {
   boardsStore.deleteItem(currentTaskList.value.id, props.taskLists);
 }
+const CONTEXT_MENU_ITEMS = [
+  {
+    title: "Delete",
+    onClick: () => {
+      isDeleting.value = true;
+      modalStore.modalIsActive = true;
+    },
+  },
+];
 </script>
 
 <template>
@@ -116,6 +126,19 @@ function deleteTaskList() {
             isEditingTitle = false;
           "
         ></textarea>
+        <ContextMenu
+          :show="modalStore.activeContextMenuId === currentTaskList.id"
+          :dots_click="
+            () => {
+              if (currentTaskList.id === modalStore.activeContextMenuId) {
+                modalStore.activeContextMenuId = '';
+              } else {
+                modalStore.activeContextMenuId = currentTaskList.id;
+              }
+            }
+          "
+          :items="CONTEXT_MENU_ITEMS"
+        />
         <span
           class="delete-button"
           :style="{ opacity: showDeleteButton ? 1 : 0 }"

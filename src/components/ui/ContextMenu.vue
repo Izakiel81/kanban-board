@@ -9,18 +9,27 @@ interface Item {
 
 const modalStore = useModalStore();
 
-const { items, dots_click, show } = defineProps<{
+const { items, dots_click, show, theme, position } = defineProps<{
   items: Array<Item>;
   dots_click: () => void;
   show: boolean;
+  theme?: string;
+  position?: { top: number; left: number };
 }>();
 </script>
 <template>
-  <div class="container">
-    <span class="dots" @click.stop="dots_click" />
-    <div class="items-container" v-if="show">
+  <div class="context-menu-container">
+    <span
+      :class="['context-menu-dots', theme ? 'light' : '']"
+      @click.stop="dots_click"
+    />
+    <div
+      :class="['context-menu-items-container', theme ? 'light' : '']"
+      v-if="show"
+      :style="{ top: position?.top + 'px', left: position?.left + 'px' }"
+    >
       <span
-        class="item"
+        :class="['context-menu-item', theme ? 'light' : '']"
         v-for="item in items"
         @click.prevent.stop="
           () => {
@@ -34,13 +43,19 @@ const { items, dots_click, show } = defineProps<{
   </div>
 </template>
 <style scoped>
-.container {
+.context-menu-container {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
-.items-container {
+.light {
+  background-color: #fafafa;
+  color: #252525;
+}
+
+.context-menu-items-container {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -54,17 +69,17 @@ const { items, dots_click, show } = defineProps<{
   border-radius: 5px;
 }
 
-.item {
+.context-menu-item {
   display: flex;
   align-items: center;
   justify-content: center;
 
   padding: 2px 5px;
 }
-.item:active {
+.context-menu-item:active {
   filter: brightness(1.2);
 }
-.dots {
+.context-menu-dots {
   position: relative;
   width: 5px;
   height: 5px;
@@ -73,8 +88,8 @@ const { items, dots_click, show } = defineProps<{
   border-radius: 100%;
 }
 
-.dots::before,
-.dots::after {
+.context-menu-dots::before,
+.context-menu-dots::after {
   content: "";
   position: absolute;
   right: 8px;
@@ -84,11 +99,11 @@ const { items, dots_click, show } = defineProps<{
   background-color: #3e3e3e;
   border-radius: 100%;
 }
-.dots::after {
+.context-menu-dots::after {
   right: 16px;
 }
 @media (min-width: 1024px) and (pointer: fine) {
-  .container {
+  .context-menu-container {
     display: none;
   }
 }
