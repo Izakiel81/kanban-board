@@ -79,6 +79,8 @@ export function useMobileDragAndDrop(
       currentIndicator.value.style.marginInline = "0";
       currentIndicator.value = null;
     }
+
+    document.body.style = "";
     cardToList.value = false;
   }
 
@@ -90,6 +92,7 @@ export function useMobileDragAndDrop(
     element.style.position = "fixed";
     element.style.opacity = "0.8";
     element.style.zIndex = "2";
+    document.body.style.overflow = "hidden";
   }
 
   function onDrag(e: TouchEvent, element: HTMLElement) {
