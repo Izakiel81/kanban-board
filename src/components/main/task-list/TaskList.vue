@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TaskListItem from "./TaskListItem.vue";
-import DragAndDropContainer from "../../DragAndDropContainer.vue";
+import DragAndDropContainer from "../../ui/DragAndDropContainer.vue";
 import DeleteButton from "../../main/ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import AddForm from "../../main/ui/AddForm.vue";

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch, inject } from "vue";
-import { useAppStatesStore } from "../stores/app_store";
-import { useModalStore } from "../stores/modals_store";
-import { useElementDragAndDrop } from "../composables/useElementDragAndDrop";
-import { useMobileDragAndDrop } from "../composables/useMobileDragAndDrop";
+import { useAppStatesStore } from "../../stores/app_store";
+import { useModalStore } from "../../stores/modals_store";
+import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop";
+import { useMobileDragAndDrop } from "../../composables/useMobileDragAndDrop";
 
 const appStates = useAppStatesStore();
 const modalStore = useModalStore();

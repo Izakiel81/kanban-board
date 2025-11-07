@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Workspace } from "../../interfaces/Workspace";
-import DragAndDropContainer from "../DragAndDropContainer.vue";
+import DragAndDropContainer from "../ui/DragAndDropContainer.vue";
 import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
