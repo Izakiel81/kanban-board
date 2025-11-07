@@ -40,6 +40,7 @@ export function useElementDragAndDrop(
   }
 
   function onDrop() {
+    dragLeave();
     if (!draggedElement.value) return;
     if (
       draggedElement.value.type === "card" &&
@@ -68,7 +69,6 @@ export function useElementDragAndDrop(
         item.order = index;
       });
       draggedElement.value.taskListId = currentElement.value.id;
-      dragLeave();
       return;
     }
 
@@ -82,7 +82,6 @@ export function useElementDragAndDrop(
         draggedElement.value.taskListId,
         currentElement.value.taskListId,
       );
-      dragLeave();
       return;
     }
     if (draggedElement.value.type === currentElement.value.type) {
@@ -91,8 +90,6 @@ export function useElementDragAndDrop(
         draggedElement.value.id,
         currentElement.value.id,
       );
-
-      dragLeave();
       return;
     }
   }
