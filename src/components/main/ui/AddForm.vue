@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-const { onClick, onClose, wBackground } = defineProps<{
+const { onClick, onClose, wBackground, limit } = defineProps<{
   onClick: (newTitle: string) => void;
   onClose: () => void;
   wBackground?: boolean;
+  limit?: number;
 }>();
 const newItemTitle = ref<string>("");
+const maxLength = limit || 300;
 </script>
 <template>
   <div
@@ -14,7 +16,7 @@ const newItemTitle = ref<string>("");
   >
     <input
       v-model="newItemTitle"
-      maxLength="300"
+      :maxLength="maxLength"
       :class="{ 'input-with-background': wBackground }"
     />
     <span class="new-item-container-buttons">

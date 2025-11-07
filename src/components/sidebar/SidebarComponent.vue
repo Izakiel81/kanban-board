@@ -46,6 +46,7 @@ function finishAdding(newTitle: string) {
         :wBackground="true"
         :onClose="() => (isAddingWorkspace = false)"
         :onClick="finishAdding"
+        :limit="150"
       />
       <button v-else class="add-button" @click="isAddingWorkspace = true">
         + Add board
