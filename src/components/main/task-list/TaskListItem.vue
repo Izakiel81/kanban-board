@@ -142,4 +142,9 @@ function openDialog() {
     sans-serif;
   overflow-wrap: anywhere;
 }
+@media (hover: none) and (pointer: coarse) {
+  .delete-button {
+    display: none;
+  }
+}
 </style>

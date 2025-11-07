@@ -328,4 +328,9 @@ function deleteTaskList() {
 .delete-button:active {
   filter: brightness(90%);
 }
+@media (hover: none) and (pointer: coarse) {
+  .delete-button {
+    display: none;
+  }
+}
 </style>

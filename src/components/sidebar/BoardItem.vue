@@ -246,5 +246,8 @@ function boardClick() {
   .board {
     background-color: #f4f4f4;
   }
+  .buttons {
+    display: none;
+  }
 }
 </style>
