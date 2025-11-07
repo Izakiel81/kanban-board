@@ -8,7 +8,7 @@ import { useDragScroll } from "./useDragScroll";
 const draggedElement = ref<Workspace | TaskList | Card | null>(null);
 const height = ref<number>(0);
 
-const THRESHOLD = 200;
+const THRESHOLD = 50;
 const MAX_SPEED = 60;
 
 export function useElementDragAndDrop(
@@ -40,6 +40,7 @@ export function useElementDragAndDrop(
   }
 
   function onDrop() {
+    stopScrollAnimation();
     dragLeave();
     if (!draggedElement.value) return;
     if (
@@ -124,7 +125,6 @@ export function useElementDragAndDrop(
   function dragLeave() {
     counter.value--;
     if (counter.value > 0) return;
-    stopScrollAnimation();
     counter.value = 0;
     draggedOver.value = false;
     elementHeight.value = 0;

@@ -111,6 +111,7 @@ const CONTEXT_MENU_ITEMS = [
       v-model="newBoardTitle"
       ref="newBoardTitleRef"
       rows="1"
+      maxLength="100"
       @blur="finishEditing()"
     />
     <div class="buttons">
