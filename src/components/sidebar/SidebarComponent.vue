@@ -3,8 +3,7 @@ import BoardItem from "./BoardItem.vue";
 import AddForm from "../main/ui/AddForm.vue";
 import { useWorkspacesStore } from "../../stores/workspaces.ts";
 import { useAppStatesStore } from "../../stores/app_store.ts";
-import { ref, computed, nextTick, provide } from "vue";
-import { v4 as uuid } from "uuid";
+import { ref, computed, provide } from "vue";
 
 const workspacesStore = useWorkspacesStore();
 const appStates = useAppStatesStore();
@@ -14,10 +13,7 @@ const currentWorkspaces = computed(() =>
 );
 
 const isAddingWorkspace = ref(false);
-const newWorkspaceTitle = ref("");
 
-const inputRef = ref<HTMLInputElement | null>(null);
-const buttonRef = ref<HTMLInputElement | null>(null);
 const parentRef = ref<HTMLElement | null>(null);
 provide("parentRef", parentRef);
 

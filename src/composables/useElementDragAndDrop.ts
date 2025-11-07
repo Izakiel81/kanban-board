@@ -13,7 +13,7 @@ const MAX_SPEED = 60;
 
 export function useElementDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
-  parentElement: Ref<HTMLElement | null>,
+  parentElement: Ref<HTMLElement | null> | undefined,
   elements: Array<Workspace | TaskList | Card>,
   draggedOver: Ref<boolean>,
   isAbove: Ref<boolean>,

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useModalStore } from "../../stores/modals_store";
 
 interface Item {

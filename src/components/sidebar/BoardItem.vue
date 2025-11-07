@@ -2,7 +2,6 @@
 import { type Workspace } from "../../interfaces/Workspace";
 import DragAndDropContainer from "../ui/DragAndDropContainer.vue";
 import ContextMenu from "../ui/ContextMenu.vue";
-import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop.ts";
 import { useWorkspacesStore } from "../../stores/workspaces";
 import { useAppStatesStore } from "../../stores/app_store";
 import { useModalStore } from "../../stores/modals_store";
@@ -25,7 +24,7 @@ const showDeleteDialog = ref(false);
 const showButtons = ref(false);
 const isEditing = ref(false);
 
-const newBoardTitleRef = ref<HTMLElementTextarea | null>(null);
+const newBoardTitleRef = ref<HTMLElement | null>(null);
 const newBoardTitle = ref<string>(currentBoard.value.title);
 
 function deleteBoard() {
@@ -123,7 +122,7 @@ const CONTEXT_MENU_ITEMS = [
     :show="showDeleteDialog"
     :title="'Are you sure you want to delete this board?'"
     :main="currentBoard.title"
-    :onClick="() => deleteBoard(currentBoard.id)"
+    :onClick="deleteBoard"
     :onCancel="() => (showDeleteDialog = false)"
   />
 </template>

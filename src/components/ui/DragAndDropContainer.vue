@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch, inject } from "vue";
-import { useAppStatesStore } from "../../stores/app_store";
+import { ref, computed, watch, inject, type Ref } from "vue";
+import type { Workspace, TaskList, Card } from "../../interfaces/Workspace.ts";
 import { useModalStore } from "../../stores/modals_store";
 import { useElementDragAndDrop } from "../../composables/useElementDragAndDrop";
 import { useMobileDragAndDrop } from "../../composables/useMobileDragAndDrop";
 
-const appStates = useAppStatesStore();
 const modalStore = useModalStore();
 
 const {
@@ -37,7 +36,7 @@ const isCardDragged = ref(false);
 
 const dragStartedMobile = ref(false);
 
-const parentRef = inject("parentRef");
+const parentRef = inject<Ref<HTMLElement | null>>("parentRef");
 
 const elementRef = ref<HTMLElement | null>(null);
 
@@ -99,7 +98,7 @@ const downStyles = computed(() =>
       },
 );
 
-let touchTimeout;
+let touchTimeout: ReturnType<typeof setTimeout>;
 
 function touchStart(event: TouchEvent, element: HTMLElement) {
   if (modalStore.modalIsActive || event.touches.length > 1) return;
@@ -129,9 +128,9 @@ function touchEnd(element: HTMLElement) {
     :draggable="!modalStore.modalIsActive"
     :[dataAttribute]="currentElement.id"
     @click.stop="onClick"
-    @touchstart.stop="touchStart($event, elementRef)"
-    @touchmove.stop="isTouching($event, elementRef)"
-    @touchend.stop="touchEnd(elementRef)"
+    @touchstart.stop="touchStart($event, elementRef as HTMLElement)"
+    @touchmove.stop="isTouching($event, elementRef as HTMLElement)"
+    @touchend.stop="touchEnd(elementRef as HTMLElement)"
     @dragstart.stop="startDrag($event)"
     @mouseover.stop="mouseOver"
     @mouseleave.stop="mouseLeave"

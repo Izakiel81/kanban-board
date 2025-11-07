@@ -14,7 +14,7 @@ const MAX_SPEED = 40;
 
 export function useMobileDragAndDrop(
   currentElement: Ref<Workspace | TaskList | Card>,
-  parentElement: Ref<HTMLElement | null>,
+  parentElement: Ref<HTMLElement | null> | undefined,
   elements: Array<Workspace | TaskList | Card>,
   dataAttribute: string,
   horizontal?: boolean,

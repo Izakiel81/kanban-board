@@ -18,9 +18,9 @@ const modalStore = useModalStore();
 
 const modalDialogTitleEdit = ref<boolean>(false);
 const newCardTitle = ref<string>(currentCard.title);
-const newCardDescription = ref<string>(currentCard.description);
+const newCardDescription = ref<string>(currentCard.description || "");
 
-const textareaRef = ref<HTMLElementTextareat | null>(null);
+const textareaRef = ref<HTMLElement | null>(null);
 
 function autoResize() {
   if (!textareaRef.value) return;

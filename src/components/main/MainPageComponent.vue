@@ -16,7 +16,6 @@ const currentWorkspaceTitle = computed(() =>
 );
 
 const isAdding = ref(false);
-const newTaskListTitle = ref("");
 
 const parentRef = ref<HTMLElement | null>(null);
 provide("parentRef", parentRef);

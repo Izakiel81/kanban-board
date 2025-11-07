@@ -9,8 +9,7 @@ import { type TaskList } from "../../../interfaces/Workspace";
 import { useAppStatesStore } from "../../../stores/app_store";
 import { useWorkspacesStore } from "../../../stores/workspaces";
 import { useModalStore } from "../../../stores/modals_store";
-import { computed, ref, watch, nextTick } from "vue";
-import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop.ts";
+import { computed, ref } from "vue";
 
 const props = defineProps<{
   taskLists: Array<TaskList>;

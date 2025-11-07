@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import DragAndDropContainer from "../../ui/DragAndDropContainer.vue";
 import ContextMenu from "../../ui/ContextMenu.vue";
-import { useElementDragAndDrop } from "../../../composables/useElementDragAndDrop";
-import { useMobileDragAndDrop } from "../../../composables/useMobileDragAndDrop";
 import { useWorkspacesStore } from "../../../stores/workspaces";
-import { useAppStatesStore } from "../../../stores/app_store";
 import { useModalStore } from "../../../stores/modals_store";
 import DeleteButton from "../ui/DeleteButton.vue";
 import DeleteDialog from "../../main/ui/DeleteDialog.vue";
 import EditCardDialog from "../../main/ui/EditCardDialog.vue";
 import { type Card } from "../../../interfaces/Workspace";
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref } from "vue";
 
 const props = defineProps<{
   card: Card;

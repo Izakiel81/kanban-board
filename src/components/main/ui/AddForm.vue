@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-const { onClick, onCancel, wBackground } = defineProps<{
+const { onClick, onClose, wBackground } = defineProps<{
   onClick: (newTitle: string) => void;
   onClose: () => void;
   wBackground?: boolean;

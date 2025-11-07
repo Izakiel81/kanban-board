@@ -3,7 +3,7 @@ import { type Ref } from "vue";
 type Edge = "top" | "bottom" | "left" | "right";
 
 export function useDragScroll(
-  parentElement: Ref<HTMLElement | null>,
+  parentElement: Ref<HTMLElement | null> | undefined,
   threshold: number,
   maxSpeed: number,
 ) {
@@ -21,14 +21,14 @@ export function useDragScroll(
     targetVelocityX: number,
     targetVelocityY: number,
   ) {
-    if (animationId !== null || !parentElement) return;
+    if (animationId !== null || !parentElement || !parentElement.value) return;
 
     function animate() {
       currentVelocityX += (targetVelocityX - currentVelocityX) * 0.2;
 
       currentVelocityY += (targetVelocityY - currentVelocityY) * 0.2;
 
-      parentElement.value?.scrollBy({
+      parentElement?.value?.scrollBy({
         left: currentVelocityX,
         top: currentVelocityY,
         behavior: "auto",
@@ -40,7 +40,7 @@ export function useDragScroll(
   }
 
   function scrollDrag(pointer: { x: number; y: number }) {
-    if (!parentElement.value) return;
+    if (!parentElement || !parentElement.value) return;
     const rect = parentElement.value.getBoundingClientRect();
 
     const distances: Record<Edge, number> = {
